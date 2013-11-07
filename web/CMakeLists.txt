@@ -9,6 +9,7 @@ uvis_install_files_with_prefix(
   ext/js-core/jquery.hammer.js
   ext/js-core/jquery.hammer.min.js
   ext/widgets/jquery-ui/jquery-ui-1.10.0.min.js
+  lib/js/vtkweb-all.js
   SOURCE "${PARAVIEW_WWW_DIR}"
   TARGET webThirdPartyJsContentFiles
   DESTINATION share/uvis/www/content/js

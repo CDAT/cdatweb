@@ -22,5 +22,6 @@ script=$app_data/bin/@SERVER_PYTHON_SCRIPT@
 
 exec pvpython $script \
   --port ${PORT:-8080} \
-  --content $app_content \
+  --content $common_content \
+  --app-content $app_content \
   "$@"

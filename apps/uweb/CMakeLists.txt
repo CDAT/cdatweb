@@ -3,6 +3,7 @@ project(uweb)
 uvis_install_files_with_prefix(
   bin/uweb.py
   content/index.html
+  content/css/main.css
   TARGET ${PROJECT_NAME}-webContentFiles
   DESTINATION share/uvis/www/apps/${PROJECT_NAME}
 )
