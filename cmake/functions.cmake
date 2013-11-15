@@ -1,3 +1,5 @@
+include(CMakeParseArguments)
+
 # Function to extract first argument into named variable
 function(shift_arg variable value)
   set(${variable} "${value}" PARENT_SCOPE)
@@ -116,6 +118,43 @@ function(uvis_install_files_with_prefix)
 
   add_custom_target(${_install_TARGET} ALL DEPENDS ${_target_depends})
 endfunction()
+
+# Function to install files with (optionally) their respective path prefixes
+function(uvis_install_directories_with_prefix)
+  cmake_parse_arguments(_install
+    "STRIP_PATH"
+    "SOURCE;TARGET;DESTINATION"
+    "DIRECTORY"
+    ${ARGN}
+  )
+  list(APPEND _install_DIRECTORIES ${_install_UNPARSED_ARGUMENTS})
+
+  set(_path)
+  set(_in_prefix)
+  if(_install_SOURCE)
+    set(_in_prefix "${_install_SOURCE}/")
+  endif()
+
+  set(_target_depends)
+  foreach(dir ${_install_DIRECTORIES})
+    message("dir ${dir}")
+    get_filename_component(_in "${_in_prefix}${dir}" REALPATH)
+    get_filename_component(_name "${dir}" NAME)
+    set(_out "${uvis_BINARY_DIR}/${_install_DESTINATION}/${_path}/${_name}")
+
+    add_custom_command(OUTPUT "${_out}" DEPENDS "${_in}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_directory "${_in}" "${_out}")
+    list(APPEND _target_depends "${_out}")
+
+    install(DIRECTORY "${_in_prefix}${dir}"
+      DESTINATION ${_install_DESTINATION}/${_path}
+      COMPONENT Web
+    )
+  endforeach()
+
+  add_custom_target(${_install_TARGET} ALL DEPENDS ${_target_depends})
+endfunction()
+
 
 set(UVIS_RUN_SERVER_SCRIPT_TEMPLATE "${uvis_SOURCE_DIR}/web/uvis.sh.in" CACHE PATH INTERNAL)
 

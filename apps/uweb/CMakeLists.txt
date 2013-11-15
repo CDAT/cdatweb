@@ -1,10 +1,20 @@
 project(uweb)
 
-uvis_install_files_with_prefix(
-  bin/uweb.py
-  content/index.html
-  content/css/main.css
-  TARGET ${PROJECT_NAME}-webContentFiles
+#uvis_install_files_with_prefix(
+#  bin/uweb.py
+#  home
+#  login
+#  TARGET ${PROJECT_NAME}-webContentFiles
+#  DESTINATION share/uvis/www/apps/${PROJECT_NAME}
+#)
+
+uvis_install_directories_with_prefix(
+  bin
+  esgf_auth_backend
+  home
+  login
+  uvdjango
+  TARGET ${PROJECT_NAME}-webContentDirectories
   DESTINATION share/uvis/www/apps/${PROJECT_NAME}
 )
 

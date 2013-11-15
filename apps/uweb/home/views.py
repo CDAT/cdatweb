@@ -9,7 +9,6 @@ from util.file_handler import download_file as download_file
 from util.calculator import eval_cdat_cmd as eval_cdat
 from util.esgf_connector import datasetId_to_html_list as datasetId2htmllist
 
-import proof_of_concept
 
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.models import User
