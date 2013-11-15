@@ -1,0 +1,243 @@
+@CHARSET "ISO-8859-1";
+html, body
+{
+}
+
+body
+{
+    font: 14px 'Lucida Sans Unicode', 'Trebuchet MS', Arial, Helvetica;    
+    margin: 0;    
+}
+td
+{
+	vertical-align: top;
+}
+td > ul > li {
+        list-style-type: none;
+
+}
+#coord_div
+{
+    height:25px;
+    border:solid 1px #c3c3c3;
+    padding-left: 5px;
+    border-top: 0px;
+}
+#n_text_input,#s_text_input,#e_text_input,#w_text_input
+{
+    width: 55px; 
+    height: 15px;
+    border: 1px solid #ccc;
+    vertical-align: middle;
+    text-align: left;
+}
+#coord_div label
+{
+    width:8px;
+    color: #666;
+    font: 14px 'Lucida Sans Unicode', 'Trebuchet MS', Arial, Helvetica;
+    height: 25px;
+    text-align: center;
+}
+h1
+{
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .7), 0px 2px 0 rgba(0, 0, 0, .5);
+    text-align: left;
+    color: #666;
+    margin: 0 0 10px 0;
+    letter-spacing: 4px;
+    font: normal 26px/1 Verdana, Helvetica;
+    position: relative;
+    top: 5px;
+}
+#top_link  
+{
+	text-align: right;
+	position:absolute;
+	right:10px;
+	top: 10px;
+	color: #999;
+}
+#top_link a 
+{
+    text-decoration: none;
+    padding: 0 4px;
+    color: #999
+}
+#left1 {
+    width: 15%;
+    float: left;
+}
+#dataset_label,#var_panel_label
+{
+    text-align:left;
+    background-color:#e5eecc;
+    border:solid 1px #c3c3c3;
+    padding-left: 5px;
+    height: 30px;
+    vertical-align: middle;
+    line-height: 30px;
+
+}
+#plot_header
+{
+    text-align:left;
+    background-color:#e5eecc;
+    border:solid 1px #c3c3c3;
+    padding-left: 5px;
+    height: 30px;
+}
+#dataset_div
+{
+    overflow: visible;
+}
+
+#var_panel {
+    overflow: visible;
+    height: 300px;
+    border: 1px solid;
+}
+#left2 {
+    width: 22%;
+    float: left;
+}
+#right{
+    width: 62%;
+    float: left;
+}
+#footer a
+{
+    display: block;
+    float: left;
+    top: 10px;
+    color: #999;
+    text-decoration: none;
+    padding: 20px;
+}
+#panel
+{
+padding:2px;
+border:solid 1px #c3c3c3;
+}
+#plot_1_1
+{
+
+	height: 850px;
+	width: 1000px;
+}
+#plot_1_2,#plot2_1,#plot_2_2
+{
+	height: 425px;
+	width: 500px;
+}
+#plot_panel td
+{
+	border:solid 1px #c3c3c3;
+}
+#calc_table1,#calc_table2
+{
+    width: 100%;
+}
+.calc_button
+{
+    width:100%;
+}
+#invalid_replacement_value,#array_name,#calc_command
+{
+    width:97%;
+}
+#replace_invalid_result
+{
+    float: right;
+}
+#calculator
+{
+    border: 1px solid;
+}
+#map_icon,.var_icon
+{
+    height: 25px;
+    width: 25px;
+    vertical-align: middle;
+}
+#plot_type_input
+{
+    height: 15px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+#plot_option
+{
+    height: 25px;
+    border:solid 1px #c3c3c3;
+    padding-left: 5px;
+    border-top: 0px;
+}
+#plotmenu ul
+{
+    padding:0;
+    margin:0;
+}
+ul.sub1, ul.sub2, ul.sub3
+{
+
+}
+#plotmenu li
+{
+    margin-right: 4px;
+    list-style-type:none;
+    position: relative;
+}
+#plotmenu ul.sub1
+{
+    position:absolute;
+    text-align: center;
+    display: none;
+}
+#plotmenu ul.sub2
+{
+    display: none;
+    position:absolute;
+    text-align: left;
+    left: 100px;
+    top: 0px;
+}
+#plotmenu ul.sub3
+{
+    top: 0px;
+    position:absolute;
+    left: 100px;
+    text-align: left;
+    display: none;
+}
+
+#plotmenu a 
+{
+    text-decoration: none;
+    width: 100px;
+    height: 25px;
+    display:block;
+    line-height:25px;
+    border: 1px solid #CCC;
+    border-radius: 5px;
+}
+#plotmenu li:hover > a 
+{
+    background-color: #CFC;
+}
+#plotmenu li:hover a:hover
+{
+    background-color: #FF0;
+}
+#plotmenu .sub1 li:hover .sub2
+{
+    display: block;
+}
+#plotmenu .sub1 li:hover .sub2 li:hover .sub3
+{
+    display: block;
+}
+#plotmenu li:hover .sub1
+{
+    display: block;
+}

@@ -1,0 +1,51 @@
+Init package:  edu.utah.sci.vistrails.basic
+Init package:  edu.utah.sci.vistrails.basic
+Init package:  edu.utah.sci.vistrails.pythoncalc
+Init package:  edu.utah.sci.vistrails.spreadsheet
+Init package:  edu.utah.sci.eranders.ParaView
+paraview version 3.11.1, Date: 2011-07-26
+Init package:  edu.utah.sci.vistrails.http
+Init package:  edu.utah.sci.vistrails.dialogs
+Init package:  gov.llnl.uvcdat
+Init package:  gov.llnl.uvcdat.cdms
+Init package:  gov.lbl.visit
+Init package:  edu.utah.sci.vistrails.matplotlib
+Init package:  edu.poly.vis_analytics
+Init package:  edu.poly.scikit_learn
+Init package:  edu.utah.sci.vistrails.vtk
+Init package:  gov.nasa.nccs.vtdv3d
+Init package:  com.kitware.pvclimate
+   ------ Loaded plot Slicer With Contours, varnum = 2 ------ 
+ Loaded Slicer With Contours version: 199
+   ------ Loaded plot Hovmoller Slicer, varnum = 1 ------ 
+ Loaded Hovmoller Slicer version: 293
+   ------ Loaded plot Slicer, varnum = 1 ------ 
+ Loaded Slicer version: 167
+   ------ Loaded plot Volume Render With Slicer, varnum = 2 ------ 
+ Loaded Volume Render With Slicer version: 612
+   ------ Loaded plot Glyph Volume, varnum = 2 ------ 
+ Loaded Glyph Volume version: 25
+   ------ Loaded plot Streamline Slicer, varnum = 2 ------ 
+ Loaded Streamline Slicer version: 114
+   ------ Loaded plot IsoSurface With Texture, varnum = 2 ------ 
+ Loaded IsoSurface With Texture version: 16
+   ------ Loaded plot Volume Render, varnum = 1 ------ 
+ Loaded Volume Render version: 413
+   ------ Loaded plot Glyph Slicer, varnum = 2 ------ 
+ Loaded Glyph Slicer version: 190
+   ------ Loaded plot Hovmoller Volume, varnum = 1 ------ 
+ Loaded Hovmoller Volume version: 287
+   ------ Loaded plot IsoSurface, varnum = 1 ------ 
+ Loaded IsoSurface version: 11
+   ------ Loaded plot Curtain Plot, varnum = 1 ------ 
+ Loaded Curtain Plot version: 10
+   ------ Loaded plot PV Contour Representation, varnum = 1 ------ 
+ Loaded PV Contour Representation version: 15
+   ------ Loaded plot PV Slice Representation, varnum = 1 ------ 
+ Loaded PV Slice Representation version: 20
+   ------ Loaded plot Contour Plot, varnum = 1 ------ 
+   ------ Loaded plot Pseudocolor Plot, varnum = 1 ------ 
+   ------ Loaded plot Histogram, varnum = 1 ------ 
+ Loaded Histogram version: 28
+None None
+quitting

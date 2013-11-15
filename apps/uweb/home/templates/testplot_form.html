@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" src="{{STATIC_URL}}css/plot.css" type="text/css"/>
+<body>
+    <a href="/logout/">Logout</a>
+    <br>
+    <h1>Box Fill</h1>
+    
+    {% if error_message %}<p><strong><font color="#ff0000">{{ error_message }}</font></strong></p>{% endif %}
+    
+    <form action="/plots/main/" method="post">
+    {% csrf_token %}
+    <table border="0">
+        <tr>
+            <td>
+                <label for="file">File:</label>
+            </td>
+            <td>
+                <input type="text" name="file" id="file" value="http://pcmdi9.llnl.gov/thredds/dodsC/cmip5.output1.INM.inmcm4.1pctCO2.mon.atmos.Amon.r1i1p1.cl.20130207.aggregation.1" style="width: 1600px; background-color: white";/><font size="1">
+            </td>
+        </tr>
+    </table>
+    <input type="submit" value="Plot boxfill"/>
+    </form>
+</body></html>

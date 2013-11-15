@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>UV-CDAT Live</title>
+
+	<link rel="stylesheet" href="{{STATIC_URL}}ext/widgets/jquery-ui/jquery-ui-1.10.0.css" type='text/css'>
+	<link rel="stylesheet" href="{{STATIC_URL}}css/plot.css" type="text/css" >
+        <link rel='stylesheet' href='{{STATIC_URL}}css/main.css' type='text/css'>
+
+        <script src="{{STATIC_URL}}ext/js-core/autobahn.min.js"></script>
+        <script src="{{STATIC_URL}}ext/js-core/jquery-1.8.3.min.js"></script>
+        <script src="{{STATIC_URL}}ext/js-core/gl-matrix-min.js"></script>
+        <script src="{{STATIC_URL}}ext/js-core/jquery.hammer.min.js"></script>
+
+        <script src="{{STATIC_URL}}ext/widgets/jscolor/jscolor.js"></script>
+        <script src="{{STATIC_URL}}ext/widgets/jquery-ui/jquery-ui-1.10.0.min.js"></script>
+
+        <script src="{{STATIC_URL}}lib/js/vtkweb-all.js"></script>
+	
+</head>
+<body>
+
+
+<div id=content>
+    <div id=left1>
+        <div id=dataset_label>
+                <img class=var_icon src={{STATIC_URL}}img/new.png/>
+                <img class=var_icon src={{STATIC_URL}}img/open.png/>
+                <img class=var_icon src={{STATIC_URL}}img/file_save.png/>
+                <img class=var_icon src={{STATIC_URL}}img/close.png/>
+		<select id="plotTypeSelection">
+            	<option value="boxfill" selected>boxfill</option>
+                <option value="isofill">isofill</option>
+            </select>
+        </div>
+        <div id=dataset_div>
+            <table>
+                {% for myfile in dataset %}
+                <tr>
+                    <td>
+                        <a id=dataset_a{{myfile.id}} href="javascript:toggle('{{myfile.id}}');"><img src='{{STATIC_URL}}img/folder_blue_open.png'/></a>
+                        <a id=dataset_import{{myfile.id}} href="javascript:import_var('{{myfile.id}}')"><img src='{{STATIC_URL}}img/save.png' width=15px/></a>
+                    </td>
+                    <td style="word-break: break-all">
+                        <a id={{myfile.id}} href="javascript:downloadFile('{{myfile.file}}','{{myfile.id}}')">{{myfile.file}}</a>
+                        <ul id=dataset_ul{{myfile.id}} style="display:none">
+                            {% for myvar in myfile.var %}
+                            <li id={{myvar}} >
+                                <input id={{myvar}} type=checkbox value={{myvar}} class={{myfile.id}}>
+                                <label for={{myvar}} id=label_{{myfile.id}}_{{myvar}} class="draggable">{{myvar}}</label>
+                            </li> 
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+      <div id=right>
+        <div id=plot_header>
+        <table>
+              <tr>
+                  <td>
+                      Plot Display Options:
+                    <label id=input_label>Row<label>
+                    <select id="row">
+                    <option value="1" selected>1</option>
+                    <option value="2" >2</option>
+                    </select>
+                    <label id=input_label>Col</label>
+                    <select id="col">
+                    <option value="1" selected>1</option>
+                    <option value="2" >2</option>
+                    </select>
+                </td>
+		
+                <td><img class=var_icon src={{STATIC_URL}}img/delete.png onclick="deleteCanvas()"/></td>
+                <td><img class=var_icon src={{STATIC_URL}}img/source.png/></td>
+                <td><img class=var_icon src={{STATIC_URL}}img/edit.png/></td>
+                <td><img class=var_icon src={{STATIC_URL}}img/pipeline.png/></td>
+                <td><img class=var_icon src={{STATIC_URL}}img/previous.png/></td>
+                <td><img class=var_icon src={{STATIC_URL}}img/next.png/></td>
+                <td><img class=var_icon src={{STATIC_URL}}img/printer.png/></td>
+                <td><img class=var_icon src={{STATIC_URL}}img/file_export.png/></td>
+            </tr>
+        </table>
+        </div>
+        <table id=plot_panel width="100%">
+            <tr id=plot_row1>
+                <td id=plot_1_1 class="droppable">
+		    <div class="splitter">
+            		<div class="viewport-container" ></div>
+            		<div class="control-panel" style="display: none;"></div>
+        	    </div>
+        	    <div><p id="data"></p></div>
+		</td> 
+		
+  		<td id=plot_1_2 class="droppable" ></td>
+            </tr>
+            <tr id=plot_row2>
+                <td id=plot_2_1 class="droppable" ></td>
+                <td id=plot_2_2 class="droppable" ></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id=left2>
+        <div id=var_panel_label>
+            <img class=var_icon src={{STATIC_URL}}img/delete.png onclick="deleteSelectedVariables()"/>
+            <img class=var_icon src={{STATIC_URL}}img/checked.png onclick="checkAllVariables()"/>
+            <img class=var_icon src={{STATIC_URL}}img/edit.png onclick="editSelectedVariables()"/>
+            <img class=var_icon src={{STATIC_URL}}img/file_save.png/>
+            <img class=var_icon src={{STATIC_URL}}img/preferences.png onclick="resetVariables()"/>
+	    
+        </div>
+       <div id=coord_div>
+            <img id=map_icon src="{{STATIC_URL}}img/map-icon.png" />
+            <label id="input_label">N:</label>
+            <input id="n_text_input" type="text" value="-90">
+            <label id="input_label">S:</label>
+            <input id="s_text_input" type="text" value="90">
+            <label id="input_label">E:</label>
+            <input id="e_text_input" type="text" value="0">
+            <label id="input_label">W:</label>
+            <input id="w_text_input" type="text" value="180">
+            <button id="delete-button">Reset</button>
+		
+        </div>
+
+        <div id="var_panel">
+            <table id="var_table">
+            </table>
+        </div>
+        <div id="calculator">
+            <table id="calc_table1">
+                <tr><td colspan=6><input type=text id=array_name placeholder="Result Array Name"/></td></tr>
+                <tr><td colspan=6><input type=text id=calc_command placeholder="Enter a CDAT command"/></td></tr>
+                <tr>
+                    <td><button class=calc_button id=sin_btn>sin</button></td>
+                    <td><button class=calc_button>asin</button></td>
+                    <td><button class=calc_button>x^2</button></td>
+                    <td><button class=calc_button>ln</button></td>
+                    <td><button class=calc_button>x<y</button></td>
+                    <td><button class=calc_button>+</button></td>
+                </tr>
+                <tr>
+                    <td><button class=calc_button>cos</button></td>
+                    <td><button class=calc_button>acos</button></td>
+                    <td><button class=calc_button>sqrt</button></td>
+                    <td><button class=calc_button>log10</button></td>
+                    <td><button class=calc_button>x>y</button></td>
+                    <td><button class=calc_button>-</button></td>
+                </tr>
+                <tr>
+                    <td><button class=calc_button>tan</button></td>
+                    <td><button class=calc_button>atan</button></td>
+                    <td><button class=calc_button>1/x</button></td>
+                    <td><button class=calc_button>exp</button></td>
+                    <td><button class=calc_button>x<>y</button></td>
+                    <td><button class=calc_button id=multiply>*</button></td>
+                </tr>
+                <tr>
+                    <td><button class=calc_button>abs</button></td>
+                    <td><button class=calc_button>std</button></td>
+                    <td><button class=calc_button>x^y</button></td>
+                    <td><button class=calc_button>10^x</button></td>
+                    <td><button class=calc_button>x==y</button></td>
+                    <td><button class=calc_button>/</button></td>
+                </tr>
+            </table>
+            <table id="calc_table2">
+                <tr>
+                    <td><button class=calc_button>Regrid</button></td>
+                    <td><button class=calc_button>Mask</button></td>
+                    <td><button class=calc_button>Get_Mask</button></td>
+                    <td><button class=calc_button>Grower</button></td>
+                </tr>
+                <tr><td colspan=2><input type=checkbox id=replace_invalid_result checked /><label for=replace_invalid_result>Replace Invalid Results</label></td>
+                <td colspan=2><input type=text id=invalid_replacement_value placeholder="Replacement Value"/></td></tr>
+            </table>
+        </div>
+    </div>    
+        
+<script type="text/javascript">
+
+    function toggle(tag_id)
+    {
+        a=document.getElementById('dataset_a'+tag_id);
+        ul=document.getElementById('dataset_ul'+tag_id);
+        if (ul.style.display=='block')
+        {
+            ul.style.display='none';
+            a.innerHTML='<img src="{{STATIC_URL}}img/folder_blue_open.png" />';
+        }
+        else
+        {
+            ul.style.display='block';
+            a.innerHTML='<img src="{{STATIC_URL}}img/folder_blue.png"/>';
+        }
+    }
+
+    function import_var(tag_id)
+    {
+        var values= $('.'+tag_id+':checked').map(function(){ return this.value;}).get();
+        for (var i=0; i<values.length;i++)
+        {
+            var myvar = values[i];
+            var myfileid=tag_id;
+            var new_element="<tr id=tr_"+myfileid+"_"+myvar+"><td><input id=cb_"+myfileid+"_" + myvar + " type=checkbox class=variables><input class=var_textbox type=hidden id=input_"+ myfileid + "_"+myvar +" value=" + myvar+"><label for=cb_"+myfileid+"_"+myvar+" id=cbinp_"+ myfileid+"_"+myvar +" class=draggable>"+myvar+"</label></td></tr>";
+            $(new_element).appendTo($("#var_table"));
+        }
+        $('.draggable').draggable({
+            revert: true,
+            help: "clone",
+            cursor: "crosshair",
+            cursorAt: {left: 5},
+        });
+        $(".var_textbox").keypress(function(e) {
+            if (e.which==13)
+            {
+                inputId=($(this).prop('id'));
+                suffix=inputId.substring(5);
+                checkboxId="cb"+suffix;
+                $("#"+checkboxId).prop('checked',false);
+                $(this).prop('type','hidden');
+                inputValue=$(this).val();
+                labelId="cbinp"+suffix;
+                $("#"+labelId).html(inputValue); 
+            }
+        });
+
+    }
+
+    function downloadFile(filename, class_id){
+        var values= $('.'+class_id+':checked').map(function(){ return this.value;}).get();
+        url='http://emily.llnl.gov:8000/download?fnm='+filename+'&varlist[]='+values;
+        window.location=url;
+    }
+
+    function editSelectedVariables() {
+        var ids= $('.variables:checked').map(function(){ return this.id;}).get();
+        for (var i=0; i<ids.length;i++)
+        {
+            var new_id = "input"+ids[i].substring(2);
+            my_element=document.getElementById(new_id);
+            my_element.setAttribute('type','text');
+            var label_id="cbinp"+ids[i].substring(2);
+            $("#"+label_id).html(""); 
+        }
+    }
+    
+    function deleteCanvas() {
+        $("#plot_1_1").empty();
+    }
+
+    function deleteSelectedVariables() {
+        $(".variables").each(function(index,domEle){
+            if ($(domEle).prop("checked"))
+            {
+                elementId=$(domEle).attr('id');
+                trId="tr"+elementId.substring(2);
+                trElement=document.getElementById(trId);
+                $(trElement).empty();
+            }
+        });
+    }
+
+    function checkAllVariables() {
+        $(".variables").each(function (index,domEle) {
+            if (!($(domEle).prop("checked")))
+            {
+                $(domEle).prop('checked',true);           
+            }
+        });
+    }
+    
+    function resetVariables() {
+        $(".variables").each(function(index,domEle){
+            if ($(domEle).prop("checked"))
+            {
+                $(domEle).prop('checked',false);           
+                elementId=$(domEle).attr('id');
+                inputId="input"+elementId.substring(2);
+                inputElement=document.getElementById(inputId);
+                $(inputElement).prop('type','hidden');
+                inputValue=$(inputElement).val();
+                labelId="cbinp"+elementId.substring(2);
+                $("#"+labelId).html(inputValue); 
+            }
+        });
+    }
+ 
+$(document).ready(function(){
+    $(".calc_button").click(function() {
+        var ids= $('.variables:checked').map(function(){ return this.id;}).get();
+        var new_id = "input"+ids[0].substring(2);
+        my_element=document.getElementById(new_id);
+        var myvariable=$(my_element).val();
+        var myid=$(this).attr('id');
+        var cmd='';
+        if (myid=='multiply')
+        {
+            var cmd=myvariable+"*";
+        }
+        $('#calc_command').val(cmd);
+    });
+
+    $("#calc_command").keypress(function(e) {
+        if (e.which==13)
+        {
+            var ids= $('.variables:checked').map(function(){ return this.id;}).get();
+            var new_id = "input"+ids[0].substring(2);
+            my_element=document.getElementById(new_id);
+            var myvariable=$(my_element).val();
+            var myfiletokens = new_id.split('_');
+            var myfileid = myfiletokens[1];
+            var myfile = document.getElementById(myfileid).innerHTML;
+            var myvar =$('#array_name').val();
+            var cmd=$(this).val();
+            $.ajax({url:'http://emily.llnl.gov:8000/calculate',
+                data:{"myfile":myfile,"myvar":myvariable,"mynewvar":myvar,"cmd":cmd}, 
+                type:'GET',
+                datatype:'json', 
+                success:function(data){
+                    outfile=data["outfile"];
+                    myfileid=data["myfileid"];
+                    var new_element="<tr id=tr_"+myfileid+"_"+myvar+"><td><input id=cb_"+myfileid+"_" + myvar + " type=checkbox class=variables><input class=var_textbox type=hidden id=input_"+ myfileid + "_"+myvar +" value=" + myvar+"><label for=cb_"+myfileid+"_"+myvar+" id=cbinp_"+ myfileid+"_"+myvar +" class=draggable>"+myvar+"</label><a id="+myfileid+" style=display:none>"+outfile+"</a></td></tr>";
+                    $(new_element).appendTo($("#var_table"));
+                    $('.draggable').draggable({
+                        revert: true,
+                        help: "clone",
+                        cursor: "crosshair",
+                        cursorAt: {left: 5},
+                    });
+                    $(".var_textbox").keypress(function(e1) {
+                        if (e1.which==13)
+                        {
+                            inputId=($(this).prop('id'));
+                            suffix=inputId.substring(5);
+                            checkboxId="cb"+suffix;
+                            $("#"+checkboxId).prop('checked',false);
+                            $(this).prop('type','hidden');
+                            inputValue=$(this).val();
+                            labelId="cbinp"+suffix;
+                            $("#"+labelId).html(inputValue); 
+                        }
+                    });
+                    },
+                error: function(){alert('ERROR: unable to process your CDAT command');}
+            });
+        }
+    });
+
+
+   
+    $(".draggable").draggable({
+        revert: true,
+        help: "clone",
+        cursor: "crosshair",
+        cursorAt: {left: 5},
+    });
+   
+ $(".droppable").droppable({
+        zIndex:2,
+        drop: function (event,ui){
+            var draggableId=ui.draggable.attr("id");
+            var droppableId=$(this).attr("id");
+            $(this).empty();
+            var n = document.getElementById("n_text_input").value;
+            var s = document.getElementById("s_text_input").value;
+            var e = document.getElementById("e_text_input").value;
+            var w = document.getElementById("w_text_input").value;
+            var plot_type=$('#plotTypeSelection').val();
+
+            var myfiletokens = draggableId.split('_');
+            var myfileid = myfiletokens[1];
+            var myfile = document.getElementById(myfileid).innerHTML;
+            var png="";
+            var myvar=ui.draggable.text();
+            if (draggableId.substring(0,5)=="label")
+            {
+                var new_element="<tr id=tr_"+myfileid+"_"+myvar+"><td><input id=cb_"+myfileid+"_" + myvar + " type=checkbox class=variables><input class=var_textbox type=hidden id=input_"+ myfileid + "_"+myvar +" value=" + myvar+"><label for=cb_"+myfileid+"_"+myvar+" id=cbinp_"+ myfileid+"_"+myvar +" class=draggable>"+myvar+"</label></td></tr>";
+                $(new_element).appendTo($("#var_table"));
+                $('.draggable').draggable({
+                    revert: true,
+                    help: "clone",
+                    cursor: "crosshair",
+                    cursorAt: {left: 5},
+                });
+                $(".var_textbox").keypress(function(e) {
+                    if (e.which==13)
+                    {
+                        inputId=($(this).prop('id'));
+                        suffix=inputId.substring(5);
+                        checkboxId="cb"+suffix;
+                        $("#"+checkboxId).prop('checked',false);
+                        $(this).prop('type','hidden');
+                        inputValue=$(this).val();
+                        labelId="cbinp"+suffix;
+                        $("#"+labelId).html(inputValue); 
+                    }
+                });
+            }
+		
+	    $.ajax({url:'http://emily.llnl.gov:8000/plot/boxfill',
+                data:{"n":n,"s":s,"e":e,"w":w,"fnm":myfile,"var":myvar},
+                type:'GET',
+                datatype:'json',
+                success:function(data){
+                    png=data["png"];
+                    event.target.innerHTML='<img src='+png+' style="height:500px;width:500px;"/>';
+                    },
+                error: function(){alert('ERROR: unable to generate plot.');}
+            });
+
+
+        }
+    });
+
+	
+    $("#flip2").click(function(){
+	$("#dataset_div").slideToggle("slow");
+	});
+    $("#calc").click(function(){
+	$("#calculator").slideToggle("slow");
+	});
+   $("#plot_1_2").hide();
+   $("#plot_2_1").hide();
+   $("#plot_2_2").hide();
+   $("#row").change(function() {
+        var select_tag = $("#row option:selected");
+        var selected_val=select_tag.val();
+        var col_tag=$("#col option:selected");
+        var col = col_tag.val();
+        if (selected_val == '1')
+        {
+            if ($("#plot_row2").length != 0)
+            {
+                $("#plot_row2").hide();
+            }
+            if (col=='1')
+            {
+                $("#plot_1_1").width(850).height(800);
+            }
+            else if (col=='2')
+            {
+                $("#plot_1_1").width(425).height(800);
+                $("#plot_1_2").width(425).height(800);
+            }
+        }
+        else if (selected_val == '2')
+        {
+    	    if (col == '1')
+            {
+                $("#plot_2_1").show();
+                $("#plot_1_1").width(850).height(400);
+                $("#plot_2_1").width(850).height(400);
+            }
+            else if (col == '2')
+            {
+                $("#plot_1_2").show();
+   		$("#plot_2_1").css("display","block");
+   		$("#plot_2_2").css("display","block");
+                $("#plot_1_2").width(425).height(400);
+                $("#plot_2_2").width(425).height(400);
+                $("#plot_2_1").width(425).height(400);
+                $("#plot_1_1").width(425).height(400);
+            }
+
+        }
+    	  
+   });
+   $("#col").change(function() {
+        var select_tag = $("#col option:selected");
+        var selected_val=select_tag.val();
+        var row_tag=$("#row option:selected");
+        var row = row_tag.val();
+        if (selected_val == '1')
+        {
+            if ($("#plot_1_2").length != 0)
+            {
+                $("#plot_1_2").css("display","none");
+            }
+            if ($("#plot_2_2").length != 0)
+            {
+                $("#plot_2_2").css("display","none");
+            }
+            if ($("#plot_2_1").length != 0)
+            {
+                $("#plot_2_1").width(850);
+            }
+            if ($("#plot_1_1").length != 0)
+            {
+                $("#plot_1_1").width(850);
+            }
+        }
+        else if (selected_val == '2')
+        {
+            if (row == '1')
+            {
+                $("#plot_1_2").css("display","block");
+                $("#plot_1_2").width(425).height(800);
+                $("#plot_1_1").width(425).height(800);
+            }
+            else if (row == '2')
+            {
+                $("#plot_1_2").show();
+                $("#plot_2_1").show();
+		$("#plot_2_2").show();
+                $("#plot_1_2").width(425).height(400);
+                $("#plot_2_2").width(425).height(400);
+                $("#plot_2_1").width(425).height(400);
+                $("#plot_1_1").width(425).height(400);
+            }
+        }
+   });
+});
+
+
+$('#plotTypeSelection').change(function (e) {
+                setPlotType();
+            });
+
+    var pv = { pipeline: null, sources: null, files: null},
+    fetchDataQueueSize = 0;
+    $("#loading").hide();
+    pv.connection = { sessionURL: "ws://localhost:8080/ws"};
+    connect();
+
+    function connect() {
+        if(location.protocol == "http:") {
+            pv.connection.sessionURL = pv.connection.sessionURL.replace("wss:","ws:");
+        }
+
+        vtkWeb.connect(pv.connection, function(connectionData) {
+            pv.connection = connectionData;
+            createViewport();
+        }, function(code,reason){
+            $(".loading").hide();
+            console.log(reason);
+        });
+    }
+
+    function createViewport() {
+        $(".viewport-container").empty();
+        pv.viewport = vtkWeb.createViewport({session: pv.connection.session});
+        pv.viewport.bind(".viewport-container");
+    }
+
+    function initRender() {
+        if (pv.connection && pv.connection.session) {
+            pv.connection.session.call("vtk:initRender").then(function(res) {
+            	console.log(res);
+            	pv.viewport.render();
+            });
+        }
+    }
+
+    function setPlotType(){
+        if (pv.connection && pv.connection.session) {
+            var selected = $('#plotTypeSelection').val();
+	    pv.connection.session.call("vtk:is_initRender").then(function(res) {
+	    	if (res){
+		    pv.connection.session.call("vtk:setPlotType",selected).then(function(res){
+                        console.log("setPlotType: ready to run stillRender");
+                        pv.viewport.render();
+	    	    });
+	        }
+	        else
+	        {
+	    	    pv.connection.session.call("vtk:setPlotType",selected).then(function(res){
+                        console.log("Calling setPlotType: ready to run initRender");
+                        initRender();
+	            });
+	        }
+	    });
+        }
+    }
+            
+    $(window).resize(function() {
+        $(".splitter").height(window.innerHeight - 35);
+        $(".control-panel").height(window.innerHeight - 35);
+    }).trigger('resize');
+
+    function updateView() {
+        if(pv.viewport) {
+            pv.viewport.invalidateScene();
+        }
+    }
+
+    function stop() {
+        if(pv.hasOwnProperty('connection') && pv.connection.session) {
+            pv.viewport.unbind();
+            vtkWeb.stop(pv.connection);
+            pv = {};
+        }
+    }
+
+    var container = $(".viewport-container");
+
+    container.bind('mouse', function(evt){
+        evt.preventDefault();
+        var vtkWeb_event = {
+            action: evt.action,
+            charCode: evt.charCode,
+            altKey: evt.altKey,
+            ctrlKey: evt.ctrlKey,
+            shiftKey: evt.shiftKey,
+            metaKey: evt.metaKey,
+            buttonLeft: (evt.current_button === 1 ? true : false),
+            buttonMiddle: (evt.current_button === 2 ? true : false),
+            buttonRight: (evt.current_button === 3 ? true : false)
+            },
+            elem_position = $(evt.delegateTarget).offset(),
+            pointer = {
+                    x : (evt.pageX - elem_position.left),
+                    y : (evt.pageY - elem_position.top)
+            };
+
+        vtkWeb_event.x = pointer.x;
+        vtkWeb_event.y = pointer.y;
+
+        action_pending = true;
+        pv.connection.session.call("vtk:mouseInteraction", vtkWeb_event).then(function (res) {
+            if (res !== null) {
+                action_pending = false;
+                console.log(res);
+                $("#data").text(res);
+            }
+        });
+    });
+
+
+
+</script>
+
+</body>
+</html>

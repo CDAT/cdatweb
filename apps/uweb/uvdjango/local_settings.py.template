@@ -1,0 +1,82 @@
+# Rename or copy this to local_settings.py
+# Then, edit as appropriate.
+#
+# Feel free to copy any other settings from settings.py that you wish to change
+# into this file. It is loaded at the end of settings.py and overrides anything
+# defined in settings.py
+
+# Information used to go out and get the proxy certificates
+ESGF_HOST = 'pcmdi9.llnl.gov'
+ESGF_PORT = 7512
+
+# Directory where you wish to store the retrieved proxy certificates
+PROXY_CERT_DIR = '/home/exampleUser/.esg/proxycerts/'
+
+# Make sure this is set to False if you are deploying!
+DEBUG = True
+
+ADMINS = (
+    ('John Smith', 'jsmith@example.com'),
+)
+
+MANAGERS = ADMINS
+
+DATABASES = {
+    'default': {
+        'ENGINE':   'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME':     'uvdjango.db',                # Or path to database file if using sqlite3.
+        # The following settings are not used with sqlite3:
+        'USER':     '',
+        'PASSWORD': '',
+        'HOST':     '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT':     '',                      # Set to empty string for default.
+    }
+}
+
+# Hosts/domain names that are valid for this site; required if DEBUG is False
+# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+# Local time zone for this installation. Choices can be found here:
+# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
+# although not all choices may be available on all operating systems.
+# In a Windows environment this must be set to your system time zone.
+TIME_ZONE = 'America/Los_Angeles'
+
+# Language code for this installation. All choices can be found here:
+# http://www.i18nguy.com/unicode/language-identifiers.html
+LANGUAGE_CODE = 'en-us'
+
+# Absolute filesystem path to the directory that will hold user-uploaded files.
+# Example: "/var/www/example.com/media/"
+MEDIA_ROOT = '/var/www/uvdjango/media/'
+
+# URL that handles the media served from MEDIA_ROOT. Make sure to use a
+# trailing slash.
+# Examples: "http://example.com/media/", "http://media.example.com/"
+MEDIA_URL = 'http://127.0.0.1:8000/media/'
+
+# Absolute path to the directory static files should be collected to.
+# Don't put anything in this directory yourself; store your static files
+# in apps' "static/" subdirectories and in STATICFILES_DIRS.
+# Example: "/var/www/example.com/static/"
+STATIC_ROOT = '/var/www/uvdjango/static/'
+
+# URL prefix for static files.
+# Example: "http://example.com/static/", "http://static.example.com/"
+STATIC_URL = 'http://127.0.0.1/static/'
+
+# Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+# Always use forward slashes, even on Windows.
+# Don't forget to use absolute paths, not relative paths.
+TEMPLATE_DIRS = (
+    
+)
+
+# Make this unique, and don't share it with anybody.
+# The default one is 50 characters long and looks something like this:
+# SECRET_KEY = '#ei8@wm(v8&ez6@#$%9@6)=j6^fmjq++l#v02y!fnyl9am3^a7'
+#
+# You can generate a new one on the command line like so:
+# python -c 'import random; print "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for i in range(50)])'
+SECRET_KEY = ''

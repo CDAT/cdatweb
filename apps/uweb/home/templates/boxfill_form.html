@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <a href="/logout/">Logout</a>
+    <br>
+    <h1>Box Fill</h1>
+    
+    {% if error_message %}<p><strong><font color="#ff0000">{{ error_message }}</font></strong></p>{% endif %}
+    
+    <form action="/plots/boxfill/" method="post">
+    {% csrf_token %}
+    <table border="0">
+        <tr>
+            <td>
+                <label for="latitude_from">Latitude From*:</label>
+            </td>
+            <td>
+                <input type="text" name="latitude_from" id="latitude_from" value="-90"/><br/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="latitude_to">Latitude To*:</label>
+            </td>
+            <td>
+                <input type="text" name="latitude_to" id="latitude_to" value="90"/><br/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="longitude_from">Longitude From*:</label>
+            </td>
+            <td>
+                <input type="text" name="longitude_from" id="longitude_from" value="0"/><br/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="longitude_to">Longitude To*:</label>
+            </td>
+            <td>
+                <input type="text" name="longitude_to" id="longitude_to" value="180"/><br/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="time_slice_from">Time slice from*:</label>
+            </td>
+            <td>
+                <input type="text" name="time_slice_from" id="longitude_to" value="0" /><br/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="time_slice_to">Time slice to*:</label>
+            </td>
+            <td>
+                <input type="text" name="time_slice_to" id="time_slice_to" value="1" /><br/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="file">File:</label>
+            </td>
+            <td>
+                <input type="text" name="file" id="file" style="width: 1600px; background-color: white"; value="http://pcmdi9.llnl.gov/thredds/dodsC/cmip5.output1.INM.inmcm4.1pctCO2.mon.atmos.Amon.r1i1p1.cl.20130207.aggregation.1"/><font size="1"> Hint: <br/>/export/fedorthurman1/uvcdat/2012-02-20/sample_data/clt.nc
+               <br/> http://esgdata1.nccs.nasa.gov/thredds/dodsC/ana4MIPs/reanalysis/NOAA-NCEP/CFSR/mon/ocean/thetao/thetao_Omon_reanalysis_CFSR_198301-198312.nc.html?openid=https://pcmdi9.llnl.gov/esgf-idp/openid/fedorthurman1<br/></font>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="var">Var:</label>
+            </td>
+            <td>
+                <input type="text" name="var" id="var" value="cl" /><font size="1"> Hint: clt</font><br/>
+            </td>
+        </tr>
+    </table>
+    <font size="1">* = Required</font><br/>
+    <input type="submit" value="Get boxfill"/>
+    </form>
+</html>

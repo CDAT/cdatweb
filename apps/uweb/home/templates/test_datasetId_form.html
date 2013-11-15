@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" src="{{STATIC_URL}}css/plot.css" type="text/css"/>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#submit").click(function make_url(){
+            datasets=document.getElementById('datasetIds').value; 
+            $.ajax({url:"http://emily.llnl.gov:8000/plots/workbench?datasetIds="+datasets,type:"POST",
+                success:function(){}});
+        });
+    });
+</script>
+<body>
+    <a href="/logout/">Logout</a>
+    <br>
+    <h1>Box Fill</h1>
+    
+    {% if error_message %}<p><strong><font color="#ff0000">{{ error_message }}</font></strong></p>{% endif %}
+    
+    {% csrf_token %}
+    <table border="0">
+        <tr>
+            <td>
+                <label for="datasetIds">Dataset IDs:</label>
+            </td>
+            <td>
+                <input type="text" name="datasetIds" id="datasetIds" value="cmip5.output1.INM.inmcm4.1pctCO2.day.atmos.day.r1i1p1.v20110323|pcmdi9.llnl.gov,cmip5.output1.INM.inmcm4.1pctCO2.day.ocean.day.r1i1p1.v20110323:pcmdi9.llnl.gov" style="width: 1600px; background-color: white";/><font size="1">
+            </td>
+        </tr>
+    </table>
+    <input id="submit" type="submit" value="GO"/>
+</body></html>
