@@ -46,8 +46,9 @@ class ESGF_Auth_Backend:
         # if we make it here, the username and password were good
         # output .httprc file if .httprc is not found
         try:
-            cdms2.setHttprcDirectory(cert_path)
-            filepath=os.path.join(settings.PROXY_CERT_DIR,username,".daprc")
+            #cdms2.setHttprcDirectory(cert_path)
+            homepath=os.environ['HOME']
+            filepath=os.path.join(homepath,".daprc")
             if not os.path.exists(filepath):
                 dodsrc_cache_root=os.path.join(cert_path,".dods_cache")
                 dodsrc_curl_ssl_certificate=os.path.join(cert_path,"%s.pem"%username)
@@ -74,6 +75,7 @@ class ESGF_Auth_Backend:
                 flock(outfile, LOCK_UN)
                 outfile.close()
         except Exception as e:
+            print e
             print "Unable to locate .daprc\n"
             return None
         # if we make it here, the username and password were good
