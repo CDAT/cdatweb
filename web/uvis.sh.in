@@ -19,9 +19,15 @@ common_content=$data/content
 app_data=$data/apps/@APPLICATION@
 app_content=$app_data/content
 script=$app_data/bin/@SERVER_PYTHON_SCRIPT@
+django_script=$app_data/bin/manage.py
+
+# For django
+PYTHONPATH=$app_data:$PYTHONPATH
 
 exec pvpython $script \
   --port ${PORT:-8080} \
   --content $common_content \
   --app-content $app_content \
-  "$@"
+  "$@" &
+
+exec python $django_script runserver 8000 &
