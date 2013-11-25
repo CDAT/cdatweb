@@ -13,6 +13,7 @@ uvis_install_directories_with_prefix(
   esgf_auth_backend
   home
   login
+  util  
   uvdjango
   TARGET ${PROJECT_NAME}-webContentDirectories
   DESTINATION share/uvis/www/apps/${PROJECT_NAME}
