@@ -113,7 +113,6 @@ TEMPLATE_LOADERS = (
 AUTHENTICATION_BACKENDS = ('esgf_auth_backend.backends.ESGF_Auth_Backend',)
 
 MIDDLEWARE_CLASSES = (
-    'middleware.middleware.XsSharing',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
