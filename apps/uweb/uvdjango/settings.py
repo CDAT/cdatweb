@@ -12,13 +12,13 @@
 # it from this file and make ALL changes in local_settings.py
 #
 ################################################################################
-
+import os
 
 ESGF_HOST = 'pcmdi9.llnl.gov'
 ESGF_PORT = 7512
-PROXY_CERT_DIR = '/uvdjango/proxycerts/'
+PROXY_CERT_DIR = os.environ['HOME'] + '/'
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (

@@ -161,6 +161,10 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
         self._initRender = True
         return reply
 
+    @exportRpc("is_initRender")
+    def is_initRender(self):
+        return self._initRender 
+
     @exportRpc("stillRender")
     def stillRender(self, options):
         self.f=cdms2.open(self._netcdfFile)
