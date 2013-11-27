@@ -137,7 +137,7 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
             SX = slice(*X.mapInterval((L,L,"cob")))
             l = ((cursorY-dy1)/(dy2-dy1)*(Y2-Y1))+Y1
             SY = slice(*Y.mapInterval((l,l,"cob")))
-            return data[...,SY,SX]
+            return data[...,SY,SX].flat[0]
         else:
           return ""
 
