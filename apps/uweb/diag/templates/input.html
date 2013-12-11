@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	<meta charset="ISO-8859-1">
+	<title>Diagnostics: Submit Task</title>
+	<link rel="stylesheet" href="{{STATIC_URL}}ext/widgets/jquery-ui/jquery-ui-1.10.0.css" type='text/css'>
+	<link rel="stylesheet" href="{{STATIC_URL}}css/plot.css" type="text/css" >
+        <link rel='stylesheet' href='{{STATIC_URL}}css/main.css' type='text/css'>
+
+        <script src="{{STATIC_URL}}ext/js-core/autobahn.min.js"></script>
+        <script src="{{STATIC_URL}}ext/js-core/jquery-1.8.3.min.js"></script>
+        <script src="{{STATIC_URL}}ext/js-core/gl-matrix-min.js"></script>
+        <script src="{{STATIC_URL}}ext/js-core/jquery.hammer.min.js"></script>
+
+        <script src="{{STATIC_URL}}ext/widgets/jscolor/jscolor.js"></script>
+        <script src="{{STATIC_URL}}ext/widgets/jquery-ui/jquery-ui-1.10.0.min.js"></script>
+
+        <script src="{{STATIC_URL}}lib/js/vtkweb-all.js"></script>
+    </head>
+    <body>
+        
+	<select id="plot_obs">
+            <option value="NCEP">NCEP</option>
+        </select>
+        <select id="plot_package">
+            <option value=""></option>
+	    <option value="AMWG">AMWG</option>
+        </select>
+	<select id="plot_seasons" style="display:none;">
+	</select>
+	<select id="plot_variables" style="display:none;">
+	</select>
+	<select id="plot_aux_options" style="display:none;">
+	</select>
+
+	<button id="submit" onclick="start()">Submit</button>
+
+
+        <script type="text/javascript">
+            $("#plot_package").change(function()
+            {
+                var plot_package=$("plot_package option:selected").val();
+                $.ajax({"url":"http://emily.llnl.gov:8000/diag/api/get_plot_set",
+                    data:{"plot_package":plot_package},
+                    type:'GET',
+                    datatype:'json',
+                    success: function(data){
+                        alert(data);
+                        seasons=data["season_list"];
+                        $("#plot_seasons").empty();
+                        $("#plot_seasons").show();
+                        for (var i=0; i < seasons.length;i++)
+                        {
+                            $("#plot_seasons").append(new Option(seasons[i],seasons[i]));
+                        }
+                    },
+                    error: function(){alert('ERROR: unable to get plot set.');}
+
+                });
+            };
+
+
+        </script>
+    </body>
+</html>
