@@ -4,6 +4,10 @@ from django.views.generic import DetailView, ListView
 urlpatterns = patterns('home.views',
         # /
         url(r'^test', 'testing'),
+        url(r'^batch', 'diag_batch'),
+        url(r'^home', 'diag_home'),
+        url(r'^variable', 'get_variable'),
+        url(r'^esgf', 'esgf_search'),
         url(r'^download', 'downloadFile'),
         url(r'^datacart', 'make_datasetId_form'),
         url(r'^workbench', 'run_main_window'),

@@ -5,9 +5,8 @@ from django.http import Http404,HttpResponse,HttpResponseRedirect
 import utils
 from django.shortcuts import render, get_object_or_404,render_to_response
 from metrics.frontend.uvcdat import *
-
-def submit_job(request):
-    return render(request, "input.html")
+import json
+from util.plots import save_plot as save_plot
 
 def get_plot_package(request):
     packageList=diagnostics_menu().keys()
@@ -96,7 +95,28 @@ def load_output(request, task_id):
     f = open(os.environ['HOME'] + '/tmp/diagout/' + task_id)
     output = f.readlines()
     f.close()
-    obj={'json_list':output}
+    mylines = json.loads(output[0]);
+    total=mylines.__len__()
+    dict_list=[]
+    
+    output_parent_path="/export/leung25/git/uvdjango/media"
+    output_path=os.path.join(output_parent_path,task_id)
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+
+    for i in range(0,total):
+        mydict={'title':'','png':''}
+        title=mylines[i]['title']
+
+        mydict['title']=title
+        outfile=os.path.join(output_path,title.replace(' ', '_'))+'.png'
+        jsn = json.loads(mylines[i]['vars'])[0]
+        s2 = cdms2.createVariable(jsn,fromJSON=True)
+        save_plot(s2,outfile)
+        mydict['png']='/media'+ outfile.split('media')[1]
+        dict_list.append(mydict)
+        
+    obj={'output_list':dict_list}
     json_res=simplejson.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 

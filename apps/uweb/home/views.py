@@ -8,7 +8,11 @@ from util.plots import getVar as get_var
 from util.file_handler import download_file as download_file
 from util.calculator import eval_cdat_cmd as eval_cdat
 from util.esgf_connector import datasetId_to_html_list as datasetId2htmllist
+#from util.esgf import *
 
+#import proof_of_concept
+
+from esgf_auth_backend.query import query as esgf_query
 
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.models import User
@@ -24,6 +28,15 @@ if not settings.configured:
 
 import tempfile,zipfile
 import vcs
+
+
+def diag_batch(request):
+    #image_dir=request.POST['directory']
+    return render(request, "diag_carousel.html")
+
+def diag_home(request):
+    #image_dir=request.POST['directory']
+    return render(request, "home.html")
 
 def testing(request):
     return render(request, "test.html")
@@ -123,6 +136,13 @@ def boxfill(request):
                 'png': plot_filename,
             })
 
+def esgf_search(request):
+    search_str=request.GET['search_str']
+    obj={"res":esgf_query("pcmdi9.llnl.gov",search_str)}
+    #obj={"res":[{"fileID":"fileID1","url":"url1"},{"fileID":"fileID2","url":"url2"}]}
+    json_res=simplejson.dumps(obj)
+    return HttpResponse(json_res, content_type="application/json")
+    
 def make_boxfill(request):
     if not request.user.is_authenticated():
         # send them to the login page, with a ?redir= on the end pointing back to this page
@@ -145,15 +165,22 @@ def make_boxfill(request):
             json_res=simplejson.dumps(obj) 
         return HttpResponse(json_res, content_type="application/json")
 
+def get_variable(request):
+    myfile=request.GET['file']
+    varlist=get_var(myfile)
+    obj={"variable":varlist}
+    json_res=simplejson.dumps(obj) 
+    return HttpResponse(json_res, content_type="application/json")
+
 
 def make_main_window(request,json_param=None):
     if not request.user.is_authenticated():
         # send them to the login page, with a ?redir= on the end pointing back to this page
         return HttpResponseRedirect(reverse('login:login') + "?" + urlencode({'redir':reverse('home.views.make_main_window')}))
     else:
-        if request.GET:
-            return render(request, 'testplot_form.html', { })
-        else:
+        #if request.GET:
+           #return render(request, 'testplot_form.html', { })
+        #else:
             #if not json_param:
             #    print "testing through form (no link from ESGF yet)"
             n="-90"
@@ -162,7 +189,7 @@ def make_main_window(request,json_param=None):
             w="180"
 
             try:
-                myfile=request.POST['file']
+                #myfile=request.POST['file']
                 lev1=None
                 lev2=None
                 if 'lev1' in request.POST:
@@ -180,7 +207,7 @@ def make_main_window(request,json_param=None):
                 'longitude':(0,180),
                 'time':slice(0,1)
             }
-               
+            myfile = "http://pcmdi9.llnl.gov/thredds/dodsC/cmip5.output1.INM.inmcm4.1pctCO2.mon.atmos.Amon.r1i1p1.cl.20130207.aggregation.1"
             # tell curl what certificate to use
             #TODO: sanitize request.user.name!
             active_cert = settings.PROXY_CERT_DIR + request.user.username + '.pem'

@@ -1,0 +1,296 @@
+<html>
+    <title>Diagnostics</title>
+    <link rel="stylesheet" href="{{STATIC_URL}}lib/css/bootstrap.min.css"/>
+    <script src="{{STATIC_URL}}ext/js-core/jquery-1.8.3.min.js"></script>
+    <script src="{{STATIC_URL}}lib/js/bootstrap.min.js"></script>
+<body>
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="http://uvcdat.llnl.gov">UV-CDAT Live</a>
+        </div>
+        <div>
+            <p class="navbar-text navbar-right"> 
+            <a href="#" class="navbar-link">448000</a>&nbsp;|
+            <a href="#" class="navbar-link">Logout</a>
+            </p>
+        </div>
+    </nav>
+    <div class="row">
+        <div class="col-md-2" id="Left">
+            <ul class="nav nav-tabs" id=projectTab>
+                <li class=active> <a href="#Project1" data-toggle="tab">Project1</a></li>
+                <li> <a href="#Sheet2" data-toggle="tab">+</a></li>
+            </ul>
+            <div class="tab-pane active" id="Project1">
+                <div class=row>
+                    <div class="col-md-12" id="Project1Div" style="height:800px;box-shadow: 0 0 2px grey">
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <div class="col-md-7" id="Center">
+            <ul class="nav nav-tabs" id=sheetTab>
+                <li class=active> <a href="#Sheet1" data-toggle="tab">Sheet1</a></li>
+                <li> <a href="#Sheet2" data-toggle="tab">+</a></li>
+            </ul>
+            <div class="tab-pane active" id="Sheet1">
+                <div class=row>
+                    <div class="col-md-6" id="Sheet1Canvas1" style="height:400px;box-shadow: 0 0 2px grey">
+                    </div>
+                    <div class="col-md-6" id="Sheet1Canvas2" style="height:400px;box-shadow: 0 0 2px grey">
+                    </div>
+                </div>
+                <div class=row>
+                    <div class="col-md-6" id="Sheet1Canvas3" style="height:400px;box-shadow: 0 0 2px grey">
+                    </div>
+                    <div class="col-md-6" id="Sheet1Canvas4" style="height:400px;box-shadow: 0 0 2px grey">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3" id="Right">
+            <ul class="nav nav-tabs" id=diagTab>
+                <li> <a href="#Variables" data-toggle="tab">Variables</a></li>
+                <li class=active> <a href="#Diagnostic" data-toggle="tab">Diagnostic</a></li>
+                <li> <a href="#ESGF" data-toggle="tab">ESGF</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane" id="Variables"></div>
+
+                <div class="tab-pane active" id="Diagnostic">
+                    <div class="panel-group" id="diagAccordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#diagAccordion" href="#diagCollapseOne">Submit a Job</a>
+                                </div>
+                            </div>
+                            <div id="diagCollapseOne" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                <form class="form-horizontal" role="form">
+                                    <div class="form-group">
+                                        <br>
+                                        <label for="inputPackage" class="col-sm-2 control-label">Package</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" id="inputPackage">
+                                                    <option value="AMWG"></option>
+                                                    <option value="AMWG">AMWG</option>
+                                                </select>
+                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPlotSet" class="col-sm-2 control-label">Set</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" id="inputPlotSet">
+                                                </select>
+                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputSeason" class="col-sm-2 control-label">Season</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" id="inputSeason">
+                                                </select>
+                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputVariable" class="col-sm-2 control-label">Variable</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" id="inputVariable">
+                                                </select>
+                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputAux" class="col-sm-2 control-label">Auxiliary</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" id="inputAux">
+                                                </select>
+                                            </div>
+                                    </div>
+                                   <div class="form-group">
+                                       <div class="col-sm-offset-2 col-md-2">
+                                           <button type="submit" class="btn btn-default" id="diagSubmitJob">Submit</button>
+                                       </div>
+                                   </div>
+                                </form>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#diagAccordion" href="#diagCollapseTwo">Results</a>
+                                </div>
+                            </div>
+                            <div id="diagCollapseTwo" class="panel-collapse collapse">
+                                <table id = resultTable>
+                                </table>
+                            </div>
+                        </div>
+                </div>
+                
+                <div class="tab-pane" id="ESGF"></div>
+        </div>
+    </div>
+</div>
+    <script>
+
+        function toggle(task_id){
+            myDiv = document.getElementById(task_id);
+
+            if (myDiv.style.display=='none')
+            {
+                myDiv.style.display='block';
+                if (!myDiv.hasChildNodes())
+                {
+                    $.ajax({url: 'http://emily.llnl.gov:8000/diag/api/load_output/'+task_id+'/',
+                        data:{},
+                        type: 'GET',
+                        success: function(data){
+                            myList = data['output_list'];
+                            inner_html='';
+                            for (var i = 0; i < myList.length; i++)
+                            {
+                                myTitle=myList[i]['title'];
+                                inner_html+=("<h6>"+myTitle+"</h6>");
+                                myPng=myList[i]['png'];
+                                if (i==0)
+                                {
+                                    $('#Sheet1Canvas1').append("<img src=" + myPng + " style=height:400px;width=465px;>");
+                                }
+                                else if (i==1)
+                                {
+                                    $('#Sheet1Canvas2').append("<img src=" + myPng + " style=height:400px;width=465px;>");
+                                }
+                                else if (i==2)
+                                {
+                                    $('#Sheet1Canvas3').append("<img src=" + myPng + " style=height:400px;width=465px;>");
+                                }
+                                else if (i==3)
+                                {
+                                    $('#Sheet1Canvas4').append("<img src=" + myPng + " style=height:400px;width=465px;>");
+                                }
+
+                            }
+                            myDiv.innerHTML=inner_html;
+                        },
+                        error: function(){alert('ERROR: unable to load output');}
+                    });
+                }
+
+            }
+            else
+            {
+                myDiv.style.display='none';
+            }
+        }
+
+        $('#diagTab a').click(function(e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+
+        $('#diagSubmitJob').click(function(e) {
+                e.preventDefault();
+                myPlotSet=$('#inputPlotSet').val().replace(/\"/g,"");
+                myPackage=$('#inputPackage').val();
+                myVariable=$('#inputVariable').val();
+                mySeason=$('#inputSeason').val();
+                $.ajax({url:'http://emily.llnl.gov:8000/diag/api/run/',
+                    data:{'plot_package':myPackage,'plot_set':myPlotSet, 'variableID':myVariable, 'seasonID':mySeason},
+                    type:'GET',
+                    success:function(data){
+                        task_id=data['task_id'];
+                        $('#resultTable').append("<tr><td><a href=javascript:toggle("+task_id+");>"+task_id+"</a></td></tr><tr><td><div id=" + task_id+" style='display:none'></div></td></tr>");
+                    },
+                    error: function(){alert('ERROR: unable to get task id');}
+                    });
+                $('#diagCollapseTwo').collapse('show');
+        });
+
+        $('#resultTable a').click(function(e){
+            alert($(this).id);
+        });
+
+        $('#inputPackage').change(function() {
+            myPackage=$('#inputPackage').val();
+            $.ajax({url:'http://emily.llnl.gov:8000/diag/api/get_plot_set/',
+                data:{'plot_package':myPackage},
+                type:'GET',
+                success:function(data){
+                    plot_set_list=data['plot_set'];
+                    plot_set_list.sort();
+                    $('#inputPlotSet').empty();
+                    $('#inputPlotSet').append("<option value=''></option>");
+                    for (var i = 0; i< plot_set_list.length; i++)
+                    {
+                        opt=plot_set_list[i];
+                        $('#inputPlotSet').append("<option value="+'"' + opt +'"'+">"+opt+"</option>");
+                    }
+                },
+                error: function(){alert('ERROR: unable to get plot set');}
+                });
+            $.ajax({url:'http://emily.llnl.gov:8000/diag/api/get_plot_seasons/',
+                data:{'plot_package':myPackage},
+                type:'GET',
+                success:function(data){
+                    plot_seasons=data['season_list'];
+                    plot_seasons.sort();
+                    $('#inputSeason').empty();
+                    $('#inputSeason').append("<option value=''></option>");
+                    for (var i = 0; i< plot_seasons.length; i++)
+                    {
+                        opt=plot_seasons[i];
+                        $('#inputSeason').append("<option value=" + opt +">"+opt+"</option>");
+                    }
+                },
+                error: function(){alert('ERROR: unable to get plot set');}
+                });
+        });
+        $('#inputPlotSet').change(function() {
+            myPlotSet=$('#inputPlotSet').val();
+            myPackage=$('#inputPackage').val();
+            $.ajax({url:'http://emily.llnl.gov:8000/diag/api/get_plot_variable/',
+                data:{'plot_package':myPackage,'plot_set':myPlotSet},
+                type:'GET',
+                success:function(data){
+                    plot_variables=data['variables_list'];
+                    plot_variables.sort();
+                    $('#inputVariable').empty();
+                    $('#inputVariable').append("<option value=''></option>");
+                    for (var i = 0; i< plot_variables.length; i++)
+                    {
+                        opt=plot_variables[i];
+                        $('#inputVariable').append("<option value=" + opt +">"+opt+"</option>");
+                    }
+                },
+                error: function(){alert('ERROR: unable to get plot variables');}
+                });
+        });
+
+        $('#inputVariable').change(function() {
+            myPlotSet=$('#inputPlotSet').val();
+            myPackage=$('#inputPackage').val();
+            myVariable=$('#inputVariable').val();
+            $.ajax({url:'http://emily.llnl.gov:8000/diag/api/get_plot_aux_options/',
+                data:{'plot_package':myPackage,'plot_set':myPlotSet, 'plot_variable':myVariable},
+                type:'GET',
+                success:function(data){
+                    plot_aux=data['aux_list'];
+                    $('#inputAux').empty();
+                    $('#inputAux').append("<option value=''></option>");
+                    if (plot_aux != null)
+                    {
+                        for (var i = 0; i< plot_aux.length; i++)
+                        {
+                            opt=plot_aux[i];
+                            $('#inputAux').append("<option value=" + opt +">"+opt+"</option>");
+                        }
+                    };
+                },
+                error: function(){alert('ERROR: unable to get plot auxiliary');}
+                });
+        });
+
+    </script>
+</body>
+</html>
