@@ -24,6 +24,9 @@ django_script=$app_data/bin/manage.py
 # For django
 PYTHONPATH=$app_data:$PYTHONPATH
 
+# For other modules
+PYTHONPATH=$prefix/share/uvis/modules:$PYTHONPATH
+
 exec pvpython $script \
   --port ${PORT:-8080} \
   --content $common_content \
