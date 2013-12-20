@@ -12,7 +12,7 @@ urlpatterns = patterns('',
                                     {'document_root': settings.MEDIA_ROOT}),
                        (r'', include('home.urls')),
                        (r'^plots/', include('home.urls')),
-                       (r'^diags/', include('diag.urls')),
+                       (r'^diag/', include('diag.urls')),
                        (r'^login/', include('login.urls', namespace='login')),
     # Examples:
     # url(r'^$', 'uvdjango.views.home', name='home'),
