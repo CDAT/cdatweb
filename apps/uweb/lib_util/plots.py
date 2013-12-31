@@ -4,12 +4,25 @@ import os
 import sys
 import vcs
 
-from util.sanitize import sanitize_filename
+from lib_util.sanitize import sanitize_filename
 
 from django.conf import settings
 if not settings.configured:
     settings.configure()
     
+
+
+def save_plot(myVar,outfile):
+    vcs_instance=get_vcs_inst()
+    vcs_instance.plot(myVar, bg=1)
+    f=open(outfile,'w')
+    flock(f, LOCK_EX)
+    vcs_instance.png(outfile)
+    flock(f,LOCK_UN)
+    f.close()
+    return
+
+
 def getVar(in_file):
     try:
         data=cdms2.open(in_file)

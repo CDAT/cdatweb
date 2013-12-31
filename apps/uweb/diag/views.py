@@ -6,7 +6,7 @@ import utils
 from django.shortcuts import render, get_object_or_404,render_to_response
 from metrics.frontend.uvcdat import *
 import json
-from util.plots import save_plot as save_plot
+from lib_util.plots import save_plot as save_plot
 
 def get_plot_package(request):
     packageList=diagnostics_menu().keys()

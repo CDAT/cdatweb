@@ -4,7 +4,7 @@ import os
 import sys
 import tempfile,tarfile
 import subprocess
-from util.sanitize import sanitize_filename
+from lib_util.sanitize import sanitize_filename
 import time
 import cdms2
 

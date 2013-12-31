@@ -6,7 +6,7 @@
     $(document).ready(function(){
         $("#submit").click(function make_url(){
             datasets=document.getElementById('datasetIds').value; 
-            $.ajax({url:"http://emily.llnl.gov:8000/plots/workbench?datasetIds="+datasets,type:"POST",
+            $.ajax({url:"http://localhost:8000/plots/workbench?datasetIds="+datasets,type:"POST",
                 success:function(){}});
         });
     });

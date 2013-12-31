@@ -2,9 +2,9 @@ import os,sys
 import metrics.fileio.findfiles
 from metrics.diagnostic_groups import *
 import metrics.frontend.uvcdat
+tmppath=os.path.join(os.environ["HOME"],"tmp")
 def get_filetable1():
-    path1="/export/leung25/Downloads/cam_output/test.xml"
-    tmppath="/export/leung25/tmp"
+    path1=os.path.join(os.environ["HOME"],"cam_output/test.xml")
     if not os.path.exists(tmppath):
         os.makedirs(tmppath)
     datafiles = metrics.fileio.findfiles.dirtree_datafiles( path1 )
@@ -13,9 +13,8 @@ def get_filetable1():
     return filetable1
 
 def get_filetable2():
-    path2="/export/leung25/Downloads/obs_data"
+    path2=os.path.join(os.environ["HOME"],"obs_data")
     datafile2 = metrics.fileio.findfiles.dirtree_datafiles( path2)
-    tmppath="/export/leung25/tmp"
     if not os.path.exists(tmppath):
         os.makedirs(tmppath)
     filetable2=datafile2.setup_filetable(tmppath,"obs")

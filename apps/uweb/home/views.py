@@ -2,12 +2,13 @@ import fcntl
 import os
 #import pycurl
 from urllib import urlencode
+import lib_util as util
 
-from util.plots import boxfill as box_fill
-from util.plots import getVar as get_var
-from util.file_handler import download_file as download_file
-from util.calculator import eval_cdat_cmd as eval_cdat
-from util.esgf_connector import datasetId_to_html_list as datasetId2htmllist
+from lib_util.plots import boxfill as box_fill
+from lib_util.plots import getVar as get_var
+from lib_util.file_handler import download_file as download_file
+from lib_util.calculator import eval_cdat_cmd as eval_cdat
+from lib_util.esgf_connector import datasetId_to_html_list as datasetId2htmllist
 #from util.esgf import *
 
 #import proof_of_concept

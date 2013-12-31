@@ -142,7 +142,7 @@
                 myDiv.style.display='block';
                 if (!myDiv.hasChildNodes())
                 {
-                    $.ajax({url: 'http://emily.llnl.gov:8000/diag/api/load_output/'+task_id+'/',
+                    $.ajax({url: 'http://localhost:8000/diag/api/load_output/'+task_id+'/',
                         data:{},
                         type: 'GET',
                         success: function(data){
@@ -195,7 +195,7 @@
                 myPackage=$('#inputPackage').val();
                 myVariable=$('#inputVariable').val();
                 mySeason=$('#inputSeason').val();
-                $.ajax({url:'http://emily.llnl.gov:8000/diag/api/run/',
+                $.ajax({url:'http://localhost:8000/diag/api/run/',
                     data:{'plot_package':myPackage,'plot_set':myPlotSet, 'variableID':myVariable, 'seasonID':mySeason},
                     type:'GET',
                     success:function(data){
@@ -213,7 +213,7 @@
 
         $('#inputPackage').change(function() {
             myPackage=$('#inputPackage').val();
-            $.ajax({url:'http://emily.llnl.gov:8000/diag/api/get_plot_set/',
+            $.ajax({url:'http://localhost:8000/diag/api/get_plot_set/',
                 data:{'plot_package':myPackage},
                 type:'GET',
                 success:function(data){
@@ -229,7 +229,7 @@
                 },
                 error: function(){alert('ERROR: unable to get plot set');}
                 });
-            $.ajax({url:'http://emily.llnl.gov:8000/diag/api/get_plot_seasons/',
+            $.ajax({url:'http://localhost:8000/diag/api/get_plot_seasons/',
                 data:{'plot_package':myPackage},
                 type:'GET',
                 success:function(data){
@@ -249,7 +249,7 @@
         $('#inputPlotSet').change(function() {
             myPlotSet=$('#inputPlotSet').val();
             myPackage=$('#inputPackage').val();
-            $.ajax({url:'http://emily.llnl.gov:8000/diag/api/get_plot_variable/',
+            $.ajax({url:'http://localhost:8000/diag/api/get_plot_variable/',
                 data:{'plot_package':myPackage,'plot_set':myPlotSet},
                 type:'GET',
                 success:function(data){
@@ -271,7 +271,7 @@
             myPlotSet=$('#inputPlotSet').val();
             myPackage=$('#inputPackage').val();
             myVariable=$('#inputVariable').val();
-            $.ajax({url:'http://emily.llnl.gov:8000/diag/api/get_plot_aux_options/',
+            $.ajax({url:'http://localhost:8000/diag/api/get_plot_aux_options/',
                 data:{'plot_package':myPackage,'plot_set':myPlotSet, 'plot_variable':myVariable},
                 type:'GET',
                 success:function(data){
