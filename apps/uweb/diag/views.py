@@ -35,7 +35,9 @@ def get_plot_variable(request):
     diagnosticType=request.GET['plot_package']
     dg_menu=diagnostics_menu()[diagnosticType]()
     filetable1 = utils.get_filetable1()
-    filetable2 = utils.get_filetable2()
+    obs=request.GET['plot_obs']
+    filetable2=utils.get_filetable2(obs)
+    #filetable2 = utils.get_filetable2()
     diagnostics_set_name=request.GET['plot_set']
     variables=dg_menu.list_variables(filetable1,filetable2,diagnostics_set_name)
     obj={'variables_list':variables}
@@ -44,7 +46,10 @@ def get_plot_variable(request):
 
 def get_plot_aux_options(request):
     filetable1 = utils.get_filetable1()
-    filetable2 = utils.get_filetable2()
+    obs=request.GET['plot_obs']
+    filetable2=utils.get_filetable2(obs)
+     
+    #filetable2 = utils.get_filetable2()
     diagnosticType=request.GET['plot_package']
     diagnostics_set_name=request.GET['plot_set']
     dg_menu=diagnostics_menu()[diagnosticType]()
@@ -60,7 +65,8 @@ def get_plot_aux_options(request):
     return HttpResponse(json_res, content_type="application/json")
 
 def get_plot_obs(request):
-    obj={'observation_list':'NCEP'}
+    obs_list=utils.get_observations()
+    obj={'observation_list':obs_list}
     json_res=simplejson.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 
@@ -69,8 +75,10 @@ def run(request):
     plot_set_name=request.GET['plot_set']
     seasonID=request.GET['seasonID']
     variableID=request.GET['variableID']
+    obs=request.GET['plot_obs']
+    filetable2=utils.get_filetable2(obs)
 
-    sclass,filetable1,filetable2,varid,seasonid=utils.get_input_parameter(diagnosticType,plot_set_name,seasonID,variableID)
+    sclass,filetable1,filetable2,varid,seasonid=utils.get_input_parameter(diagnosticType,plot_set_name,seasonID,variableID,obs)
     task_id=plotdata_run(sclass,filetable1,filetable2,str(varid),seasonid)
     obj={'task_id':str(task_id)}
     print obj

@@ -79,6 +79,13 @@
                                             </div>
                                     </div>
                                     <div class="form-group">
+                                        <label for="inputObs" class="col-sm-2 control-label">Obs</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" id="inputObs">
+                                                </select>
+                                            </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="inputPlotSet" class="col-sm-2 control-label">Set</label>
                                             <div class="col-sm-9">
                                                 <select class="form-control" id="inputPlotSet">
@@ -212,6 +219,26 @@
         });
 
         $('#inputPackage').change(function() {
+            $.ajax({url:'http://localhost:8000/diag/api/get_plot_obs/',
+                data:{},
+                type:'GET',
+                success:function(data){
+                    plot_obs_list=data['observation_list'];
+                    plot_obs_list.sort();
+                    $('#inputObs').empty();
+                    $('#inputObs').append("<option value=''></option>");
+                    for (var i = 0; i< plot_obs_list.length; i++)
+                    {
+                        opt=plot_obs_list[i];
+                        if (opt=="NCEP")
+                        {
+                            $('#inputObs').append("<option value="+'"' + opt +'"'+" selected>"+opt+"</option>");
+                        };
+                        $('#inputObs').append("<option value="+'"' + opt +'"'+">"+opt+"</option>");
+                    }
+                },
+                error: function(){alert('ERROR: unable to get plot observations');}
+                });
             myPackage=$('#inputPackage').val();
             $.ajax({url:'http://localhost:8000/diag/api/get_plot_set/',
                 data:{'plot_package':myPackage},
@@ -249,8 +276,9 @@
         $('#inputPlotSet').change(function() {
             myPlotSet=$('#inputPlotSet').val();
             myPackage=$('#inputPackage').val();
+            myObs=$('#inputObs').val();
             $.ajax({url:'http://localhost:8000/diag/api/get_plot_variable/',
-                data:{'plot_package':myPackage,'plot_set':myPlotSet},
+                data:{'plot_package':myPackage,'plot_set':myPlotSet,'plot_obs':myObs},
                 type:'GET',
                 success:function(data){
                     plot_variables=data['variables_list'];
@@ -271,8 +299,9 @@
             myPlotSet=$('#inputPlotSet').val();
             myPackage=$('#inputPackage').val();
             myVariable=$('#inputVariable').val();
+            myObs=$('#inputObs').val();
             $.ajax({url:'http://localhost:8000/diag/api/get_plot_aux_options/',
-                data:{'plot_package':myPackage,'plot_set':myPlotSet, 'plot_variable':myVariable},
+                data:{'plot_package':myPackage,'plot_set':myPlotSet, 'plot_variable':myVariable,'plot_obs':myObs},
                 type:'GET',
                 success:function(data){
                     plot_aux=data['aux_list'];

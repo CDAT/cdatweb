@@ -17,6 +17,8 @@ import os
 ESGF_HOST = 'pcmdi9.llnl.gov'
 ESGF_PORT = 7512
 PROXY_CERT_DIR = os.environ['HOME'] + '/'
+DIAG_MODEL_PATH = os.environ['HOME'] + '/cam_output'
+DIAG_OBS_PATH = os.environ['HOME'] + '/obs_data'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
