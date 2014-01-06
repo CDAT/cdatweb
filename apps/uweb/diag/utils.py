@@ -23,6 +23,22 @@ class ObsMenu(object):
         datafile2 = metrics.fileio.findfiles.dirtree_datafiles( path2)
         self.obs_menu=datafile2.check_filespec()
 
+class TaskTracker(object):
+    __metaclass__ = SingletonType
+
+    def __init__(self):
+        self.task_dict={}
+
+    def add_task(self,taskID,task):
+        self.task_dict[taskID]=task
+    def del_task(self,taskID):
+        if taskID in self.task_dict:
+            del self.task_dict[taskID]
+    def get_task(self,taskID):
+        if taskID in self.task_dict:
+            return self.task_dict[taskID]
+        return None
+
 def get_filetable1():
     path1=settings.DIAG_MODEL_PATH
     if not os.path.exists(tmppath):

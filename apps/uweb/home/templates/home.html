@@ -202,12 +202,14 @@
                 myPackage=$('#inputPackage').val();
                 myVariable=$('#inputVariable').val();
                 mySeason=$('#inputSeason').val();
+                myObs=$('#inputObs').val();
+                
                 $.ajax({url:'http://localhost:8000/diag/api/run/',
-                    data:{'plot_package':myPackage,'plot_set':myPlotSet, 'variableID':myVariable, 'seasonID':mySeason},
+                    data:{'plot_package':myPackage,'plot_set':myPlotSet, 'variableID':myVariable, 'seasonID':mySeason, 'plot_obs':myObs},
                     type:'GET',
                     success:function(data){
                         task_id=data['task_id'];
-                        $('#resultTable').append("<tr><td><a href=javascript:toggle("+task_id+");>"+task_id+"</a></td></tr><tr><td><div id=" + task_id+" style='display:none'></div></td></tr>");
+                        $('#resultTable').append("<tr><td><a href=javascript:toggle("+task_id+");>"+task_id+"</a></td><td>&nbsp;<div id=progress"+task_id+ " class='progress progress-striped active'><div class='progress-bar'  role='progressbar' aria-valuenow=45 aria-valuemin=0 aria-valuemax=100 style='width: 40px'></div></div></td></tr><tr><td><div id=" + task_id+" style='display:none'></div></td></tr>");
                     },
                     error: function(){alert('ERROR: unable to get task id');}
                     });

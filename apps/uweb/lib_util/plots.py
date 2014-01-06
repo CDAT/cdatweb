@@ -9,11 +9,21 @@ from lib_util.sanitize import sanitize_filename
 from django.conf import settings
 if not settings.configured:
     settings.configure()
-    
 
+vcs_inst=None
 
-def save_plot(myVar,outfile):
+def get_vcs_inst():
+    global vcs_inst
+    if not vcs_inst:
+        vcs_inst=vcs.init()
+    return vcs_inst
+
+def save_plot(myVar,outfile,fromJson=False):
     vcs_instance=get_vcs_inst()
+    if fromJson:
+       myVar=cdms2.createVariable(myVar,fromJSON=True)
+    print vcs_instance
+    print myVar.info()
     vcs_instance.plot(myVar, bg=1)
     f=open(outfile,'w')
     flock(f, LOCK_EX)
@@ -21,7 +31,6 @@ def save_plot(myVar,outfile):
     flock(f,LOCK_UN)
     f.close()
     return
-
 
 def getVar(in_file):
     try:
