@@ -196,6 +196,25 @@
             $(this).tab('show');
         });
 
+        function updateLoop(task_id) {
+            $.ajax({url:'http://localhost:8000/diag/api/get_status/'+task_id+'/', data:{},type:'GET',
+                success: function(data1){
+                    myStatus=data1['status'];
+                    if (myStatus=='0')
+                    {
+                                    $("#progress"+task_id).remove();
+                                    toggle(task_id);  
+                    }
+                    else
+                    {
+                                    setTimeout(updateLoop(task_id),1000);
+                    }
+                },
+                error: function(){alert('ERROR in progress bar update');}});
+        }
+
+
+
         $('#diagSubmitJob').click(function(e) {
                 e.preventDefault();
                 myPlotSet=$('#inputPlotSet').val().replace(/\"/g,"");
@@ -210,6 +229,25 @@
                     success:function(data){
                         task_id=data['task_id'];
                         $('#resultTable').append("<tr><td><a href=javascript:toggle("+task_id+");>"+task_id+"</a></td><td>&nbsp;<div id=progress"+task_id+ " class='progress progress-striped active'><div class='progress-bar'  role='progressbar' aria-valuenow=45 aria-valuemin=0 aria-valuemax=100 style='width: 40px'></div></div></td></tr><tr><td><div id=" + task_id+" style='display:none'></div></td></tr>");
+                        updateLoop(task_id);
+                        /*
+                        (function updateLoop(){
+                            $.ajax({url:'http://localhost:8000/diag/api/get_status/'+task_id+'/', data:{},type:'GET',
+                            success: function(data1){
+                                myStatus=data1['status'];
+                                if (myStatus=='0')
+                                {
+                                    $("#progress"+task_id).remove();
+                                    toggle(task_id);  
+                                }
+                                else
+                                {
+                                    setTimeout(updateLoop,1000);
+                                }
+                            },
+                            error: function(){alert('ERROR in progress bar update');}});
+                        })();
+                        */
                     },
                     error: function(){alert('ERROR: unable to get task id');}
                     });

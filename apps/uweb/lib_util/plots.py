@@ -22,8 +22,6 @@ def save_plot(myVar,outfile,fromJson=False):
     vcs_instance=get_vcs_inst()
     if fromJson:
        myVar=cdms2.createVariable(myVar,fromJSON=True)
-    print vcs_instance
-    print myVar.info()
     vcs_instance.plot(myVar, bg=1)
     f=open(outfile,'w')
     flock(f, LOCK_EX)

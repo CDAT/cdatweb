@@ -7,6 +7,8 @@ from django.conf import settings
 
 tmppath=os.path.join(os.environ["HOME"],"tmp")
 
+import threading
+
 class SingletonType(type):
     def __call__(cls, *args, **kwargs):
         try:

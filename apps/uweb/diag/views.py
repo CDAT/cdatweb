@@ -8,6 +8,7 @@ from metrics.frontend.uvcdat import *
 import json
 from lib_util.plots import save_plot as save_plot
 from django.conf import settings
+import time
 
 def get_plot_package(request):
     packageList=diagnostics_menu().keys()
@@ -71,23 +72,31 @@ def get_plot_obs(request):
     json_res=simplejson.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 
-def run(request):
-    diagnosticType=request.GET['plot_package']
-    plot_set_name=request.GET['plot_set']
-    seasonID=request.GET['seasonID']
-    variableID=request.GET['variableID']
-    obs=request.GET['plot_obs']
-    filetable2=utils.get_filetable2(obs)
+def run_elo(request):
+    #diagnosticType=request.GET['plot_package']
+    #plot_set_name=request.GET['plot_set']
+    #seasonID=request.GET['seasonID']
+    #variableID=request.GET['variableID']
+    #obs=request.GET['plot_obs']
+    #filetable2=utils.get_filetable2(obs)
 
-    sclass,filetable1,filetable2,varid,seasonid=utils.get_input_parameter(diagnosticType,plot_set_name,seasonID,variableID,obs)
-    task=plotdata_run(sclass,filetable1,filetable2,str(varid),seasonid)
-    pid = task.pid
-    utils.TaskTracker().add_task(pid,task)
-    obj={'task_id':str(pid)}
-    print obj
-    json_res=simplejson.dumps(obj)
-    return HttpResponse(json_res, content_type="application/json")
-    #return HttpResponse("bla")
+    #sclass,filetable1,filetable2,varid,seasonid=utils.get_input_parameter(diagnosticType,plot_set_name,seasonID,variableID,obs)
+    #outputPath=settings.DIAG_MEDIA
+    #taskID = str(time.time())
+    #taskID=str(1)
+    #output_parent_path=settings.DIAG_MEDIA
+    #output_path=os.path.join(output_parent_path,taskID)
+    #if not os.path.exists(output_path):
+    #    os.makedirs(output_path)
+    #pid=plotdata_run(sclass,filetable1,filetable2,str(varid),seasonid, outputPath, taskID)
+    #pid=1
+    #obj={'task_id':str(pid)}
+    #task_tracker=utils.TaskTracker()
+    #task_tracker.add_task(pid,output_path)
+    #json_res=simplejson.dumps(obj)
+    
+    #return HttpResponse(json_res, content_type="application/json")
+    return HttpResponse('blah')
 
 def get_status(request,taskID):
     task_id=int(taskID)
@@ -106,36 +115,45 @@ def get_status(request,taskID):
 
 def load_output(request, taskID):
     task_id=int(taskID)
-    task=utils.TaskTracker().get_task(task_id)
-    results=plotdata_results(task)
-    #results = [1,[cdms2.MV2.array(numpy.random.random((64,128))),None]]
-    total=len(results)#.__len__()
+    #outfile=utils.TaskTracker().get_task(task_id)
+    #look for the output file that ends in diagoutput
     """
-    f = open(os.environ['HOME'] + '/tmp/diagout/' + task_id)
+    filelist=os.listdir(outfile)
+    outfilename=None
+    for filename in filelist:
+        if filename.endswith('.diagoutput'):
+            outfilename=filename
+            break
+    """
+    #f = open(os.path.join(outfile,outfilename))
+    f = open("/export/leung25/uvis/apps/uweb/media/diag/1/1389223541.14.diagoutput")
     output = f.readlines()
     f.close()
-    mylines = json.loads(output[0]);
-    total=mylines.__len__()
-    """
+    total=len(output)
+    
     dict_list=[] 
     output_parent_path=settings.DIAG_MEDIA
     output_path=os.path.join(output_parent_path,taskID)
     if not os.path.exists(output_path):
         os.makedirs(output_path)
 
-    for i in range(1,total):
-        #mydict={'title':'','png':''}
-        #title=results[i].title
-        #mydict['title']=title
-        title="11"
+    for i in range(0,total):
+        mydict={'title':'','png':''}
+        myline=json.loads(output[i])
+        title=myline['title']
+        mydict['title']=title
         outfile=os.path.join(output_path,title.replace(' ', '_'))+'.png'
-        #jsn = json.loads(mylines[i]['vars'])[0]
-        #s2 = cdms2.createVariable(jsn,fromJSON=True)
+
+        jsn = json.loads(myline['vars'])[0]
+        s2 = cdms2.createVariable(jsn,fromJSON=True)
         #save_plot(s2,outfile)
-        myVar = results[i].vars[0]
-        #myVar = results[i][0]
-        #myVar = open('/export/leung25/myVar.txt').read()
-        save_plot(myVar,outfile,fromJson=True)
+        print 'init vcs'
+        x = vcs.init()
+        print 'plotting'
+        x.plot(s2,bg=1)
+        print 'pnging'
+        x.png(outfile)
+        print 'retuirning'
         mydict['png']='/media'+ outfile.split('media')[1]
         dict_list.append(mydict)
         
