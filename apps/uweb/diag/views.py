@@ -89,14 +89,14 @@ def run_elo(request):
     #if not os.path.exists(output_path):
     #    os.makedirs(output_path)
     #pid=plotdata_run(sclass,filetable1,filetable2,str(varid),seasonid, outputPath, taskID)
-    #pid=1
-    #obj={'task_id':str(pid)}
+    pid=1
+    obj={'task_id':str(pid)}
     #task_tracker=utils.TaskTracker()
     #task_tracker.add_task(pid,output_path)
-    #json_res=simplejson.dumps(obj)
+    json_res=simplejson.dumps(obj)
     
-    #return HttpResponse(json_res, content_type="application/json")
-    return HttpResponse('blah')
+    return HttpResponse(json_res, content_type="application/json")
+    #return HttpResponse('blah')
 
 def get_status(request,taskID):
     task_id=int(taskID)
@@ -160,4 +160,3 @@ def load_output(request, taskID):
     obj={'output_list':dict_list}
     json_res=simplejson.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
-

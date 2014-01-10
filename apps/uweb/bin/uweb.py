@@ -46,6 +46,7 @@ import base64
 import vcs
 import cdms2
 import MV2
+import json
 
 # import paraview modules.
 from vtk.web import wamp
@@ -77,7 +78,8 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
         self.f = None
         self.image_width=864.0
         self.image_height=646.0
-
+    
+    @exportRpc("setFileName")
     def setFileName(self, filename):
         self._netcdfFile = filename
 
@@ -165,13 +167,80 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
     def is_initRender(self):
         return self._initRender 
 
-    @exportRpc("stillRender")
-    def stillRender(self, options):
+    def diagRender(self, filename):
+        print "called diagRender"
+        print "open netCDF"
+        self._netcdfFile="/export/leung25/Downloads/clt.nc"
+        self._variable="clt"
         self.f=cdms2.open(self._netcdfFile)
         data = self.f(self._variable)
         self._canvas.clear()
-        d = self._canvas.plot(data,self._plotTemplate,self._plotType,bg=1)
+        d = self._canvas.plot(data,self._plotTemplate,"boxfill",bg=1)
         png = d._repr_png_()
+        """
+        f=open(filename,'r')
+        lines=f.readlines()
+        f.close()
+        total=len(lines)
+        print "JSON loading"
+        try:
+            myline=json.loads(lines[0])
+        except Exception as e:
+            print e
+        print "JSON loading variable"
+        jsn=json.loads(myline['vars'])[0]
+        print "create variable"
+        s2=cdms2.createVariable(jsn,fromJSON=True)
+        print s2
+        print "plotting"
+        d=self._canvas.plot(s2,bg=1)
+        print d[:160]
+        print "_repr_png_()"
+        png=d._repr_png_()
+        """
+        """
+        for i in range(0, total):
+            myline=json.loads(lines[i])
+            jsn=json.loads(myline['vars'])[0]
+            s2=cdms2.createVariable(jsn,fromJSON=True)
+            d=self._canvas.plot(s2,bg=1)
+            png=d._repr_png_()
+        """
+        png = base64.b64encode(png)
+        print png[:160]
+        reply = {}
+        if not self._initRender:
+            return reply
+        import datetime
+        reply['image'] = png
+        reply['state'] = True
+        reply['mtime'] = datetime.datetime.now().time().microsecond
+        reply['size'] = [864, 646]
+        reply['format'] = "png;base64"
+        reply['global_id'] = ""
+        reply['localTime'] = ""
+        reply['workTime'] = ""
+        print reply
+        return reply
+
+
+    @exportRpc("stillRender")
+    def stillRender(self, options):
+        print self._netcdfFile
+        print "called stillRender"
+        if self._netcdfFile.endswith(".diagoutput"):
+            reply = self.diagRender(self._netcdfFile)
+            return reply
+        self.f=cdms2.open(self._netcdfFile)
+        data = self.f(self._variable)
+        print "clear canvas"
+        self._canvas.clear()
+        print "plot canvas"
+        d = self._canvas.plot(data,self._plotTemplate,self._plotType,bg=1)
+        print "canvas"
+        print d[:160]
+        png = d._repr_png_()
+        print "repr png done"
 
         """
         self._canvas.plot(data,self._plotTemplate,self._plotType,bg=1)
@@ -198,6 +267,7 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
         reply['global_id'] = ""
         reply['localTime'] = ""
         reply['workTime'] = ""
+        print reply
         return reply
 
 

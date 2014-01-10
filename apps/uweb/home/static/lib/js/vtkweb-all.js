@@ -1323,6 +1323,8 @@
 
         // Setup internal API
         function render(fetch) {
+            console.log("Callaing render in vtkweb");
+            console.log(force_render);
             if (force_render === false) {
                 if (render_onidle_timeout !== null) {
                     // clear any renderOnIdle requests that are pending since we
@@ -1330,6 +1332,7 @@
                     GLOBAL.clearTimeout(render_onidle_timeout);
                     render_onidle_timeout = null;
                 }
+                console.log("setting force_render to true");
                 force_render = true;
                 /**
                  * @class request.Render
@@ -1385,7 +1388,7 @@
                     stat_id: 'image-fps',
                     stat_value: 0 // start
                 });
-
+                console.log("calling vtk:stillRender");
                 session.call("vtk:stillRender", renderCfg).then(function (res) {
                     /**
                      * @class reply.Render
@@ -1454,6 +1457,8 @@
                      * the request. This does not include the json parsing.
                      * Just the high level opeartion achieved by vtkWeb.
                      */
+                    console.log("stillRender callback....");
+                    console.log(res);
                     options.view = Number(res.global_id);
                     lastMTime = res.mtime;
                     if(res.hasOwnProperty("image") && res.image !== null) {
@@ -1488,6 +1493,8 @@
                     }
                     renderStatistics();
                     force_render = false;
+                    console.log("end of render()");
+                    console.log(force_render);
                     container.trigger('done');
 
                     // the image we received is not the latest, we should
@@ -1495,8 +1502,12 @@
                     if (res.stale === true) {
                         renderOnIdle();
                     }
+                    console.log("end of stillRender()");
                 });
+                force_render = false;
+                console.log("out for stillRender() callback");
             }
+            console.log("end of render() DONE");
         }
 
         // internal function to render stats.

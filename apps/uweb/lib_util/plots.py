@@ -20,6 +20,7 @@ def get_vcs_inst():
 
 def save_plot(myVar,outfile,fromJson=False):
     vcs_instance=get_vcs_inst()
+    print "CanvasID: ",vcs_instance.canvasid()
     if fromJson:
        myVar=cdms2.createVariable(myVar,fromJSON=True)
     vcs_instance.plot(myVar, bg=1)
