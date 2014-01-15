@@ -9,6 +9,7 @@ import json
 from lib_util.plots import save_plot as save_plot
 from django.conf import settings
 import time
+import xml.etree.ElementTree as ET
 
 def get_plot_package(request):
     packageList=diagnostics_menu().keys()
@@ -73,30 +74,27 @@ def get_plot_obs(request):
     return HttpResponse(json_res, content_type="application/json")
 
 def run_elo(request):
-    #diagnosticType=request.GET['plot_package']
-    #plot_set_name=request.GET['plot_set']
-    #seasonID=request.GET['seasonID']
-    #variableID=request.GET['variableID']
-    #obs=request.GET['plot_obs']
-    #filetable2=utils.get_filetable2(obs)
+    diagnosticType=request.GET['plot_package']
+    plot_set_name=request.GET['plot_set']
+    seasonID=request.GET['seasonID']
+    variableID=request.GET['variableID']
+    obs=request.GET['plot_obs']
+    filetable2=utils.get_filetable2(obs)
 
-    #sclass,filetable1,filetable2,varid,seasonid=utils.get_input_parameter(diagnosticType,plot_set_name,seasonID,variableID,obs)
-    #outputPath=settings.DIAG_MEDIA
-    #taskID = str(time.time())
-    #taskID=str(1)
-    #output_parent_path=settings.DIAG_MEDIA
-    #output_path=os.path.join(output_parent_path,taskID)
-    #if not os.path.exists(output_path):
-    #    os.makedirs(output_path)
-    #pid=plotdata_run(sclass,filetable1,filetable2,str(varid),seasonid, outputPath, taskID)
-    pid=1
+    sclass,filetable1,filetable2,varid,seasonid=utils.get_input_parameter(diagnosticType,plot_set_name,seasonID,variableID,obs)
+    outputPath=settings.DIAG_MEDIA
+    taskID = str(time.time()) # TODO: this taskID should be a unique identifier.
+    output_parent_path=settings.DIAG_MEDIA
+    output_path=os.path.join(output_parent_path,taskID)
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+    pid=plotdata_run(sclass,filetable1,filetable2,str(varid),seasonid, outputPath, taskID)
     obj={'task_id':str(pid)}
-    #task_tracker=utils.TaskTracker()
-    #task_tracker.add_task(pid,output_path)
+    task_tracker=utils.TaskTracker()
+    task_tracker.add_task(pid,output_path)
     json_res=simplejson.dumps(obj)
     
     return HttpResponse(json_res, content_type="application/json")
-    #return HttpResponse('blah')
 
 def get_status(request,taskID):
     task_id=int(taskID)
@@ -115,18 +113,23 @@ def get_status(request,taskID):
 
 def load_output(request, taskID):
     task_id=int(taskID)
-    #outfile=utils.TaskTracker().get_task(task_id)
+    outfile=utils.TaskTracker().get_task(task_id)
     #look for the output file that ends in diagoutput
-    """
     filelist=os.listdir(outfile)
     outfilename=None
     for filename in filelist:
-        if filename.endswith('.diagoutput'):
+        if filename.endswith('.xml'):
             outfilename=filename
             break
+    mylist=[]
+    tree = ET.parse(os.path.join(outfile,outfilename))
+    root=tree.getroot()
+    elementlist=root.findall('ncfile')
+    for element in elementlist:
+        mylist.append(os.path.join(outfile,element.text))
     """
-    #f = open(os.path.join(outfile,outfilename))
-    f = open("/export/leung25/uvis/apps/uweb/media/diag/1/1389223541.14.diagoutput")
+    f = open(os.path.join(outfile,outfilename))
+    #f = open("/export/leung25/uvis/apps/uweb/media/diag/1/1389223541.14.diagoutput")
     output = f.readlines()
     f.close()
     total=len(output)
@@ -156,7 +159,7 @@ def load_output(request, taskID):
         print 'retuirning'
         mydict['png']='/media'+ outfile.split('media')[1]
         dict_list.append(mydict)
-        
-    obj={'output_list':dict_list}
+    """    
+    obj={'output_list':mylist}
     json_res=simplejson.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")

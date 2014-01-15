@@ -161,10 +161,12 @@
             if (myDiv.style.display=='none')
             {
                 myDiv.style.display='block';
+
                 if (!myDiv.hasChildNodes())
                 {
+                    /*
 				    if (pv.connection && pv.connection.session) {
-            				var selected = "/export/leung25/uvis/apps/uweb/media/diag/1/1389223541.14.diagoutput"
+            				var selected = "/export/leung25/uvis/apps/uweb/media/diag/2/test.nc"
 	    				pv.connection.session.call("vtk:is_initRender").then(function(res) {
 	    				    if (res){
 					        pv.connection.session.call("vtk:setFileName",selected).then(function(res){
@@ -181,8 +183,9 @@
 	            		                });
 	        			     }
 	    		    	   	});
-        			    }
-                    /*
+                                        }
+                    */
+                    
                     $.ajax({url: 'http://localhost:8000/diag/api/load_output/'+task_id+'/',
                         data:{},
                         type: 'GET',
@@ -191,14 +194,14 @@
                             inner_html='';
                             for (var i = 0; i < myList.length; i++)
                             {
-                                myTitle=myList[i]['title'];
+                                myTitle=myList[i];
                                 inner_html+=("<h6>"+myTitle+"</h6>");
-                                myPng=myList[i]['png'];
                                 if (i==0)
                                 {
                                     //$('#Sheet1Canvas1').append("<img src=" + myPng + " style=height:400px;width=465px;>");
 				    if (pv.connection && pv.connection.session) {
-            				var selected = "/export/leung25/uvis/apps/uweb/media/diag/1/1389223541.14.diagoutput"
+                                        //var selected = "/export/leung25/uvis/apps/uweb/media/diag/1/1389223541.14.diagoutput"
+                                        selected=myTitle;
 	    				pv.connection.session.call("vtk:is_initRender").then(function(res) {
 	    				    if (res){
 					        pv.connection.session.call("vtk:setFileName",selected).then(function(res){
@@ -233,7 +236,7 @@
                             myDiv.innerHTML=inner_html;
                         },
                         error: function(){alert('ERROR: unable to load output');}
-                    });*/
+                    });
                 }
             }
             else

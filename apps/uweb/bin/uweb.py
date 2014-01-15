@@ -227,20 +227,38 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
     @exportRpc("stillRender")
     def stillRender(self, options):
         print self._netcdfFile
+        
         print "called stillRender"
         if self._netcdfFile.endswith(".diagoutput"):
             reply = self.diagRender(self._netcdfFile)
             return reply
-        self.f=cdms2.open(self._netcdfFile)
-        data = self.f(self._variable)
-        print "clear canvas"
-        self._canvas.clear()
-        print "plot canvas"
-        d = self._canvas.plot(data,self._plotTemplate,self._plotType,bg=1)
-        print "canvas"
-        print d[:160]
-        png = d._repr_png_()
-        print "repr png done"
+        try:
+            print "clear canvas"
+            self._canvas.clear()
+            print "open file"
+            self.f=cdms2.open(self._netcdfFile)
+            varlist=self.f.plot_these
+            if isinstance(varlist, list):
+                for i in varlist:
+                    self._variable=i
+                    print "get var", self._variable
+                    data = self.f(self._variable)
+                    print "plot canvas"
+                    d = self._canvas.plot(data,self._plotTemplate,f.presentation,bg=1)
+                    print "done canvas"
+            else:
+                self._variable=varlist
+                print "get var", self._variable
+                data = self.f(self._variable)
+                print "plot canvas"
+                d = self._canvas.plot(data,self._plotTemplate,self.f.presentation,bg=1)
+                print "done canvas"
+
+            png = d._repr_png_()
+            print png[d:160]
+            print "repr png done"
+        except Exception as e:
+            print e
 
         """
         self._canvas.plot(data,self._plotTemplate,self._plotType,bg=1)
