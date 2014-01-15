@@ -116,8 +116,8 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
         if (dx1 < cursorX < dx2) and (dy1 < cursorY < dy2):
             X = data.getAxis(-1)
             Y = data.getAxis(-2)
-            if (disp.g_type == "boxfill"):
-                b = self._canvas.getboxfill(disp.g_name)
+            if (disp.g_type == "isofill"):
+                b = self._canvas.getisofill(disp.g_name)
             if MV2.allclose(b.datawc_x1,1.e20):
                 X1 = X[0]
                 X2 = X[-1]
@@ -139,7 +139,11 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
             SX = slice(*X.mapInterval((L,L,"cob")))
             l = ((cursorY-dy1)/(dy2-dy1)*(Y2-Y1))+Y1
             SY = slice(*Y.mapInterval((l,l,"cob")))
-            return data[...,SY,SX].flat[0]
+            myRank=data.rank()
+            if myRank > 2:
+                return data[...,SY,SX].flat[0]
+            else:
+                return data[...,SY,SX]
         else:
           return ""
 
