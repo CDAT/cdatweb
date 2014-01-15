@@ -280,7 +280,7 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
         reply['image'] = png
         reply['state'] = True
         reply['mtime'] = datetime.datetime.now().time().microsecond
-        reply['size'] = [864, 646]
+        reply['size'] = [550, 400]
         reply['format'] = "png;base64"
         reply['global_id'] = ""
         reply['localTime'] = ""
