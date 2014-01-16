@@ -32,13 +32,11 @@ uvis.plot = function(nodeId) {
 	    	if (res) {
 		      m_connection.session.call("vtk:setPlotType",selected).then(function(res){
             console.log("setPlotType: ready to run stillRender");
-            m_this.render();
           });
         }
         else {
           m_connection.session.call("vtk:setPlotType",selected).then(function(res){
             m_connection.session.call("vtk:initRender").then(function(res) {
-              m_this.render();
             });
           });
         }
