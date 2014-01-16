@@ -76,8 +76,8 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
         self._viewSelection = None
         self._variable = None
         self.f = None
-        self.image_width=864.0
-        self.image_height=646.0
+        self.image_width=550.0
+        self.image_height=400.0
     
     @exportRpc("setFileName")
     def setFileName(self, filename):
