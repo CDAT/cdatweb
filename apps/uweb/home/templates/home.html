@@ -154,8 +154,32 @@
     </div>
 </div>
     <script type="text/javascript">
+      /**
+       * Test function
+       */
+      function testDisplay() {
+        if (pv.connection && pv.connection.session) {
+          var selected = "/home/aashish/workspace/data/documents/clt.nc"
+          pv.connection.session.call("vtk:is_initRender").then(function(res) {
+            if (res) {
+              pv.connection.session.call("vtk:setFileName",selected).then(function(res){
+                console.log("setPlotType: ready to run stillRender");
+                pv.viewport.render();
+              });
+            }
+            else {
+              pv.connection.session.call("vtk:setFileName",selected).then(function(res){
+                console.log("Calling setPlotType: ready to run initRender");
+                initRender();
+                pv.viewport.render();
+                console.log("Called initRender()");
+              });
+            }
+          });
+        }
+      }
 
-        function toggle(task_id){
+        function toggle(task_id) {
             myDiv = document.getElementById(task_id);
 
             if (myDiv.style.display=='none')
@@ -431,6 +455,7 @@
         vtkWeb.connect(pv.connection, function(connectionData) {
             pv.connection = connectionData;
             createViewport();
+            testDisplay();
         }, function(code,reason){
             $(".loading").hide();
             console.log(reason);
