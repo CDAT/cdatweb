@@ -237,22 +237,18 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
             self._canvas.clear()
             print "open file"
             self.f=cdms2.open(self._netcdfFile)
-            varlist=self.f.plot_these
+            varlist = self.f.listvariable()
+
+            # use the first variable to plot the data
+            self._variable = varlist
             if isinstance(varlist, list):
-                for i in varlist:
-                    self._variable=i
-                    print "get var", self._variable
-                    data = self.f(self._variable)
-                    print "plot canvas"
-                    d = self._canvas.plot(data,self._plotTemplate,f.presentation,bg=1)
-                    print "done canvas"
-            else:
-                self._variable=varlist
-                print "get var", self._variable
-                data = self.f(self._variable)
-                print "plot canvas"
-                d = self._canvas.plot(data,self._plotTemplate,self.f.presentation,bg=1)
-                print "done canvas"
+              self._variable = varlist[0]
+
+            print "get var", self._variable
+            data = self.f(self._variable)
+            print "plot canvas"
+            d = self._canvas.plot(data,self._plotTemplate,"boxfill",bg=1)
+            print "done canvas"
 
             png = d._repr_png_()
             print png[d:160]
