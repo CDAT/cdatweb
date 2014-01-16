@@ -241,26 +241,19 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
             self._canvas.clear()
             print "open file"
             self.f=cdms2.open(self._netcdfFile)
-            varlist=self.f.plot_these
-            if isinstance(varlist, list):
-                for i in varlist:
-                    self._variable=i
-                    print "get var", self._variable
-                    data = self.f(self._variable)
-                    print "plot canvas"
-                    d = self._canvas.plot(data,self._plotTemplate,f.presentation,bg=1)
-                    print "done canvas"
-            else:
-                self._variable=varlist
-                print "get var", self._variable
-                data = self.f(self._variable)
-                print "plot canvas"
-                d = self._canvas.plot(data,self._plotTemplate,self.f.presentation,bg=1)
-                print "done canvas"
+            varlist = self.f.listvariable()
 
+            # use the first variable to plot the data
+            self._variable = varlist
+            if isinstance(varlist, list):
+              self._variable = varlist[0]
+
+            print "get var", self._variable
+            data = self.f(self._variable)
+            print "plot canvas"
+            d = self._canvas.plot(data,self._plotTemplate,"boxfill",bg=1)
+            print "done canvas"
             png = d._repr_png_()
-            print png[d:160]
-            print "repr png done"
         except Exception as e:
             print e
 
@@ -278,8 +271,6 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
         #with open(self._netcdfFile, "rb") as image_file:
         #    imageString = base64.b64encode(image_file.read())
         reply = {}
-        if not self._initRender:
-            return reply
         import datetime
         reply['image'] = png
         reply['state'] = True

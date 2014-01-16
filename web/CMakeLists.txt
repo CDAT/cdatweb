@@ -31,6 +31,7 @@ uvis_install_files_with_prefix(
   content/css/bootstrap.min.css
   content/js/bootstrap.js
   content/js/bootstrap.min.js
+  content/js/uvis.js
   TARGET webContentFiles
   DESTINATION share/uvis/www
 )

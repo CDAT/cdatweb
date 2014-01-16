@@ -12,7 +12,6 @@ urlpatterns = patterns('diag.views',
 	url(r'^api/get_plot_variable', 'get_plot_variable'),
 	url(r'^api/get_plot_aux_options', 'get_plot_aux_options'),
 	url(r'^api/get_plot_obs', 'get_plot_obs'),
-	url(r'^submit', 'submit_job'),
 
         )
 
