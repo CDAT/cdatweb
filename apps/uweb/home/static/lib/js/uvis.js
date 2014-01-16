@@ -58,7 +58,8 @@ uvis.remoteConnection = function (url) {
     vtkWeb.connect(m_meta.connection, function(connectionData) {
       m_meta.connection = connectionData;
       m_isConnected = true;
-      callback();
+
+      typeof callback === 'function' && callback();
     });
   };
 
@@ -125,11 +126,13 @@ uvis.plot = function(nodeId, args) {
    * @param type
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.setType = function(type) {
+  this.setType = function(type, callback) {
     if (this.hasValidConnection()) {
       m_connection.getSession().call("vtk:setPlotType", type).then(
         function(res){
           m_type = type;
+
+          typeof callback === 'function' && callback();
         });
     }
   };
@@ -148,10 +151,12 @@ uvis.plot = function(nodeId, args) {
    * Set data (input) for the plot.
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.setData = function(data) {
+  this.setData = function(data, callback) {
     if (this.hasValidConnection()) {
       m_connection.getSession().call("vtk:setFileName",data).then(function(res){
         m_data = data;
+
+        typeof callback === 'function' && callback();
       });
     }
   };
