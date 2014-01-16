@@ -249,10 +249,7 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
             print "plot canvas"
             d = self._canvas.plot(data,self._plotTemplate,"boxfill",bg=1)
             print "done canvas"
-
             png = d._repr_png_()
-            print png[d:160]
-            print "repr png done"
         except Exception as e:
             print e
 
@@ -270,8 +267,6 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
         #with open(self._netcdfFile, "rb") as image_file:
         #    imageString = base64.b64encode(image_file.read())
         reply = {}
-        if not self._initRender:
-            return reply
         import datetime
         reply['image'] = png
         reply['state'] = True
