@@ -12,6 +12,7 @@
         <script src="{{STATIC_URL}}ext/widgets/jquery-ui/jquery-ui-1.10.0.min.js"></script>
 
         <script src="{{STATIC_URL}}lib/js/vtkweb-all.js"></script>
+        <script src="{{STATIC_URL}}lib/js/uvis.js"></script>
 <body>
     <nav class="navbar navbar-default" role="navigation">
         <div class="navbar-header">
@@ -52,6 +53,7 @@
         		    	</div>
                     </div>
                     <div class="col-md-6" id="Sheet1Canvas2" style="height:400px;box-shadow: 0 0 2px grey">
+                        <div id="viewport-container2" ></div>
                     </div>
                 </div>
                 <div class=row>
@@ -155,7 +157,8 @@
 </div>
     <script type="text/javascript">
 
-        function toggle(task_id){
+
+        function toggle(task_id) {
             myDiv = document.getElementById(task_id);
 
             if (myDiv.style.display=='none')
@@ -417,94 +420,116 @@
                 });
         });
 
-	var pv = { pipeline: null, sources: null, files: null},
-    fetchDataQueueSize = 0;
-    $("#loading").hide();
-    pv.connection = { sessionURL: "ws://localhost:8080/ws"};
-    connect();
+//	var pv = { pipeline: null, sources: null, files: null},
+//    fetchDataQueueSize = 0;
+//    $("#loading").hide();
+//    pv.connection = { sessionURL: "ws://localhost:8080/ws"};
+//    connect();
+//
+//    function connect() {
+//        if(location.protocol == "http:") {
+//            pv.connection.sessionURL = pv.connection.sessionURL.replace("wss:","ws:");
+//        }
+//
+//        vtkWeb.connect(pv.connection, function(connectionData) {
+//            pv.connection = connectionData;
+//            createViewport();
+//            testDisplay();
+//        }, function(code,reason){
+//            $(".loading").hide();
+//            console.log(reason);
+//        });
+//    }
+//
+//    function createViewport() {
+//        $(".viewport-container").empty();
+//        pv.viewport = vtkWeb.createViewport({session: pv.connection.session});
+//        pv.viewport.bind(".viewport-container");
+//    }
+//
+//    function initRender() {
+//        if (pv.connection && pv.connection.session) {
+//            pv.connection.session.call("vtk:initRender").then(function(res) {
+//            	console.log(res);
+//                pv.viewport.render();
+//                console.log("called pv.viewport.render()");
+//            });
+//        }
+//    }
+//
+//    $(window).resize(function() {
+//        $(".splitter").height(window.innerHeight - 35);
+//        $(".control-panel").height(window.innerHeight - 35);
+//    }).trigger('resize');
+//
+//    function updateView() {
+//        if(pv.viewport) {
+//            pv.viewport.invalidateScene();
+//        }
+//    }
+//
+//    function stop() {
+//        if(pv.hasOwnProperty('connection') && pv.connection.session) {
+//            pv.viewport.unbind();
+//            vtkWeb.stop(pv.connection);
+//            pv = {};
+//        }
+//    }
 
-    function connect() {
-        if(location.protocol == "http:") {
-            pv.connection.sessionURL = pv.connection.sessionURL.replace("wss:","ws:");
-        }
+    var remoteConnection = new uvis.remoteConnection(),
+        myplot = new uvis.plot("#viewport-container",
+                               {"connection": remoteConnection}),
+        myview = new uvis.view(),
+        myplot2 = new uvis.plot("#viewport-container2",
+                               {"connection": remoteConnection});
 
-        vtkWeb.connect(pv.connection, function(connectionData) {
-            pv.connection = connectionData;
-            createViewport();
-        }, function(code,reason){
-            $(".loading").hide();
-            console.log(reason);
-        });
+    myview.addPlot(myplot);
+    myview.addPlot(myplot2);
+
+    function testDisplay() {
+      var data = "/home/aashish/workspace/data/documents/clt.nc";
+      myplot.setData(data);
+      myplot2.setData(data);
+      myview.contextInit();
+      myview.render();
     }
 
-    function createViewport() {
-        $(".viewport-container").empty();
-        pv.viewport = vtkWeb.createViewport({session: pv.connection.session});
-        pv.viewport.bind(".viewport-container");
-    }
+    // When connected call our display method
+    remoteConnection.connect(testDisplay);
 
-    function initRender() {
-        if (pv.connection && pv.connection.session) {
-            pv.connection.session.call("vtk:initRender").then(function(res) {
-            	console.log(res);
-                pv.viewport.render();
-                console.log("called pv.viewport.render()");
-            });
-        }
-    }
 
-    $(window).resize(function() {
-        $(".splitter").height(window.innerHeight - 35);
-        $(".control-panel").height(window.innerHeight - 35);
-    }).trigger('resize');
-
-    function updateView() {
-        if(pv.viewport) {
-            pv.viewport.invalidateScene();
-        }
-    }
-
-    function stop() {
-        if(pv.hasOwnProperty('connection') && pv.connection.session) {
-            pv.viewport.unbind();
-            vtkWeb.stop(pv.connection);
-            pv = {};
-        }
-    }
-
-    var container = $(".viewport-container");
-
-    container.bind('mouse', function(evt){
-        evt.preventDefault();
-        var vtkWeb_event = {
-            action: evt.action,
-            charCode: evt.charCode,
-            altKey: evt.altKey,
-            ctrlKey: evt.ctrlKey,
-            shiftKey: evt.shiftKey,
-            metaKey: evt.metaKey,
-            buttonLeft: (evt.current_button === 1 ? true : false),
-            buttonMiddle: (evt.current_button === 2 ? true : false),
-            buttonRight: (evt.current_button === 3 ? true : false)
-            },
-            elem_position = $(evt.delegateTarget).offset(),
-            pointer = {
-                    x : (evt.pageX - elem_position.left),
-                    y : (evt.pageY - elem_position.top)
-            };
-
-        vtkWeb_event.x = pointer.x;
-        vtkWeb_event.y = pointer.y;
-
-        action_pending = true;
-        pv.connection.session.call("vtk:mouseInteraction", vtkWeb_event).then(function (res) {
-            if (res !== null) {
-                action_pending = false;
-                console.log(res);
-                $("#data").text(res);
-            }
-        });
-    });
+//    var container = $(".viewport-container");
+//    container.bind('mouse', function(evt){
+//        evt.preventDefault();
+//        var vtkWeb_event = {
+//            action: evt.action,
+//            charCode: evt.charCode,
+//            altKey: evt.altKey,
+//            ctrlKey: evt.ctrlKey,
+//            shiftKey: evt.shiftKey,
+//            metaKey: evt.metaKey,
+//            buttonLeft: (evt.current_button === 1 ? true : false),
+//            buttonMiddle: (evt.current_button === 2 ? true : false),
+//            buttonRight: (evt.current_button === 3 ? true : false)
+//            },
+//            elem_position = $(evt.delegateTarget).offset(),
+//            pointer = {
+//                    x : (evt.pageX - elem_position.left),
+//                    y : (evt.pageY - elem_position.top)
+//            };
+//
+//        vtkWeb_event.x = pointer.x;
+//        vtkWeb_event.y = pointer.y;
+//
+//        action_pending = true;
+//        pv.connection.session.call("vtk:mouseInteraction", vtkWeb_event).then(function (res) {
+//            if (res !== null) {
+//                action_pending = false;
+//                console.log(res);
+//                $("#data").text(res);
+//            }
+//        });
+//    });
 
     </script>
 </body>
