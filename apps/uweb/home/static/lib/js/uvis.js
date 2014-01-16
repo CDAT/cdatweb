@@ -187,8 +187,7 @@ uvis.plot = function(nodeId, args) {
   /////////////////////////////////////////////////////////////////////////////
   this.render = function() {
     // @todo Provide right abstraction
-    $(m_nodeId).empty();
-    pv.viewport.render();
+    m_viewport.render();
   };
 };
 
@@ -249,9 +248,9 @@ uvis.view = function() {
 
   this.render = function() {
     // @todo Implement this
-    var plot;
-    for(plot in m_plots) {
-      plot.render();
+    var i;
+    for(i = 0; i < m_plots.length; ++i) {
+      m_plots[i].render();
     }
   };
 };
