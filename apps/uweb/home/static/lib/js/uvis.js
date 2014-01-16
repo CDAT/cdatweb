@@ -14,7 +14,7 @@ uvis.remoteConnection = function (url) {
 
   // Use localhost by default
   if (typeof url === 'undefined') {
-    url = ws://localhost:8080/ws;
+    url = "ws://localhost:8080/ws";
   }
   m_meta.connection = {sessionURL: url};
 
@@ -26,7 +26,7 @@ uvis.remoteConnection = function (url) {
    */
   /////////////////////////////////////////////////////////////////////////////
   this.getSession = function() {
-    return m_meta.session;
+    return m_meta.connection.session;
   }
 
   /////////////////////////////////////////////////////////////////////////////
@@ -91,7 +91,7 @@ uvis.plot = function(nodeId, args) {
 
   if (m_remote) {
     // Remote rendered plots expect a remote connection in the argument
-    if (args.hasOwnProperty(connection)) {
+    if (args.hasOwnProperty("connection")) {
       m_connection = args.connection;
     } else {
       console.log("[ERROR] Remote render plots require remote connection");
@@ -150,7 +150,7 @@ uvis.plot = function(nodeId, args) {
   /////////////////////////////////////////////////////////////////////////////
   this.setData = function(data) {
     if (this.hasValidConnection()) {
-      m_connection.getSession().call("vtk:setFileName",selected).then(function(res){
+      m_connection.getSession().call("vtk:setFileName",data).then(function(res){
         m_data = data;
       });
     }
@@ -206,9 +206,9 @@ uvis.view = function() {
    */
   /////////////////////////////////////////////////////////////////////////////
   this.contextInit = function() {
-    var plot;
-    for(plot in m_plots) {
-      plot.contextInit();
+    var i;
+    for(i = 0; i < m_plots.length; ++i) {
+      m_plots[i].contextInit();
     }
   };
 
@@ -218,9 +218,9 @@ uvis.view = function() {
    */
   /////////////////////////////////////////////////////////////////////////////
   this.contextClose = function() {
-    var plot;
-    for(plot in m_plots) {
-      plot.contextClose();
+    var i;
+    for(i = 0; i < m_plots.length; ++i) {
+      m_plots[i].contextClose();
     }
   };
 
@@ -228,12 +228,12 @@ uvis.view = function() {
   /**
    * Add new plot to the view.
    *
-   * @param {uvis.plot} vp
+   * @param {uvis.plot} plot
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.addPlot = function(vp) {
-    //@todo add check if the viewport already exists
-    m_plots.concat(vp);
+  this.addPlot = function(plot) {
+    // @todo check if the plot already exists
+    m_plots.push(plot);
   };
 
   /////////////////////////////////////////////////////////////////////////////
