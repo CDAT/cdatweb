@@ -47,12 +47,13 @@
                 <div class=row>
                     <div class="col-md-6" id="Sheet1Canvas1" style="height:400px;box-shadow: 0 0 2px grey">
 			<div class="splitter">
-            			<div class="viewport-container" ></div>
+            			<div id="viewport-container" ></div>
 		            		<div class="control-panel" style="display: none;"></div>
         		    	</div>
         	    		<div><p id="data"></p></div>
                     </div>
                     <div class="col-md-6" id="Sheet1Canvas2" style="height:400px;box-shadow: 0 0 2px grey">
+                        <div id="viewport-container2" ></div>
                     </div>
                 </div>
                 <div class=row>
@@ -476,15 +477,19 @@
 //    }
 
     var remoteConnection = new uvis.remoteConnection(),
-        myplot = new uvis.plot(".viewport-container",
+        myplot = new uvis.plot("#viewport-container",
                                {"connection": remoteConnection}),
-        myview = new uvis.view();
+        myview = new uvis.view(),
+        myplot2 = new uvis.plot("#viewport-container2",
+                               {"connection": remoteConnection});
 
     myview.addPlot(myplot);
+    myview.addPlot(myplot2);
 
     function testDisplay() {
       var data = "/home/aashish/workspace/data/documents/clt.nc";
       myplot.setData(data);
+      myplot2.setData(data);
       myview.contextInit();
       myview.render();
     }
