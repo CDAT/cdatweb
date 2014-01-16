@@ -60,7 +60,7 @@ uvis.plot = function(nodeId) {
       console.log("[uvis:plot] Connection cannot be null");
       return;
     }
-    m_viewport = vtkWeb.createViewport({session: conn.session});
+    m_viewport = vtkWeb.createViewport({session: m_connection.session});
     m_viewport.bind(m_nodeId);
   };
 
