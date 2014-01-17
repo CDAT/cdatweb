@@ -122,11 +122,12 @@ def load_output(request, taskID):
             outfilename=filename
             break
     mylist=[]
+    
     tree = ET.parse(os.path.join(outfile,outfilename))
     root=tree.getroot()
     elementlist=root.findall('ncfile')
     for element in elementlist:
-        mylist.append(os.path.join(outfile,element.text))
+        mylist.append({'fullpath':os.path.join(outfile,element.text),'filename':element.text})
     """
     f = open(os.path.join(outfile,outfilename))
     #f = open("/export/leung25/uvis/apps/uweb/media/diag/1/1389223541.14.diagoutput")

@@ -19,7 +19,7 @@
             <a class="navbar-brand" href="http://uvcdat.llnl.gov">UV-CDAT Live</a>
         </div>
         <div>
-            <p class="navbar-text navbar-right"> 
+            <p class="navbar-text navbar-right">
             <a href="#" class="navbar-link">448000</a>&nbsp;|
             <a href="#" class="navbar-link">Logout</a>
             </p>
@@ -41,7 +41,7 @@
         <div class="col-md-7" id="Center">
             <ul class="nav nav-tabs" id=sheetTab>
                 <li class=active> <a href="#Sheet1" data-toggle="tab">Sheet1</a></li>
-                <li> <a href="#Sheet2" data-toggle="tab">+</a></li>
+                <li> <a href="#Sheet1" data-toggle="tab">+</a></li>
             </ul>
             <div class="tab-pane active" id="Sheet1">
                 <div class=row>
@@ -147,15 +147,12 @@
                                 </table>
                             </div>
                         </div>
-                </div>
-                
+                </div> 
                 <div class="tab-pane" id="ESGF"></div>
         </div>
     </div>
 </div>
     <script type="text/javascript">
-
-
         function toggle(task_id) {
             myDiv = document.getElementById(task_id);
 
@@ -186,35 +183,64 @@
 	    		    	   	});
                                         }
                     */
-                    
+                     
                     $.ajax({url: 'http://localhost:8000/diag/api/load_output/'+task_id+'/',
                         data:{},
                         type: 'GET',
                         success: function(data){
                             myList = data['output_list'];
+                            console.log(myList);
                             inner_html='';
+                            if (myList.length > 0) {
+                                count = myList.length;
+                                index = 0;
+                                myplot1.setData(myList[index++]['fullpath'],function(){
+                                    myplot1.render();
+                                    if (index < count){
+                                        myplot2.setData(myList[index++]['fullpath'],function(){
+                                            myplot2.render();
+                                            if (index < count){
+                                                myplot3.setData(myList[index++]['fullpath'], function(){
+                                                    myplot3.render();
+                                                    if (index < count) {
+                                                        myplot4.setData(myList[index++]['fullpath'], function() {
+                                                            myplot4.render();
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+
+
                             for (var i = 0; i < myList.length; i++)
                             {
-                                myTitle=myList[i];
+                                myTitle=myList[i]['filename'];
                                 inner_html+=("<h6>"+myTitle+"</h6>");
+                                /*
                                 if (i==0)
                                 {
-                                    myplot1.setData(myTitle);
+                                    console.log(myTitle);
+                                    myplot1.setData(myTitle,myplot1.render);
                                 }
                                 else if (i==1)
                                 {
-                                    myplot2.setData(myTitle);
+                                    console.log(myTitle);
+                                    myplot2.setData(myTitle,myplot2.render);
                                 }
                                 else if (i==2)
                                 {
-                                    myplot3.setData(myTitle);
+                                    console.log(myTitle);
+                                    myplot3.setData(myTitle,myplot3.render);
                                 }
                                 else if (i==3)
                                 {
-                                    myplot4.setData(myTitle);
+                                    myplot4.setData(myTitle,myplot4.render);
                                 }
+                                */
                             }
-                            myview.render();
                             myDiv.innerHTML=inner_html;
                         },
                         error: function(){alert('ERROR: unable to load output');}
@@ -296,7 +322,7 @@
         });
 
         $('#inputPackage').change(function() {
-            $.ajax({url:'http://localhost:8000/diag/api/get_plot_obs/',
+                $.ajax({url:'http://localhost:8000/diag/api/get_plot_obs/',
                 data:{},
                 type:'GET',
                 success:function(data){

@@ -37,7 +37,8 @@ def diag_batch(request):
 
 def diag_home(request):
     #image_dir=request.POST['directory']
-    return render(request, "home.html")
+    mycontent={'uvis_hostname':settings.UVIS_HOSTNAME}
+    return render(request, "home.html",mycontent)
 
 def testing(request):
     return render(request, "test.html")

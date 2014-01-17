@@ -216,10 +216,9 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
             png=d._repr_png_()
         """
         png = base64.b64encode(png)
+        print self._netcdfFile
         print png[:160]
         reply = {}
-        if not self._initRender:
-            return reply
         import datetime
         reply['image'] = png
         reply['state'] = True
@@ -229,7 +228,6 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
         reply['global_id'] = ""
         reply['localTime'] = ""
         reply['workTime'] = ""
-        print reply
         return reply
 
 

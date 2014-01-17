@@ -20,6 +20,7 @@ PROXY_CERT_DIR = os.environ['HOME'] + '/'
 DIAG_MODEL_PATH = os.environ['HOME'] + '/cam_output'
 DIAG_OBS_PATH = os.environ['HOME'] + '/obs_data'
 DIAG_MEDIA = os.environ['HOME']+'/uvis/apps/uweb/media/diag'
+UVIS_HOSTNAME='localhost:8000'
 
 
 
