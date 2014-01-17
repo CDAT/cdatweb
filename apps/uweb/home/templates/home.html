@@ -46,11 +46,7 @@
             <div class="tab-pane active" id="Sheet1">
                 <div class=row>
                     <div class="col-md-6" id="Sheet1Canvas1" style="height:400px;box-shadow: 0 0 2px grey">
-			<div class="splitter">
-        	    		<div><p id="data"></p></div>
-            			<div class="viewport-container" ></div>
-		            		<div class="control-panel" style="display: none;"></div>
-        		    	</div>
+            			<div id="viewport-container1" ></div>
                     </div>
                     <div class="col-md-6" id="Sheet1Canvas2" style="height:400px;box-shadow: 0 0 2px grey">
                         <div id="viewport-container2" ></div>
@@ -58,8 +54,10 @@
                 </div>
                 <div class=row>
                     <div class="col-md-6" id="Sheet1Canvas3" style="height:400px;box-shadow: 0 0 2px grey">
+            			<div id="viewport-container3" ></div>
                     </div>
                     <div class="col-md-6" id="Sheet1Canvas4" style="height:400px;box-shadow: 0 0 2px grey">
+            			<div id="viewport-container4" ></div>
                     </div>
                 </div>
             </div>
@@ -201,41 +199,22 @@
                                 inner_html+=("<h6>"+myTitle+"</h6>");
                                 if (i==0)
                                 {
-                                    //$('#Sheet1Canvas1').append("<img src=" + myPng + " style=height:400px;width=465px;>");
-				    if (pv.connection && pv.connection.session) {
-                                        //var selected = "/export/leung25/uvis/apps/uweb/media/diag/1/1389223541.14.diagoutput"
-                                        selected=myTitle;
-	    				pv.connection.session.call("vtk:is_initRender").then(function(res) {
-	    				    if (res){
-					        pv.connection.session.call("vtk:setFileName",selected).then(function(res){
-			                            console.log("setPlotType: ready to run stillRender");
-                        		            pv.viewport.render();
-	    	    			        });
-	        		    	    }
-	        		    	    else
-	        		            {
-	    	    		                pv.connection.session.call("vtk:setFileName",selected).then(function(res){
-                        		            console.log("Calling setPlotType: ready to run initRender");
-                                                    initRender();
-	            		                });
-	        			     }
-	    		    	   	});
-        			    }
+                                    myplot1.setData(myTitle);
                                 }
                                 else if (i==1)
                                 {
-                                    $('#Sheet1Canvas2').append("<img src=" + myPng + " style=height:400px;width=465px;>");
+                                    myplot2.setData(myTitle);
                                 }
                                 else if (i==2)
                                 {
-                                    $('#Sheet1Canvas3').append("<img src=" + myPng + " style=height:400px;width=465px;>");
+                                    myplot3.setData(myTitle);
                                 }
                                 else if (i==3)
                                 {
-                                    $('#Sheet1Canvas4').append("<img src=" + myPng + " style=height:400px;width=465px;>");
+                                    myplot4.setData(myTitle);
                                 }
-
                             }
+                            myview.render();
                             myDiv.innerHTML=inner_html;
                         },
                         error: function(){alert('ERROR: unable to load output');}
@@ -252,7 +231,7 @@
             e.preventDefault();
             $(this).tab('show');
         });
-
+        /*
         function updateLoop(task_id) {
             $.ajax({url:'http://localhost:8000/diag/api/get_status/'+task_id+'/', data:{},type:'GET',
                 success: function(data1){
@@ -269,7 +248,7 @@
                 },
                 error: function(){alert('ERROR in progress bar update');}});
         }
-
+        */
 
 
         $('#diagSubmitJob').click(function(e) {
@@ -286,11 +265,9 @@
                     success:function(data){
                         task_id=data['task_id'];
 			$('#resultTable').append("<tr><td><a href=javascript:toggle("+task_id+");>"+task_id+"</a></td></tr><tr><td><div id=" + task_id+" style='display:none'></div></td></tr>");
-			/*
+                        /*
                         $('#resultTable').append("<tr><td><a href=javascript:toggle("+task_id+");>"+task_id+"</a></td><td>&nbsp;<div id=progress"+task_id+ " class='progress progress-striped active'><div class='progress-bar'  role='progressbar' aria-valuenow=45 aria-valuemin=0 aria-valuemax=100 style='width: 40px'></div></div></td></tr><tr><td><div id=" + task_id+" style='display:none'></div></td></tr>");
                         updateLoop(task_id);
-			*/
-                        /*
                         (function updateLoop(){
                             $.ajax({url:'http://localhost:8000/diag/api/get_status/'+task_id+'/', data:{},type:'GET',
                             success: function(data1){
@@ -477,17 +454,27 @@
 //    }
 
     var remoteConnection = new uvis.remoteConnection(),
-        myplot = new uvis.plot("#viewport-container",
+        myplot1 = new uvis.plot("#viewport-container1",
+                               {"connection": remoteConnection}),
+        myplot3 = new uvis.plot("#viewport-container3",
+                               {"connection": remoteConnection}),
+        myplot4 = new uvis.plot("#viewport-container4",
                                {"connection": remoteConnection}),
         myview = new uvis.view(),
         myplot2 = new uvis.plot("#viewport-container2",
                                {"connection": remoteConnection});
 
-    myview.addPlot(myplot);
+    myview.addPlot(myplot1);
     myview.addPlot(myplot2);
-
+    myview.addPlot(myplot3);
+    myview.addPlot(myplot4);
+    function initSheet(){
+        myview.contextInit();
+    }
+    remoteConnection.connect(initSheet);
+    /**
     function testDisplay() {
-      var data = "/home/aashish/workspace/data/documents/clt.nc";
+      var data = "/export/leung25/Downloads/clt.nc";
       myplot.setData(data);
       myplot2.setData(data);
       myview.contextInit();
@@ -496,7 +483,7 @@
 
     // When connected call our display method
     remoteConnection.connect(testDisplay);
-
+    **/
 
 //    var container = $(".viewport-container");
 //    container.bind('mouse', function(evt){

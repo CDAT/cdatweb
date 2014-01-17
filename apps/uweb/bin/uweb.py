@@ -171,15 +171,20 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
     def is_initRender(self):
         return self._initRender 
 
-    def diagRender(self, filename):
+    def diagRender(self):
         print "called diagRender"
-        print "open netCDF"
-        self._netcdfFile="/export/leung25/Downloads/clt.nc"
-        self._variable="clt"
         self.f=cdms2.open(self._netcdfFile)
-        data = self.f(self._variable)
-        self._canvas.clear()
-        d = self._canvas.plot(data,self._plotTemplate,"boxfill",bg=1)
+        varlist=self.f.plot_these
+        if isinstance(varlist,list):
+            for i in varlist:
+                self._variable=1
+                data=self.f(self._variable)
+                d=self._canvas.plot(data,self.plotTemplate,self.f.presentation,bg=1)
+        else:
+            self._variable=varlist
+            data=self.f(self._variable)
+            d = self._canvas.plot(data,self._plotTemplate,self.f.presentation,bg=1)
+            
         png = d._repr_png_()
         """
         f=open(filename,'r')
@@ -219,7 +224,7 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
         reply['image'] = png
         reply['state'] = True
         reply['mtime'] = datetime.datetime.now().time().microsecond
-        reply['size'] = [864, 646]
+        reply['size'] = [550, 400]
         reply['format'] = "png;base64"
         reply['global_id'] = ""
         reply['localTime'] = ""
@@ -230,17 +235,15 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
 
     @exportRpc("stillRender")
     def stillRender(self, options):
-        print self._netcdfFile
-        
-        print "called stillRender"
-        if self._netcdfFile.endswith(".diagoutput"):
-            reply = self.diagRender(self._netcdfFile)
-            return reply
         try:
-            print "clear canvas"
-            self._canvas.clear()
             print "open file"
             self.f=cdms2.open(self._netcdfFile)
+            if hasattr(self.f,'presentation'):
+                reply = self.diagRender()
+                return reply
+                        
+            print "clear canvas"
+            self._canvas.clear()
             varlist = self.f.listvariable()
 
             # use the first variable to plot the data
