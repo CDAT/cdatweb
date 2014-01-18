@@ -41,7 +41,7 @@
         <div class="col-md-7" id="Center">
             <ul class="nav nav-tabs" id=sheetTab>
                 <li class=active> <a href="#Sheet1" data-toggle="tab">Sheet1</a></li>
-                <li> <a href="#Sheet1" data-toggle="tab">+</a></li>
+                <li id='lastSheet'> <a href="#Sheet1" data-toggle="tab">+</a></li>
             </ul>
             <div class="tab-pane active" id="Sheet1">
                 <div class=row>
@@ -153,6 +153,24 @@
     </div>
 </div>
     <script type="text/javascript">
+        function addSheet(){
+            var myelement = document.getElementById('sheetTab');
+            var lastNode=document.getElementById('lastSheet');
+            var childrenList=$('#sheetTab').children();
+            var total=childrenList.length;
+            for (i=0;i<total;i++){
+                var child=childrenList[i];
+                if (child.hasAttribute('class')){
+                    var newnode = childrenList[0].cloneNode(true);
+                    newnode.childNodes[0].value='Sheet'+total;
+                    myelement.insertBefore(newnode,lastNode);
+                    console.log(child);
+                    child.removeAttribute('class');
+                    console.log(child);
+                }
+            }
+        }
+
         function toggle(task_id) {
             myDiv = document.getElementById(task_id);
 
@@ -189,7 +207,6 @@
                         type: 'GET',
                         success: function(data){
                             myList = data['output_list'];
-                            console.log(myList);
                             inner_html='';
                             if (myList.length > 0) {
                                 count = myList.length;
@@ -198,12 +215,15 @@
                                     myplot1.render();
                                     if (index < count){
                                         myplot2.setData(myList[index++]['fullpath'],function(){
+                                            //$('#viewport-container2').empty();
                                             myplot2.render();
                                             if (index < count){
                                                 myplot3.setData(myList[index++]['fullpath'], function(){
+                                                    //$('#viewport-container3').empty();
                                                     myplot3.render();
                                                     if (index < count) {
                                                         myplot4.setData(myList[index++]['fullpath'], function() {
+                                                            //$('#viewport-container4').empty();
                                                             myplot4.render();
                                                         });
                                                     }
@@ -213,8 +233,14 @@
                                     }
                                 });
                             }
-
-
+                            /**
+                            if (sessionStorage.diagcount){ 
+                                console.log(sessionStorage.diagcount);
+                                if (Number(sessionStorage.diagcount) > 1) {
+                                    addSheet();
+                                }
+                            }
+                            **/
                             for (var i = 0; i < myList.length; i++)
                             {
                                 myTitle=myList[i]['filename'];
@@ -279,6 +305,14 @@
 
         $('#diagSubmitJob').click(function(e) {
                 e.preventDefault();
+                if (sessionStorage.diagcount){
+                    console.log(sessionStorage.diagcount);
+                    sessionStorage.diagcount=Number(sessionStorage.diagcount)+1;
+                }
+                else {
+                    sessionStorage.diagcount=1;
+                }
+                
                 myPlotSet=$('#inputPlotSet').val().replace(/\"/g,"");
                 myPackage=$('#inputPackage').val();
                 myVariable=$('#inputVariable').val();
