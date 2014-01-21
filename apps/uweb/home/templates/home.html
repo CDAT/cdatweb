@@ -162,11 +162,9 @@
                 var child=childrenList[i];
                 if (child.hasAttribute('class')){
                     var newnode = childrenList[0].cloneNode(true);
-                    newnode.childNodes[0].value='Sheet'+total;
+                    newnode.childNodes[1].innerHTML='Sheet'+total;
                     myelement.insertBefore(newnode,lastNode);
-                    console.log(child);
                     child.removeAttribute('class');
-                    console.log(child);
                 }
             }
         }
@@ -215,15 +213,12 @@
                                     myplot1.render();
                                     if (index < count){
                                         myplot2.setData(myList[index++]['fullpath'],function(){
-                                            //$('#viewport-container2').empty();
                                             myplot2.render();
                                             if (index < count){
                                                 myplot3.setData(myList[index++]['fullpath'], function(){
-                                                    //$('#viewport-container3').empty();
                                                     myplot3.render();
                                                     if (index < count) {
                                                         myplot4.setData(myList[index++]['fullpath'], function() {
-                                                            //$('#viewport-container4').empty();
                                                             myplot4.render();
                                                         });
                                                     }
@@ -233,14 +228,12 @@
                                     }
                                 });
                             }
-                            /**
                             if (sessionStorage.diagcount){ 
                                 console.log(sessionStorage.diagcount);
                                 if (Number(sessionStorage.diagcount) > 1) {
                                     addSheet();
                                 }
                             }
-                            **/
                             for (var i = 0; i < myList.length; i++)
                             {
                                 myTitle=myList[i]['filename'];
@@ -283,31 +276,13 @@
             e.preventDefault();
             $(this).tab('show');
         });
-        /*
-        function updateLoop(task_id) {
-            $.ajax({url:'http://localhost:8000/diag/api/get_status/'+task_id+'/', data:{},type:'GET',
-                success: function(data1){
-                    myStatus=data1['status'];
-                    if (myStatus=='0')
-                    {
-                                    $("#progress"+task_id).remove();
-                                    toggle(task_id);  
-                    }
-                    else
-                    {
-                                    setTimeout(updateLoop(task_id),1000);
-                    }
-                },
-                error: function(){alert('ERROR in progress bar update');}});
-        }
-        */
 
 
         $('#diagSubmitJob').click(function(e) {
                 e.preventDefault();
                 if (sessionStorage.diagcount){
-                    console.log(sessionStorage.diagcount);
                     sessionStorage.diagcount=Number(sessionStorage.diagcount)+1;
+                    
                 }
                 else {
                     sessionStorage.diagcount=1;
@@ -324,11 +299,10 @@
                     type:'GET',
                     success:function(data){
                         task_id=data['task_id'];
-			$('#resultTable').append("<tr><td><a href=javascript:toggle("+task_id+");>"+task_id+"</a></td></tr><tr><td><div id=" + task_id+" style='display:none'></div></td></tr>");
-                        /*
+			//$('#resultTable').append("<tr><td><a href=javascript:toggle("+task_id+");>"+task_id+"</a></td></tr><tr><td><div id=" + task_id+" style='display:none'></div></td></tr>");
                         $('#resultTable').append("<tr><td><a href=javascript:toggle("+task_id+");>"+task_id+"</a></td><td>&nbsp;<div id=progress"+task_id+ " class='progress progress-striped active'><div class='progress-bar'  role='progressbar' aria-valuenow=45 aria-valuemin=0 aria-valuemax=100 style='width: 40px'></div></div></td></tr><tr><td><div id=" + task_id+" style='display:none'></div></td></tr>");
-                        updateLoop(task_id);
-                        (function updateLoop(){
+                        //updateLoop(task_id);
+                        (function updateLoop(task_id){
                             $.ajax({url:'http://localhost:8000/diag/api/get_status/'+task_id+'/', data:{},type:'GET',
                             success: function(data1){
                                 myStatus=data1['status'];
@@ -339,12 +313,11 @@
                                 }
                                 else
                                 {
-                                    setTimeout(updateLoop,1000);
+                                    setTimeout(function() {updateLoop(task_id);}, 1000);
                                 }
                             },
                             error: function(){alert('ERROR in progress bar update');}});
-                        })();
-                        */
+                        })(task_id);
                     },
                     error: function(){alert('ERROR: unable to get task id');}
                     });
