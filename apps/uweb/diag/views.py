@@ -88,32 +88,39 @@ def run_elo(request):
     output_path=os.path.join(output_parent_path,taskID)
     if not os.path.exists(output_path):
         os.makedirs(output_path)
-    pid=plotdata_run(sclass,filetable1,filetable2,str(varid),seasonid, outputPath, taskID)
+    p_object=plotdata_run(sclass,filetable1,filetable2,str(varid),seasonid, outputPath, taskID)
+    pid = p_object.pid
     obj={'task_id':str(pid)}
     task_tracker=utils.TaskTracker()
-    task_tracker.add_task(pid,output_path)
+    task_tracker.add_task(pid,p_object)
     json_res=simplejson.dumps(obj)
     
     return HttpResponse(json_res, content_type="application/json")
 
 def get_status(request,taskID):
     task_id=int(taskID)
-    status = 0
+    p_object=utils.TaskTracker().get_task(task_id)
+    status=plotdata_status(p_object)
+    status1 = 1
     if taskID < 0:
-        status=0
+        status1=1
     try:
         os.kill(task_id, 0)
-        status=1
+        status1=0
     except OSError, e:
-        status=0
+        status1=1
         pass
+    print "STATUS : ", status, ", ", status1
     obj={'status': status}
     json_res=simplejson.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 
 def load_output(request, taskID):
     task_id=int(taskID)
-    outfile=utils.TaskTracker().get_task(task_id)
+    p_object=utils.TaskTracker().get_task(task_id)
+    outfile = plotdata_results(p_object)
+    #task_id=int(taskID)
+    #outfile=utils.TaskTracker().get_task(task_id)
     #look for the output file that ends in diagoutput
     filelist=os.listdir(outfile)
     outfilename=None

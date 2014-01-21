@@ -308,12 +308,12 @@
                                 myStatus=data1['status'];
                                 if (myStatus=='0')
                                 {
-                                    $("#progress"+task_id).remove();
-                                    toggle(task_id);  
+                                    setTimeout(function() {updateLoop(task_id);}, 1000);
                                 }
                                 else
                                 {
-                                    setTimeout(function() {updateLoop(task_id);}, 1000);
+                                    $("#progress"+task_id).remove();
+                                    toggle(task_id);  
                                 }
                             },
                             error: function(){alert('ERROR in progress bar update');}});
