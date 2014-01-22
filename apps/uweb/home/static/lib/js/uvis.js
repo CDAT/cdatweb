@@ -194,6 +194,21 @@ uvis.plot = function(nodeId, args) {
     // @todo Provide right abstraction
     m_viewport.render();
   };
+
+  /////////////////////////////////////////////////////////////////////////////
+  /**
+   * Clear plot to its default background color
+   */
+  /////////////////////////////////////////////////////////////////////////////
+  this.clear = function() {
+    var ctxs = $(m_nodeId + " > .renderers > canvas");
+    var i = null;
+
+    // Find all of the canvas used by the container and clear them now
+    for (i = 0 ; i < ctxs.length; ++i) {
+      ctxs[i].getContext('2d').clearRect(0, 0, ctxs[i].width, ctxs[i].height);
+    }
+  };
 };
 
 //////////////////////////////////////////////////////////////////////////////
