@@ -501,10 +501,22 @@
     myview.addPlot(myplot2);
     myview.addPlot(myplot3);
     myview.addPlot(myplot4);
+    myplot1.on('mousemove', function(evt) {
+      var elem_position = $(evt.delegateTarget).offset(),
+          x = evt.pageX - elem_position.left,
+          y = evt.pageY - elem_position.top;
+
+      myplot1.getDataXY(x, y, function(data){
+        console.log('data ', data);
+      });
+    });
     function initSheet(){
-        myview.contextInit();
+      myview.contextInit();
+      var data = "/home/aashish/workspace/data/documents/clt.nc";
+      myplot1.setData(data, function() { myplot1.render() });
     }
     remoteConnection.connect(initSheet);
+
     /**
     function testDisplay() {
       var data = "/export/leung25/Downloads/clt.nc";

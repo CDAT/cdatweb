@@ -88,7 +88,13 @@ uvis.plot = function(nodeId, args) {
       m_remote = true,
       m_type = null,
       m_data = null,
-      m_this = this;
+      m_this = this,
+      m_actions = {'blur':[], 'focus':[], 'focusin':[], 'focusout':[],
+        'load':[], 'resize':[], 'scroll':[], 'unload':[], 'click':[],
+        'dblclick':[], 'mousedown':[], 'mouseup':[],
+        'mousemove':[], 'mouseover':[], 'mouseout':[], 'mouseenter':[],
+        'mouseleave':[],'change':[], 'select':[], 'submit':[], 'keydown':[],
+        'keypress':[], 'keyup':[], 'error':[]};
 
   if (m_remote) {
     // Remote rendered plots expect a remote connection in the argument
@@ -98,6 +104,14 @@ uvis.plot = function(nodeId, args) {
       console.log("[ERROR] Remote render plots require remote connection");
     }
   }
+
+  for (var action in m_actions) {
+    if (m_actions.hasOwnProperty(action)) {
+      var i = null;
+      for (i = 0; i < m_actions[action].length; ++i) {
+        $(m_nodeId).on(action, m_actions[action]);
+      }
+  }}
 
   /////////////////////////////////////////////////////////////////////////////
   /**
@@ -209,6 +223,38 @@ uvis.plot = function(nodeId, args) {
       ctxs[i].getContext('2d').clearRect(0, 0, ctxs[i].width, ctxs[i].height);
     }
   };
+
+  /////////////////////////////////////////////////////////////////////////////
+  /**
+   * Bind callback to an action
+   *
+   * @param action {string}
+   * @param callback {function}
+   */
+  /////////////////////////////////////////////////////////////////////////////
+  this.on = function(action, callback) {
+    if (!m_actions.hasOwnProperty(action)) {
+      console.log('Action %s not supported', action);
+      return;
+    }
+    $(m_nodeId).on(action, callback);
+    m_actions[action].push(callback);
+  };
+
+  /////////////////////////////////////////////////////////////////////////////
+  /**
+   * Get data at given x and y position
+   *
+   * @param x
+   * @param y
+   * @param callback
+   */
+  /////////////////////////////////////////////////////////////////////////////
+  this.getDataXY = function(x, y, callback) {
+    m_connection.getSession().call("vtk:getDataValueFromCursor", x, y).then(function(data){
+      callback(data);
+    });
+  };
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -266,6 +312,11 @@ uvis.view = function() {
     // @todo Implement this
   };
 
+  /////////////////////////////////////////////////////////////////////////////
+  /**
+   *  Render view and all of its plots
+   */
+  /////////////////////////////////////////////////////////////////////////////
   this.render = function() {
     // @todo Implement this
     var i;
