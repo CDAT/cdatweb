@@ -88,10 +88,11 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
         print "mouseInteraction ..."
         x=event["x"]
         y=event["y"]
-        x_percent=x/self.image_width
-        y_percent=1.0-(y/self.image_height)
+        #x_percent=x/self.image_width
+        #y_percent=1.0-(y/self.image_height)
 
-        data=self.getDataValueFromCursor(x_percent,y_percent)
+        #data=self.getDataValueFromCursor(x_percent,y_percent)
+        data=self.getDataValueFromCursor(x,y)
         data=str(data)
         print x,y, x_percent,y_percent,data
         return data
@@ -140,9 +141,13 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
             l = ((cursorY-dy1)/(dy2-dy1)*(Y2-Y1))+Y1
             SY = slice(*Y.mapInterval((l,l,"cob")))
             myRank=data.rank()
+            print "Rank: ", myRank
+            
             if myRank > 2:
+                print data[...,SY,SX].flat[0]
                 return data[...,SY,SX].flat[0]
             else:
+                print data[...,SY,SX]
                 return data[...,SY,SX]
         else:
           return ""

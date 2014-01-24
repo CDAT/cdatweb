@@ -46,6 +46,7 @@
             <div class="tab-pane active" id="Sheet1">
                 <div class=row>
                     <div class="col-md-6" id="Sheet1Canvas1" style="height:400px;box-shadow: 0 0 2px grey">
+                                <div id="data1">123</div>
             			<div id="viewport-container1" ></div>
                     </div>
                     <div class="col-md-6" id="Sheet1Canvas2" style="height:400px;box-shadow: 0 0 2px grey">
@@ -178,28 +179,6 @@
 
                 if (!myDiv.hasChildNodes())
                 {
-                    /*
-				    if (pv.connection && pv.connection.session) {
-            				var selected = "/export/leung25/uvis/apps/uweb/media/diag/2/test.nc"
-	    				pv.connection.session.call("vtk:is_initRender").then(function(res) {
-	    				    if (res){
-					        pv.connection.session.call("vtk:setFileName",selected).then(function(res){
-			                            console.log("setPlotType: ready to run stillRender");
-                        		            pv.viewport.render();
-	    	    			        });
-	        		    	    }
-	        		    	    else
-	        		            {
-	    	    		                pv.connection.session.call("vtk:setFileName",selected).then(function(res){
-                        		            console.log("Calling setPlotType: ready to run initRender");
-                                                    initRender();
-                                                    console.log("Called initRender()");
-	            		                });
-	        			     }
-	    		    	   	});
-                                        }
-                    */
-                     
                     $.ajax({url: 'http://localhost:8000/diag/api/load_output/'+task_id+'/',
                         data:{},
                         type: 'GET',
@@ -210,6 +189,7 @@
                                 count = myList.length;
                                 index = 0;
                                 myplot1.setData(myList[index++]['fullpath'],function(){
+                                    myplot1.clear();
                                     myplot1.render();
                                     if (index < count){
                                         myplot2.setData(myList[index++]['fullpath'],function(){
@@ -507,13 +487,14 @@
           y = evt.pageY - elem_position.top;
 
       myplot1.getDataXY(x, y, function(data){
-        console.log('data ', data);
+        console.log('data ', x,y,data);
+        $("#data1").text(data);
       });
     });
     function initSheet(){
       myview.contextInit();
-      var data = "/home/aashish/workspace/data/documents/clt.nc";
-      myplot1.setData(data, function() { myplot1.render() });
+      //var data = "/home/aashish/workspace/data/documents/clt.nc";
+      //myplot1.setData(data, function() { myplot1.render() });
     }
     remoteConnection.connect(initSheet);
 
