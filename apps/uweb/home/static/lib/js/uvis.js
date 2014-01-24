@@ -250,8 +250,8 @@ uvis.plot = function(nodeId, args) {
    * @param callback
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.getDataXY = function(x, y, callback) {
-    m_connection.getSession().call("vtk:getDataValueFromCursor", x, y).then(function(data){
+  this.getData = function(evt, callback) {
+    m_connection.getSession().call("vtk:mouseInteraction", evt).then(function(data){
       callback(data);
     });
   };

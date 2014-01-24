@@ -88,11 +88,11 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
         print "mouseInteraction ..."
         x=event["x"]
         y=event["y"]
-        #x_percent=x/self.image_width
-        #y_percent=1.0-(y/self.image_height)
+        x_percent=x/self.image_width
+        y_percent=1.0-(y/self.image_height)
 
-        #data=self.getDataValueFromCursor(x_percent,y_percent)
-        data=self.getDataValueFromCursor(x,y)
+        data=self.getDataValueFromCursor(x_percent,y_percent)
+        #data=self.getDataValueFromCursor(x,y)
         data=str(data)
         print x,y, x_percent,y_percent,data
         return data
@@ -178,6 +178,7 @@ class UWebProtocol(pv_protocols.ParaViewWebProtocol):
 
     def diagRender(self):
         print "called diagRender"
+        self._canvas.clear()
         self.f=cdms2.open(self._netcdfFile)
         varlist=self.f.plot_these
         if isinstance(varlist,list):

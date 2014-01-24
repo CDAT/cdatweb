@@ -482,12 +482,15 @@
     myview.addPlot(myplot3);
     myview.addPlot(myplot4);
     myplot1.on('mousemove', function(evt) {
-      var elem_position = $(evt.delegateTarget).offset(),
-          x = evt.pageX - elem_position.left,
-          y = evt.pageY - elem_position.top;
+      var elem_position = $(evt.delegateTarget).offset();
+          evt["x"] = evt.pageX - elem_position.left;
+          evt["y"] = evt.pageY - elem_position.top;
+      var evtInfo = {};
+      evtInfo.x = evt["x"];
+      evtInfo.y = evt["y"];
 
-      myplot1.getDataXY(x, y, function(data){
-        console.log('data ', x,y,data);
+      myplot1.getData(evtInfo, function(data){
+        console.log('data ', evtInfo,data);
         $("#data1").text(data);
       });
     });
