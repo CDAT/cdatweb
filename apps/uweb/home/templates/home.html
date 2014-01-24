@@ -46,18 +46,21 @@
             <div class="tab-pane active" id="Sheet1">
                 <div class=row>
                     <div class="col-md-6" id="Sheet1Canvas1" style="height:400px;box-shadow: 0 0 2px grey">
-                                <div id="data1">123</div>
+                                <div id="data1"></div>
             			<div id="viewport-container1" ></div>
                     </div>
                     <div class="col-md-6" id="Sheet1Canvas2" style="height:400px;box-shadow: 0 0 2px grey">
+                                <div id="data2"></div>
                         <div id="viewport-container2" ></div>
                     </div>
                 </div>
                 <div class=row>
                     <div class="col-md-6" id="Sheet1Canvas3" style="height:400px;box-shadow: 0 0 2px grey">
+                                <div id="data3"></div>
             			<div id="viewport-container3" ></div>
                     </div>
                     <div class="col-md-6" id="Sheet1Canvas4" style="height:400px;box-shadow: 0 0 2px grey">
+                                <div id="data4"></div>
             			<div id="viewport-container4" ></div>
                     </div>
                 </div>
@@ -162,7 +165,7 @@
             for (i=0;i<total;i++){
                 var child=childrenList[i];
                 if (child.hasAttribute('class')){
-                    var newnode = childrenList[0].cloneNode(true);
+                    var newnode = child.cloneNode(true);
                     newnode.childNodes[1].innerHTML='Sheet'+total;
                     myelement.insertBefore(newnode,lastNode);
                     child.removeAttribute('class');
@@ -193,12 +196,15 @@
                                     myplot1.render();
                                     if (index < count){
                                         myplot2.setData(myList[index++]['fullpath'],function(){
+                                            myplot2.clear();
                                             myplot2.render();
                                             if (index < count){
                                                 myplot3.setData(myList[index++]['fullpath'], function(){
+                                                    myplot3.clear();
                                                     myplot3.render();
                                                     if (index < count) {
                                                         myplot4.setData(myList[index++]['fullpath'], function() {
+                                                            myplot4.clear();
                                                             myplot4.render();
                                                         });
                                                     }
@@ -492,6 +498,45 @@
       myplot1.getData(evtInfo, function(data){
         console.log('data ', evtInfo,data);
         $("#data1").text(data);
+      });
+    });
+    myplot2.on('mousemove', function(evt) {
+      var elem_position = $(evt.delegateTarget).offset();
+          evt["x"] = evt.pageX - elem_position.left;
+          evt["y"] = evt.pageY - elem_position.top;
+      var evtInfo = {};
+      evtInfo.x = evt["x"];
+      evtInfo.y = evt["y"];
+
+      myplot2.getData(evtInfo, function(data){
+        console.log('data ', evtInfo,data);
+        $("#data2").text(data);
+      });
+    });
+    myplot3.on('mousemove', function(evt) {
+      var elem_position = $(evt.delegateTarget).offset();
+          evt["x"] = evt.pageX - elem_position.left;
+          evt["y"] = evt.pageY - elem_position.top;
+      var evtInfo = {};
+      evtInfo.x = evt["x"];
+      evtInfo.y = evt["y"];
+
+      myplot3.getData(evtInfo, function(data){
+        console.log('data ', evtInfo,data);
+        $("#data3").text(data);
+      });
+    });
+    myplot4.on('mousemove', function(evt) {
+      var elem_position = $(evt.delegateTarget).offset();
+          evt["x"] = evt.pageX - elem_position.left;
+          evt["y"] = evt.pageY - elem_position.top;
+      var evtInfo = {};
+      evtInfo.x = evt["x"];
+      evtInfo.y = evt["y"];
+
+      myplot4.getData(evtInfo, function(data){
+        console.log('data ', evtInfo,data);
+        $("#data4").text(data);
       });
     });
     function initSheet(){
