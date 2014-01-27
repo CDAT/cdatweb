@@ -546,7 +546,7 @@
       });
     });
     function initSheet(){
-      myview.contextInit();
+      myview.createContext();
       //var data = "/home/aashish/workspace/data/documents/clt.nc";
       //myplot1.setData(data, function() { myplot1.render() });
     }
@@ -557,7 +557,7 @@
       var data = "/export/leung25/Downloads/clt.nc";
       myplot.setData(data);
       myplot2.setData(data);
-      myview.contextInit();
+      myview.createContext();
       myview.render();
     }
 
