@@ -226,6 +226,36 @@ uvis.plot = function(nodeId, args) {
 
   /////////////////////////////////////////////////////////////////////////////
   /**
+   * Push current state onto stack
+   */
+  /////////////////////////////////////////////////////////////////////////////
+  this.save = function() {
+    var ctxs = $(m_nodeId + " > .renderers > canvas"),
+        i = null;
+
+    // Find all of the canvas used by the container and clear them now
+    for (i = 0 ; i < ctxs.length; ++i) {
+      ctxs[i].getContext('2d').save();
+    }
+  };
+
+  /////////////////////////////////////////////////////////////////////////////
+  /**
+   * Restore to last state from stack
+   */
+  /////////////////////////////////////////////////////////////////////////////
+  this.restore = function() {
+    var ctxs = $(m_nodeId + " > .renderers > canvas"),
+        i = null;
+
+    // Find all of the canvas used by the container and clear them now
+    for (i = 0 ; i < ctxs.length; ++i) {
+      ctxs[i].restore();
+    }
+  };
+
+  /////////////////////////////////////////////////////////////////////////////
+  /**
    * Bind callback to an action
    *
    * @param action {string}
