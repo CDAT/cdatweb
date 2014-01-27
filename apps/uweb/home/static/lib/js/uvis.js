@@ -180,7 +180,7 @@ uvis.plot = function(nodeId, args) {
    * Initialize the context
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.contextInit = function() {
+  this.createContext = function() {
     if (m_connection === null) {
       console.log("[plot:info] Connection cannot be null");
       return;
@@ -194,7 +194,7 @@ uvis.plot = function(nodeId, args) {
    * Close the context
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.contextClose = function() {
+  this.closeContext = function() {
     m_viewport.unbind();
     vtkweb.stop(m_connection.getMeta());
   };
@@ -270,10 +270,10 @@ uvis.view = function() {
    * Initialize context specific data
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.contextInit = function() {
+  this.createContext = function() {
     var i;
     for(i = 0; i < m_plots.length; ++i) {
-      m_plots[i].contextInit();
+      m_plots[i].createContext();
     }
   };
 
@@ -282,10 +282,10 @@ uvis.view = function() {
    * Clean up on context close
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.contextClose = function() {
+  this.closeContext = function() {
     var i;
     for(i = 0; i < m_plots.length; ++i) {
-      m_plots[i].contextClose();
+      m_plots[i].closeContext();
     }
   };
 
