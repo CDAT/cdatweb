@@ -40,7 +40,7 @@
         </div>
         <div class="col-md-7" id="Center">
             <ul class="nav nav-tabs" id=sheetTab>
-                <li class=active> <a href="#Sheet1" data-toggle="tab">Sheet1</a></li>
+                <li class=active> <a class=sheetTabAnchor data-toggle="tab">Sheet1</a></li>
                 <li id='lastSheet'> <a href="#Sheet1" data-toggle="tab">+</a></li>
             </ul>
             <div class="tab-pane active" id="Sheet1">
@@ -175,8 +175,26 @@
                     newnode.childNodes[1].innerHTML='Sheet'+total;
                     myelement.insertBefore(newnode,lastNode);
                     child.removeAttribute('class');
+                    $('.sheetTabAnchor').click(function(e){ 
+                        var tabIndex=parseInt(this.text.substring(5));
+                        var newTabIndex=tabIndex-1; 
+                        console.log(tabIndex); 
+                    });
                 }
             }
+            return total;
+        }
+
+        $('.sheetTabAnchor').click(function(e){ 
+            var tabIndex=parseInt(this.text.substring(5));
+            var newTabIndex=tabIndex-1; 
+            myplot1.restore();
+            console.log(tabIndex); 
+        });
+
+        function createHiddenInput(newID, newValue){
+            var myInputTag="<input id="+newID+" type=hidden value=" + newValue +"/>";
+            return myInputTag;
         }
 
         function toggle(task_id) {
@@ -198,6 +216,7 @@
                                 count = myList.length;
                                 index = 0;
                                 myplot1.setData(myList[index++]['fullpath'],function(){
+                                    myplot1.save()
                                     myplot1.clear();
                                     myplot1.render();
                                     if (index < count){
@@ -220,16 +239,17 @@
                                     }
                                 });
                             }
+                            var cur_sheet=1;
                             if (sessionStorage.diagcount){ 
                                 console.log(sessionStorage.diagcount);
                                 if (Number(sessionStorage.diagcount) > 1) {
-                                    addSheet();
+                                    cur_sheet=addSheet();
                                 }
                             }
                             for (var i = 0; i < myList.length; i++)
                             {
                                 myTitle=myList[i]['filename'];
-                                inner_html+=("<h6>"+myTitle+"</h6>");
+                                inner_html+=("<h6>"+myTitle+"</h6>"+createHiddenInput("Sheet"+(cur_sheet)+"Canvas"+(i+1),myList[i]['fullpath']));
                                 /*
                                 if (i==0)
                                 {
@@ -493,6 +513,24 @@
     myview.addPlot(myplot2);
     myview.addPlot(myplot3);
     myview.addPlot(myplot4);
+
+    function getActiveSheet(){
+        var childrenList=$("#sheetTab").children();
+        var len=childrenList.length;
+        for (i=0; i<len; i++){
+            if (childrenList[i].hasAttribute('class'))
+            {
+                mySheet=childrenList[i].text;
+                return mySheet;
+            }
+        }
+    }
+
+    function getFilename(mySheet,myCanvas){
+        myID=mySheet+myCanvas;
+        return $('#'+myID).val();
+    }
+
     myplot1.on('mousemove', function(evt) {
       var elem_position = $(evt.delegateTarget).offset();
           evt["x"] = evt.pageX - elem_position.left;
