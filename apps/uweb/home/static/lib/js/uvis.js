@@ -250,7 +250,7 @@ uvis.plot = function(nodeId, args) {
 
     // Find all of the canvas used by the container and clear them now
     for (i = 0 ; i < ctxs.length; ++i) {
-      ctxs[i].restore();
+      ctxs[i].getContext('2d').restore();
     }
   };
 
