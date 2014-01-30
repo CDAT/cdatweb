@@ -37,9 +37,25 @@ def diag_batch(request):
     #image_dir=request.POST['directory']
     return render(request, "diag_carousel.html")
 
+def esgf_data_node(request):
+    host=settings.ESGF_HOST 
+    data_node_list=esgf_data_node_list(host)
+    obj={'res':data_node_list}
+    json_res=simplejson.dumps(obj)
+    return HttpResponse(json_res, content_type="application/json")
+
+def esgf_search(request):
+    search_str=request.GET['search_str']
+    obj={"res":esgf_query("pcmdi9.llnl.gov",search_str)}
+    #obj={"res":[{"fileID":"fileID1","url":"url1"},{"fileID":"fileID2","url":"url2"}]}
+    json_res=simplejson.dumps(obj)
+    return HttpResponse(json_res, content_type="application/json")
+
 def diag_home(request):
     #image_dir=request.POST['directory']
-    mycontent={'uvis_hostname':settings.UVIS_HOSTNAME}
+    host=settings.ESGF_HOST 
+    data_node_list=esgf_data_node_list(host)
+    mycontent={'data_node_list':data_node_list,'uvis_hostname':settings.UVIS_HOSTNAME}
     return render(request, "home.html",mycontent)
 
 def testing(request):
@@ -139,20 +155,6 @@ def boxfill(request):
             return render(request, 'boxfill.html', {
                 'png': plot_filename,
             })
-
-def esgf_data_node(request):
-    host=settings.ESGF_HOST 
-    data_node_list=esgf_data_node_list(host)
-    obj={'res':data_node_list}
-    json_res=simplejson.dumps(obj)
-    return HttpResponse(json_res, content_type="application/json")
-
-def esgf_search(request):
-    search_str=request.GET['search_str']
-    obj={"res":esgf_query("pcmdi9.llnl.gov",search_str)}
-    #obj={"res":[{"fileID":"fileID1","url":"url1"},{"fileID":"fileID2","url":"url2"}]}
-    json_res=simplejson.dumps(obj)
-    return HttpResponse(json_res, content_type="application/json")
     
 def make_boxfill(request):
     if not request.user.is_authenticated():
