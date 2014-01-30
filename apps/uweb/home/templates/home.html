@@ -44,12 +44,29 @@
                 <li id='lastSheet'> <a href="#Sheet1" data-toggle="tab">+</a></li>
             </ul>
             <div class="tab-pane active" id="Sheet1">
-                <div class="btn-toolbar" role="toolbar">
-                    <div class="btn-group"><img type="button" src="{{STATIC_URL}}img/delete.png" class="img-thumbnail"></img></div>
-                    <div class="btn-group">2</div>
-                    <div class="btn-group">3</div>
-                </div>
-
+                    <div class="btn-group btn-group-xs">
+                        <button type="button" class="btn btn-default">
+                            <img src="{{STATIC_URL}}img/delete.png" class="img-rounded" style="height:25px;width:25px;vertical-align:middle;"></img>
+                        </button>
+                        <button type="button" class="btn btn-default">
+                            <img src="{{STATIC_URL}}img/source.png" class="img-rounded" style="height:25px;width:25px;vertical-align:middle;"></img>
+                        </button>
+                        <button type="button" class="btn btn-default">
+                            <img src="{{STATIC_URL}}img/pipeline.png" class="img-rounded" style="height:25px;width:25px;vertical-align:middle;"></img>
+                        </button>
+                        <button type="button" class="btn btn-default">
+                            <img src="{{STATIC_URL}}img/previous.png" class="img-rounded" style="height:25px;width:25px;vertical-align:middle;"></img>
+                        </button>
+                        <button type="button" class="btn btn-default">
+                            <img src="{{STATIC_URL}}img/next.png" class="img-rounded" style="height:25px;width:25px;vertical-align:middle;"></img>
+                        </button>
+                        <button type="button" class="btn btn-default">
+                            <img src="{{STATIC_URL}}img/printer.png" class="img-rounded" style="height:25px;width:25px;vertical-align:middle;"></img>
+                        </button>
+                        <button type="button" class="btn btn-default">
+                            <img src="{{STATIC_URL}}img/file_export.png" class="img-rounded" style="height:25px;width:25px;vertical-align:middle;"></img>
+                        </button>
+                    </div>
                 <div class=row>
                     <div class="col-md-6" id="Sheet1Canvas1" style="height:400px;box-shadow: 0 0 2px grey">
                                 <div id="data1"></div>
@@ -79,9 +96,79 @@
                 <li> <a href="#ESGF" data-toggle="tab">ESGF</a></li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane" id="Variables"></div>
+                <div class="tab-pane" id="Variables">
+                    <div class="btn-group btn-group-xs">
+                        <button type="button" class="btn btn-default" onclick="deleteSelectedVariables()">
+                            <img class=img-rounded src={{STATIC_URL}}img/delete.png style="height:25px;width:25px;vertical-align:middle;"  />
+                        </button>
+                        <button type="button" class="btn btn-default" onclick="checkAllVariables()">
+                            <img class=img-rounded src={{STATIC_URL}}img/checked.png style="height:25px;width:25px;vertical-align:middle;"/>
+                        </button>
+                        <button type="button" class="btn btn-default" onclick="editSelectedVariables()">
+                            <img class=img-rounded src={{STATIC_URL}}img/edit.png style="height:25px;width:25px;vertical-align:middle;"/>
+                        </button>
+                        <button type="button" class="btn btn-default">
+                            <img class=img-rounded src={{STATIC_URL}}img/file_save.png style="height:25px;width:25px;vertical-align:middle;"/>
+                        </button>
+                        <button type="button" class="btn btn-default" onclick="resetVariables()">
+                            <img class=img-rounded src={{STATIC_URL}}img/preferences.png style="height:25px;width:25px;vertical-align:middle;"/>
+                        </button>
+                    </div>
+                    <div class=row>
+                        <div class="col-md-11" id="var_panel" style="height:620px;box-shadow: 0 0 2px grey">
+                        </div>
+                    </div>
+                    <div class=row>
+                        <div id=calculator>
+                            <table id="calc_table1" >
+                                <tr><td colspan=6><input style="width:444px;" type=text id=array_name placeholder="Result Array Name"/></td></tr>
+                                <tr><td colspan=6><input style="width:444px;" type=text id=calc_command placeholder="Enter a CDAT command"/></td></tr>
+                                <tr>
+                                    <td><button style="width:72px;" id=sin_btn>sin</button></td>
+                                    <td><button style="width:72px;" id=asin_btn>asin</button></td>
+                                    <td><button style="width:72px;" id=sqr>x^2</button></td>
+                                    <td><button style="width:72px;" id=nat_log>ln</button></td>
+                                    <td><button style="width:72px;" id=x_less_than_y>x&lt;y</button></td>
+                                    <td><button style="width:72px;" id=plus>+</button></td>
+                                </tr>
+                                <tr>
+                                    <td><button style="width:72px;" id=cos_btn>cos</button></td>
+                                    <td><button style="width:72px;" id=acos_btn>acos</button></td>
+                                    <td><button style="width:72px;" id=sqrt>sqrt</button></td>
+                                    <td><button style="width:72px;" id=log10>log10</button></td>
+                                    <td><button style="width:72px;" id=x_greater_than_y>x&gt;y</button></td>
+                                    <td><button style="width:72px;" id=minus>-</button></td>
+                                </tr>
+                                <tr>
+                                    <td><button style="width:72px;" id=tan_btn>tan</button></td>
+                                    <td><button style="width:72px;" id=atan_btn>atan</button></td>
+                                    <td><button style="width:72px;" id=invert_btn>1/x</button></td>
+                                    <td><button style="width:72px;" id=exp_btn>exp</button></td>
+                                    <td><button style="width:72px;" id=x_compare_y>x&lt;&gt;y</button></td>
+                                    <td><button style="width:72px;" id=multiply>*</button></td>
+                                </tr>
+                                <tr>
+                                    <td><button style="width:72px;" id=abs_btn>abs</button></td>
+                                    <td><button style="width:72px;" id=std_btn>std</button></td>
+                                    <td><button style="width:72px;" id=power_btn>x^y</button></td>
+                                    <td><button style="width:72px;" id=10exp_btn>10^x</button></td>
+                                    <td><button style="width:72px;" id=x_equal_y>x==y</button></td>
+                                    <td><button style="width:72px;" id=divide>/</button></td>
+                                </tr>
+                            </table>
+                            <table id="calc_table2">
+                                <tr>
+                                    <td><button style="width:109px;" id=regrid_btn>Regrid</button></td>
+                                    <td><button style="width:109px;" id=mask_btn>Mask</button></td>
+                                    <td><button style="width:109px;" id=get_mask_btn>Get_Mask</button></td>
+                                    <td><button style="width:110px;" id=grower_btn>Grower</button></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
-                <div class="tab-pane active" id="Diagnostic">
+                <div class="tab-pane" id="Diagnostic">
                     <div class="panel-group" id="diagAccordion">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -158,7 +245,7 @@
                             </div>
                         </div>
                 </div> 
-                <div class="tab-pane" id="ESGF"></div>
+                <div class="tab-pane active" id="ESGF"></div>
         </div>
     </div>
 </div>
@@ -188,7 +275,7 @@
         $('.sheetTabAnchor').click(function(e){ 
             var tabIndex=parseInt(this.text.substring(5));
             var newTabIndex=tabIndex-1; 
-            myplot1.restore();
+            //myplot1.restore();
             console.log(tabIndex); 
         });
 

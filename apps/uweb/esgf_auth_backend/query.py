@@ -2,6 +2,32 @@ import os,sys
 import urllib2
 import libxml2
 
+def get_data_node_list(host):
+    rqst="http://%s/esg-search/search?facets=*&type=Dataset&limit=1&latest=true" % host
+    try:
+        url=urllib2.urlopen(rqst)
+    except Exception, msg:
+        print "unable to connect to %s"%rqst
+    
+    rawXML = url.read()
+    formattedXML=rawXML.replace("\n","")
+    doc=libxml2.parseDoc(formattedXML)
+    data_node_list=[]
+    for node in doc.xpathEval('/response/lst[@name="facet_counts"]/lst[@name="facet_fields"]/lst[@name="data_node"]/int'):
+        data_node_list.append(node.get_properties().get_content())
+    #filter out all pcmdi except for pcmdi9
+    found_pcmdi9=False
+    filtered_data_node_list=[]
+    for data_node in data_node_list:
+        if data_node=='pcmdi9.llnl.gov':
+            found_pcmdi9=True
+        filtered_data_node_list.append(data_node)
+    if found_pcmdi9:
+        for data_node in data_node_list:
+            if data_node.startswith('pcmdi') and data_node != 'pcmdi9.llnl.gov':
+                filtered_data_node_list.remove(data_node)
+    return filtered_data_node_list
+
 def _extract_url(doc_node):
     opendap_url=None
     nodeset=doc_node.xpathEval('./arr[@name="url"]/str/text()')
@@ -44,7 +70,8 @@ def query(host,query):
     return filelist
 
 if __name__ == "__main__":
-    myfiles=query("pcmdi9.llnl.gov","temperature&limit=2")
+    print get_data_node_list("pcmdi9.llnl.gov")
+    myfiles=query("pcmdi9.llnl.gov","temperature")
     print len(myfiles)
     for file in myfiles:
-        print file, myfiles[file]
+        print file
