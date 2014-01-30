@@ -14,6 +14,8 @@ from lib_util.esgf_connector import datasetId_to_html_list as datasetId2htmllist
 #import proof_of_concept
 
 from esgf_auth_backend.query import query as esgf_query
+from esgf_auth_backend.query import get_data_node_list as esgf_data_node_list
+
 
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.models import User
@@ -137,6 +139,13 @@ def boxfill(request):
             return render(request, 'boxfill.html', {
                 'png': plot_filename,
             })
+
+def esgf_data_node(request):
+    host=settings.ESGF_HOST 
+    data_node_list=esgf_data_node_list(host)
+    obj={'res':data_node_list}
+    json_res=simplejson.dumps(obj)
+    return HttpResponse(json_res, content_type="application/json")
 
 def esgf_search(request):
     search_str=request.GET['search_str']
