@@ -1,6 +1,7 @@
 <html>
     <title>Diagnostics</title>
     <link rel="stylesheet" href="{{STATIC_URL}}lib/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="{{STATIC_URL}}css/jquery-ui-1.10.0.css"/>
     <script src="{{STATIC_URL}}ext/js-core/jquery-1.8.3.min.js"></script>
     <script src="{{STATIC_URL}}lib/js/bootstrap.min.js"></script>
 
@@ -33,9 +34,54 @@
             </ul>
             <div class="tab-pane active" id="Project1">
                 <div class=row>
-                    <div class="col-md-12" id="Project1Div" style="height:800px;box-shadow: 0 0 2px grey">
+                    <div class="col-md-12" id="Project1Div" style="height:720px;box-shadow: 0 0 2px grey">
                     </div>
-                </div> 
+                </div>
+                    <h4>&nbsp;<span class="label label-default">Plots</span></h4>
+                        <div id="plot_type_selection" class=col-md-13>
+                            <div class="btn-group dropup">
+                                <button type="button" class="btn btn-default" style="width:260px;">DV3D</button>
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:30px;height:34px;">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">Curtain Plot</a></li>
+                                    <li><a href="#">Glyph Slicer</a></li>
+                                    <li><a href="#">Glyph Volume</a></li>
+                                    <li><a href="#">Hovmoller Slicer</a></li>
+                                    <li><a href="#">Hovmoller Volume</a></li>
+                                    <li><a href="#">IsoSurface</a></li>
+                                    <li><a href="#">IsoSurface With Texture</a></li>
+                                    <li><a href="#">Slicer</a></li>
+                                    <li><a href="#">Slicer With Contours</a></li>
+                                    <li><a href="#">Streamline Slicer</a></li>
+                                    <li><a href="#">Volume Render</a></li>
+                                    <li><a href="#">Volume Render With Slicer</a></li>
+                                </ul>
+                            </div>
+                            <br>
+                            <div class="btn-group dropup">
+                                <button type="button" class="btn btn-default" style="width:260px;">            VCS</button>
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:30px;height:34px;">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">Boxfill</a></li>
+                                    <li><a href="#">Isofill</a></li>
+                                    <li><a href="#">Isoline</a></li>
+                                    <li><a href="#">Meshfill</a></li>
+                                   <li><a href="#">Outfill</a></li>
+                                   <li><a href="#">Scatter</a></li>
+                                   <li><a href="#">TaylorDiagram</a></li>
+                                   <li><a href="#">Vector</a></li>
+                                   <li><a href="#">XvsY</a></li>
+                                   <li><a href="#">XyvsY</a></li>
+                                   <li><a href="#">YxvsX</a></li>
+                                </ul>
+                            </div>
+                        </div>
             </div>
         </div>
         <div class="col-md-7" id="Center">
@@ -186,6 +232,7 @@
                                                 <select class="form-control" id="inputPackage">
                                                     <option value="AMWG"></option>
                                                     <option value="AMWG">AMWG</option>
+                                                    <option value="LMWG">LMWG</option>
                                                 </select>
                                             </div>
                                     </div>
@@ -250,21 +297,25 @@
                     <form class="form-horizontal" role="form">
                         <br>
                         <div class="form-group">
-                            <label for="inputDataNode" class="col-sm-2 control-label">Text Search</label>
-                            <div class="col-sm-9">
-                                <input type=text class=form-control size=48>
-                            </div>
-                            <br>
+                                        <label for="inputEsgfSearch" class="col-sm-2 control-label">
+                                            <img class=img-rounded src={{STATIC_URL}}img/search.png style="height:25px;width:25px;vertical-align:middle;"/>
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <input type=text class=form-control id=inputEsgfSearch>
+                                        </div>
                     </div>
+                            
                                     <div class="form-group">
-                                        <label for="inputDataNode" class="col-sm-2 control-label">Data Node</label>
+                                        <label for="inputDataNode" class="col-sm-2 control-label">
+                                            <img class=img-rounded src={{STATIC_URL}}img/database.png style="height:25px;width:25px;vertical-align:middle;"/>
+                                        </label>
                                             <div class="col-sm-9">
                                                 <select class="form-control" id="inputDataNode">
                                                 </select>
                                             </div>
                                     </div>
                                    <div class="form-group">
-                                       <div class="col-sm-offset-2 col-md-2">
+                                       <div class="col-sm-offset-9 col-md-2">
                                            <button type="submit" class="btn btn-primary" id="run_esgf_search">Search</button>
                                        </div>
                                    </div>
@@ -274,6 +325,7 @@
     </div>
 </div>
     <script type="text/javascript">
+        $(function() { $("#plot_type_accordion").accordion();});
         function addSheet(){
             var myelement = document.getElementById('sheetTab');
             var lastNode=document.getElementById('lastSheet');
