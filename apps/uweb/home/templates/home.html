@@ -245,7 +245,31 @@
                             </div>
                         </div>
                 </div> 
-                <div class="tab-pane active" id="ESGF"></div>
+            </div>
+                <div class="tab-pane" id="ESGF">
+                    <form class="form-horizontal" role="form">
+                        <br>
+                        <div class="form-group">
+                            <label for="inputDataNode" class="col-sm-2 control-label">Text Search</label>
+                            <div class="col-sm-9">
+                                <input type=text class=form-control size=48>
+                            </div>
+                            <br>
+                    </div>
+                                    <div class="form-group">
+                                        <label for="inputDataNode" class="col-sm-2 control-label">Data Node</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" id="inputDataNode">
+                                                </select>
+                                            </div>
+                                    </div>
+                                   <div class="form-group">
+                                       <div class="col-sm-offset-2 col-md-2">
+                                           <button type="submit" class="btn btn-primary" id="run_esgf_search">Search</button>
+                                       </div>
+                                   </div>
+                    </form>
+                </div>
         </div>
     </div>
 </div>
