@@ -14,6 +14,7 @@
 
         <script src="{{STATIC_URL}}lib/js/vtkweb-all.js"></script>
         <script src="{{STATIC_URL}}lib/js/uvis.js"></script>
+        <script src="{{STATIC_URL}}lib/js/esgf_panel.js"></script>
 <body>
     <nav class="navbar navbar-default" role="navigation">
         <div class="navbar-header">
@@ -345,7 +346,9 @@
                     $.each(search_data, function(i,item) {
                         var myFileID=search_data[i].fileID;
                         var myURL=search_data[i].url;
-                        var new_element = "<tr><td><label for="+myURL +" id=label_"+myURL+"> &nbsp;&nbsp;&nbsp;"+myFileID+"</label><td></tr>";
+                        var first_td = '<td><a class=esgf_file_toggle><img src="{{STATIC_URL}}img/folder_blue_open.png"/></a><br><br><a class=esgf_file_var_import><img src="{{STATIC_URL}}img/save.png" width=15px/></a></td>';
+                        var second_td= '<td style="word-break: break-all"><a id='+myURL+' class=esgf_file_download>'+myFileID+'</a><ul class=esgf_file_ul style="display:none;"></ul></td>';
+                        var new_element = "<tr>"+first_td+second_td+"</tr>";
                         $(new_element).appendTo("#esgf_result");
                         })
                     },
