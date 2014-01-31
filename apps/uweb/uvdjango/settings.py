@@ -1,7 +1,7 @@
 ################################################################################
 #
 #                DEFAULT SETTINGS, DO NOT MAKE YOUR CHANGES HERE!
-# 
+#
 # These settings are over-ridden by local_settings.py
 # That is where you should make all your changes.
 #
@@ -92,7 +92,7 @@ STATIC_ROOT = ''
 STATIC_URL = '/static/'
 
 # Additional locations of static files
-STATICFILES_DIRS = (
+STATICFILES_DIRS = ( os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../../content')),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
