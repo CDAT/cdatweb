@@ -103,8 +103,6 @@ class VcsPlot(Plot):
             # Now plot the canvas
             d = self._canvas.plot(data, self._plotTemplate, self._type, bg=1)
 
-            print d
-
             png = d._repr_png_()
             png = base64.b64encode(png)
 
