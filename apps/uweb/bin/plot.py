@@ -37,7 +37,7 @@ class Plot(object):
     def createContext(self):
         pass
 
-    def render(self):
+    def render(self, options):
         pass
 
     def error(self, message):
@@ -77,7 +77,8 @@ class VcsPlot(Plot):
     def createContext(self):
         self._canvas = vcs.init()
 
-    def render(self):
+    def render(self, options):
+        print 'calling render on the plot 1'
         try:
             if (self._sources is None):
               self.error("Invalid sources for the plot")
@@ -85,6 +86,8 @@ class VcsPlot(Plot):
 
             # vcs plot can handle only one source
             source = self._sources[0];
+
+            print 'calling render on the plot 2'
 
             self.f = cdms2.open(source)
             if hasattr(self.f,'presentation'):
@@ -107,11 +110,15 @@ class VcsPlot(Plot):
             png = d._repr_png_()
             png = base64.b64encode(png)
 
+            print 'calling render on the plot 3'
+
             return self.toJSON(png, True, datetime.datetime.now().time().microsecond,
                                [550, 400], "png;base64", "", "", "")
 
         except Exception as e:
             print e
+
+        return {}
 
     class Factory:
         def create(self, *args, **kwargs):

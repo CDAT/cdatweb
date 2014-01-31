@@ -83,8 +83,6 @@ def bindRpc(cls, ns, name, mctor):
 def addMappedRpc(cls, objs, ns, call):
   call_lc = call[0].lower() + call[1:]
 
-  print 'call_lc ', call_lc
-
   def createRpc(call):
     def dispatchRpc(self, i, *args, **kwargs):
       c = getattr(self, objs)
@@ -109,6 +107,15 @@ class UVisProtocol(pv_protocols.ParaViewWebProtocol):
 
           print 'plot is ', pl
           return i
+
+    @exportRpc("stillRender")
+    def stillRender(self, options):
+        print 'stillRender'
+        print 'stillRender options, ', options
+        print 'stillRender options ', options['view']
+        #if options['view'] != "-1":
+        print 'rendering ', self._plots[options['view']]
+        return self._plots[options['view']].render(options);
 
     # TODO Add API for remove plot
 

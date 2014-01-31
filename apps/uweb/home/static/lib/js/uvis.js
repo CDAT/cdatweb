@@ -171,10 +171,11 @@ uvis.plot = function(nodeId, args) {
   /////////////////////////////////////////////////////////////////////////////
   this.setData = function(source, callback) {
     if (this.hasValidConnection()) {
-      m_connection.getSession().call("vtk:plot:setSources", self.m_id, [source]).then(function(res){
-        m_data = source;
-        typeof callback === 'function' && callback();
-      }, function(msg) {console.log(msg);});
+      m_connection.getSession().call("vtk:plot:setSources", m_id,
+        [source]).then(function(res){
+          m_data = source;
+          typeof callback === 'function' && callback();
+        }, function(msg) {console.log(msg);});
     }
   };
 
@@ -186,7 +187,7 @@ uvis.plot = function(nodeId, args) {
   this.init = function(callback) {
     if (this.hasValidConnection()) {
       m_connection.getSession().call("vtk:createPlot", "VcsPlot").then(function(res){
-        self.m_id = res;
+        m_id = res;
         typeof callback === 'function' && callback();
       });
     } else {
@@ -204,8 +205,18 @@ uvis.plot = function(nodeId, args) {
       console.log("[plot:info] Connection cannot be null");
       return;
     }
-    m_viewport = vtkWeb.createViewport({session: m_connection.getSession()});
+    m_viewport = vtkWeb.createViewport({session: m_connection.getSession(),
+                                        view: m_id});
     m_viewport.bind(m_nodeId);
+
+    if (this.hasValidConnection()) {
+      m_connection.getSession().call("vtk:plot:createContext", m_id).then(function(res){
+        typeof callback === 'function' && callback();
+      });
+    } else {
+      console.log("[error] Invalid connection");
+    }
+
   };
 
   /////////////////////////////////////////////////////////////////////////////
