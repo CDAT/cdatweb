@@ -1,4 +1,13 @@
 
+class PlotFactory(object):
+    _factories = {}
+
+    @staticmethod
+    def createPlot(id, *args, **kwargs):
+        if not PlotFactory._factories.has_key(id):
+            PlotFactory._factories[id] = eval(id + '.Factory()')
+        return PlotFactory._factories[id].create(*args, **kwargs)
+
 class Plot(object):
     def __init__(self, id=None, type=None):
         self._id = id
@@ -94,6 +103,8 @@ class VcsPlot(Plot):
             # Now plot the canvas
             d = self._canvas.plot(data, self._plotTemplate, self._type, bg=1)
 
+            print d
+
             png = d._repr_png_()
             png = base64.b64encode(png)
 
@@ -102,3 +113,7 @@ class VcsPlot(Plot):
 
         except Exception as e:
             print e
+
+    class Factory:
+        def create(self, *args, **kwargs):
+            return VcsPlot(*args, **kwargs)
