@@ -85,6 +85,7 @@ uvis.remoteConnection = function (url) {
 //////////////////////////////////////////////////////////////////////////////
 uvis.plot = function(nodeId, args) {
   var m_name = "default",
+      m_id = null,
       m_nodeId = nodeId,
       m_connection = null,
       m_viewport = null,
@@ -168,13 +169,29 @@ uvis.plot = function(nodeId, args) {
    * Set data (input) for the plot.
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.setData = function(data, callback) {
+  this.setData = function(source, callback) {
     if (this.hasValidConnection()) {
-      m_connection.getSession().call("vtk:setFileName",data).then(function(res){
-        m_data = data;
+      m_connection.getSession().call("vtk:setSources", self.m_id, source).then(function(res){
+        m_data = source;
 
         typeof callback === 'function' && callback();
       });
+    }
+  };
+
+  /////////////////////////////////////////////////////////////////////////////
+  /**
+   * Perform initialization code
+   */
+  /////////////////////////////////////////////////////////////////////////////
+  this.init = function(callback) {
+    if (this.hasValidConnection()) {
+      m_connection.getSession().call("vtk:createPlot", "VcsPlot").then(function(res){
+        self.m_id = res;
+        typeof callback === 'function' && callback();
+      });
+    } else {
+      console.log("[error] Invalid connection");
     }
   };
 
