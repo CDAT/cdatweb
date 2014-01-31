@@ -294,7 +294,7 @@
                 </div> 
             </div>
                 <div class="tab-pane active" id="ESGF">
-                    <form class="form-horizontal" role="form">
+                    <!--<form class="form-horizontal" role="form">-->
                         <br>
                         <div class="form-group">
                             <label for="inputEsgfSearch" class="col-sm-2 control-label">
@@ -326,7 +326,7 @@
                                 <button type="submit" class="btn btn-primary" id="run_esgf_search">Search</button>
                             </div>
                         </div>
-                    </form>
+                        <!--</form>-->
                     <table id=esgf_result class="table table-striped">
                 </div>
         </div>
@@ -339,17 +339,17 @@
                 data:{"search_str":search_str},
                 type:'GET',
                 datatype:'json',
-                success:function(data){
-                    search_data = data["res"];
-                    console.log(search_data);
+                success:function(res){
+                    search_data = res["res"];
                     $("#esgf_result").empty();
                     $.each(search_data, function(i,item) {
                         var myFileID=search_data[i].fileID;
                         var myURL=search_data[i].url;
                         var new_element = "<tr><td><label for="+myURL +" id=label_"+myURL+"> &nbsp;&nbsp;&nbsp;"+myFileID+"</label><td></tr>";
                         $(new_element).appendTo("#esgf_result");
-                    })},
-                error: function(){alert('ERROR: unable to search ESGF.');}
+                        })
+                    },
+                error: function(){alert('ERROR: Unable to search ESGF');}
             });
         });
         
