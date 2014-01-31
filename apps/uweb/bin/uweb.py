@@ -104,6 +104,8 @@ class UVisProtocol(pv_protocols.ParaViewWebProtocol):
           self._nextPlot += 1
           i = self._nextPlot
           self._plots[i]= pl
+
+          print 'plot is ', pl
           return i
 
     # TODO Add API for remove plot

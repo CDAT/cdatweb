@@ -691,9 +691,14 @@
       });
     });
     function initSheet(){
-      myview.createContext();
-      //var data = "/home/aashish/workspace/data/documents/clt.nc";
-      //myplot1.setData(data, function() { myplot1.render() });
+      var data = "/home/aashish/workspace/data/documents/clt.nc";
+      myplot1.init(function() {
+        myplot1.setData(data, function() {
+          myplot1.createContext();
+          myplot1.render();
+        });
+      });
+
     }
     remoteConnection.connect(initSheet);
 

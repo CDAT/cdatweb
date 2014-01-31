@@ -25,6 +25,7 @@ class Plot(object):
         return self._sources
 
     def setSources(self, sources):
+        print 'calling setSources'
         self._sources = sources
 
     def variables(self):
