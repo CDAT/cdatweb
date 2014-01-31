@@ -138,8 +138,8 @@
         <div class="col-md-3" id="Right">
             <ul class="nav nav-tabs" id=diagTab>
                 <li> <a href="#Variables" data-toggle="tab">Variables</a></li>
-                <li class=active> <a href="#Diagnostic" data-toggle="tab">Diagnostic</a></li>
-                <li> <a href="#ESGF" data-toggle="tab">ESGF</a></li>
+                <li> <a href="#Diagnostic" data-toggle="tab">Diagnostic</a></li>
+                <li class=active> <a href="#ESGF" data-toggle="tab">ESGF</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane" id="Variables">
@@ -293,39 +293,67 @@
                         </div>
                 </div> 
             </div>
-                <div class="tab-pane" id="ESGF">
+                <div class="tab-pane active" id="ESGF">
                     <form class="form-horizontal" role="form">
                         <br>
                         <div class="form-group">
-                                        <label for="inputEsgfSearch" class="col-sm-2 control-label">
-                                            <img class=img-rounded src={{STATIC_URL}}img/search.png style="height:25px;width:25px;vertical-align:middle;"/>
-                                        </label>
-                                        <div class="col-sm-9">
-                                            <input type=text class=form-control id=inputEsgfSearch>
-                                        </div>
-                    </div>
+                            <label for="inputEsgfSearch" class="col-sm-2 control-label">
+                                <img class=img-rounded src={{STATIC_URL}}img/search.png style="height:25px;width:25px;vertical-align:middle;"/>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type=text class=form-control id=inputEsgfSearch value="cmip5.output1.INM.inmcm4.1pctCo2.mon">
+                            </div>
+                        </div>
                             
-                                    <div class="form-group">
-                                        <label for="inputDataNode" class="col-sm-2 control-label">
-                                            <img class=img-rounded src={{STATIC_URL}}img/database.png style="height:25px;width:25px;vertical-align:middle;"/>
-                                        </label>
-                                            <div class="col-sm-9">
-                                                <select class="form-control" id="inputDataNode">
-                                                </select>
-                                            </div>
-                                    </div>
-                                   <div class="form-group">
-                                       <div class="col-sm-offset-9 col-md-2">
-                                           <button type="submit" class="btn btn-primary" id="run_esgf_search">Search</button>
-                                       </div>
-                                   </div>
+                        <div class="form-group">
+                            <label for="inputDataNode" class="col-sm-2 control-label">
+                                <img class=img-rounded src={{STATIC_URL}}img/database.png style="height:25px;width:25px;vertical-align:middle;"/>
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="form-control" id="inputDataNode">
+                                    {% for data_node in data_node_list %}
+                                        {% if data_node == "pcmdi9.llnl.gov" %}
+                                            <option value={{data_node}} selected>{{data_node}}</option>
+                                        {% else %}
+                                            <option value={{data_node}}>{{data_node}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-9 col-md-2">
+                                <button type="submit" class="btn btn-primary" id="run_esgf_search">Search</button>
+                            </div>
+                        </div>
                     </form>
+                    <table id=esgf_result class="table table-striped">
                 </div>
         </div>
     </div>
 </div>
     <script type="text/javascript">
-        $(function() { $("#plot_type_accordion").accordion();});
+        $("#run_esgf_search").click(function() {
+            var search_str=$("#inputEsgfSearch").val();
+            $.ajax({url:'http://localhost:8000/plots/esgf',
+                data:{"search_str":search_str},
+                type:'GET',
+                datatype:'json',
+                success:function(data){
+                    search_data = data["res"];
+                    console.log(search_data);
+                    $("#esgf_result").empty();
+                    $.each(search_data, function(i,item) {
+                        var myFileID=search_data[i].fileID;
+                        var myURL=search_data[i].url;
+                        var new_element = "<tr><td><label for="+myURL +" id=label_"+myURL+"> &nbsp;&nbsp;&nbsp;"+myFileID+"</label><td></tr>";
+                        $(new_element).appendTo("#esgf_result");
+                    })},
+                error: function(){alert('ERROR: unable to search ESGF.');}
+            });
+        });
+        
+
         function addSheet(){
             var myelement = document.getElementById('sheetTab');
             var lastNode=document.getElementById('lastSheet');
