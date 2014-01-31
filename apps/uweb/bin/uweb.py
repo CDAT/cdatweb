@@ -81,13 +81,15 @@ def bindRpc(cls, ns, name, mctor):
 
 #//////////////////////////////////////////////////////////////////////////////
 def addMappedRpc(cls, objs, ns, call):
-  call_uc = call[0].upper() + call[1:]
+  call_lc = call[0].lower() + call[1:]
+
+  print 'call_lc ', call_lc
 
   def createRpc(call):
     def dispatchRpc(self, i, *args, **kwargs):
       c = getattr(self, objs)
       if i in c:
-        return getattr(c[i], call_uc)(*args, **kwargs)
+        return getattr(c[i], call_lc)(*args, **kwargs)
     return dispatchRpc
 
   bindRpc(cls, ns, call, createRpc)

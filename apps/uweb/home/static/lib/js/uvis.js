@@ -171,7 +171,7 @@ uvis.plot = function(nodeId, args) {
   /////////////////////////////////////////////////////////////////////////////
   this.setData = function(source, callback) {
     if (this.hasValidConnection()) {
-      m_connection.getSession().call("vtk:setSources", self.m_id, [source]).then(function(res){
+      m_connection.getSession().call("vtk:plot:setSources", self.m_id, [source]).then(function(res){
         m_data = source;
         typeof callback === 'function' && callback();
       }, function(msg) {console.log(msg);});
