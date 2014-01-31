@@ -3,16 +3,13 @@
     <link rel="stylesheet" href="{{STATIC_URL}}lib/css/bootstrap.min.css"/>
     <script src="{{STATIC_URL}}ext/js-core/jquery-1.8.3.min.js"></script>
     <script src="{{STATIC_URL}}lib/js/bootstrap.min.js"></script>
-
-        <script src="{{STATIC_URL}}ext/js-core/autobahn.min.js"></script>
-	<script src="{{STATIC_URL}}ext/js-core/gl-matrix-min.js"></script>
-        <script src="{{STATIC_URL}}ext/js-core/jquery.hammer.min.js"></script>
-
-        <script src="{{STATIC_URL}}ext/widgets/jscolor/jscolor.js"></script>
-        <script src="{{STATIC_URL}}ext/widgets/jquery-ui/jquery-ui-1.10.0.min.js"></script>
-
-        <script src="{{STATIC_URL}}lib/js/vtkweb-all.js"></script>
-        <script src="{{STATIC_URL}}lib/js/uvis.js"></script>
+    <script src="{{STATIC_URL}}ext/js-core/autobahn.min.js"></script>
+    <script src="{{STATIC_URL}}ext/js-core/gl-matrix-min.js"></script>
+    <script src="{{STATIC_URL}}ext/js-core/jquery.hammer.min.js"></script>
+    <script src="{{STATIC_URL}}ext/widgets/jscolor/jscolor.js"></script>
+    <script src="{{STATIC_URL}}ext/widgets/jquery-ui/jquery-ui-1.10.0.min.js"></script>
+    <script src="{{STATIC_URL}}lib/js/vtkweb-all.js"></script>
+    <script src="{{STATIC_URL}}lib/js/uvis.js"></script>
 <body>
     <nav class="navbar navbar-default" role="navigation">
         <div class="navbar-header">
@@ -35,7 +32,7 @@
                 <div class=row>
                     <div class="col-md-12" id="Project1Div" style="height:800px;box-shadow: 0 0 2px grey">
                     </div>
-                </div> 
+                </div>
             </div>
         </div>
         <div class="col-md-7" id="Center">
@@ -70,7 +67,7 @@
                 <div class=row>
                     <div class="col-md-6" id="Sheet1Canvas1" style="height:400px;box-shadow: 0 0 2px grey">
                                 <div id="data1"></div>
-            			<div id="viewport-container1" ></div>
+                  <div id="viewport-container1" ></div>
                     </div>
                     <div class="col-md-6" id="Sheet1Canvas2" style="height:400px;box-shadow: 0 0 2px grey">
                                 <div id="data2"></div>
@@ -80,11 +77,11 @@
                 <div class=row>
                     <div class="col-md-6" id="Sheet1Canvas3" style="height:400px;box-shadow: 0 0 2px grey">
                                 <div id="data3"></div>
-            			<div id="viewport-container3" ></div>
+                  <div id="viewport-container3" ></div>
                     </div>
                     <div class="col-md-6" id="Sheet1Canvas4" style="height:400px;box-shadow: 0 0 2px grey">
                                 <div id="data4"></div>
-            			<div id="viewport-container4" ></div>
+                  <div id="viewport-container4" ></div>
                     </div>
                 </div>
             </div>
@@ -244,7 +241,7 @@
                                 </table>
                             </div>
                         </div>
-                </div> 
+                </div>
             </div>
                 <div class="tab-pane" id="ESGF">
                     <form class="form-horizontal" role="form">
@@ -286,21 +283,21 @@
                     newnode.childNodes[1].innerHTML='Sheet'+total;
                     myelement.insertBefore(newnode,lastNode);
                     child.removeAttribute('class');
-                    $('.sheetTabAnchor').click(function(e){ 
+                    $('.sheetTabAnchor').click(function(e){
                         var tabIndex=parseInt(this.text.substring(5));
-                        var newTabIndex=tabIndex-1; 
-                        console.log(tabIndex); 
+                        var newTabIndex=tabIndex-1;
+                        console.log(tabIndex);
                     });
                 }
             }
             return total;
         }
 
-        $('.sheetTabAnchor').click(function(e){ 
+        $('.sheetTabAnchor').click(function(e){
             var tabIndex=parseInt(this.text.substring(5));
-            var newTabIndex=tabIndex-1; 
+            var newTabIndex=tabIndex-1;
             //myplot1.restore();
-            console.log(tabIndex); 
+            console.log(tabIndex);
         });
 
         function createHiddenInput(newID, newValue){
@@ -351,7 +348,7 @@
                                 });
                             }
                             var cur_sheet=1;
-                            if (sessionStorage.diagcount){ 
+                            if (sessionStorage.diagcount){
                                 console.log(sessionStorage.diagcount);
                                 if (Number(sessionStorage.diagcount) > 1) {
                                     cur_sheet=addSheet();
@@ -405,24 +402,24 @@
                 e.preventDefault();
                 if (sessionStorage.diagcount){
                     sessionStorage.diagcount=Number(sessionStorage.diagcount)+1;
-                    
+
                 }
                 else {
                     sessionStorage.diagcount=1;
                 }
-                
+
                 myPlotSet=$('#inputPlotSet').val().replace(/\"/g,"");
                 myPackage=$('#inputPackage').val();
                 myVariable=$('#inputVariable').val();
                 mySeason=$('#inputSeason').val();
                 myObs=$('#inputObs').val();
-                
+
                 $.ajax({url:'http://localhost:8000/diag/api/run_elo/',
                     data:{'plot_package':myPackage,'plot_set':myPlotSet, 'variableID':myVariable, 'seasonID':mySeason, 'plot_obs':myObs},
                     type:'GET',
                     success:function(data){
                         task_id=data['task_id'];
-			//$('#resultTable').append("<tr><td><a href=javascript:toggle("+task_id+");>"+task_id+"</a></td></tr><tr><td><div id=" + task_id+" style='display:none'></div></td></tr>");
+      //$('#resultTable').append("<tr><td><a href=javascript:toggle("+task_id+");>"+task_id+"</a></td></tr><tr><td><div id=" + task_id+" style='display:none'></div></td></tr>");
                         $('#resultTable').append("<tr><td><a href=javascript:toggle("+task_id+");>"+task_id+"</a></td><td>&nbsp;<div id=progress"+task_id+ " class='progress progress-striped active'><div class='progress-bar'  role='progressbar' aria-valuenow=45 aria-valuemin=0 aria-valuemax=100 style='width: 40px'></div></div></td></tr><tr><td><div id=" + task_id+" style='display:none'></div></td></tr>");
                         //updateLoop(task_id);
                         (function updateLoop(task_id){
@@ -436,7 +433,7 @@
                                 else
                                 {
                                     $("#progress"+task_id).remove();
-                                    toggle(task_id);  
+                                    toggle(task_id);
                                 }
                             },
                             error: function(){alert('ERROR in progress bar update');}});
