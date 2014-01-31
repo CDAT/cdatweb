@@ -60,6 +60,9 @@ uvis.remoteConnection = function (url) {
       m_isConnected = true;
 
       typeof callback === 'function' && callback();
+    },
+    function(code, reason) {
+      console.log(reason);
     });
   };
 
