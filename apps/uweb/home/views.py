@@ -53,10 +53,14 @@ def esgf_search(request):
 
 def diag_home(request):
     #image_dir=request.POST['directory']
-    host=settings.ESGF_HOST 
-    data_node_list=esgf_data_node_list(host)
-    mycontent={'data_node_list':data_node_list,'uvis_hostname':settings.UVIS_HOSTNAME}
-    return render(request, "home.html",mycontent)
+    if not request.user.is_authenticated():
+        # send them to the login page, with a ?redir= on the end pointing back to this page
+        return HttpResponseRedirect(reverse('login:login') + "?" + urlencode({'redir':reverse('home.views.diag_home')}))
+    else:
+        host=settings.ESGF_HOST 
+        data_node_list=esgf_data_node_list(host)
+        mycontent={'data_node_list':data_node_list,'uvis_hostname':settings.UVIS_HOSTNAME, "user":request.user.username}
+        return render(request, "home.html",mycontent)
 
 def testing(request):
     return render(request, "test.html")
