@@ -113,9 +113,8 @@ class UVisProtocol(pv_protocols.ParaViewWebProtocol):
         print 'stillRender'
         print 'stillRender options, ', options
         print 'stillRender options ', options['view']
-        #if options['view'] != "-1":
-        print 'rendering ', self._plots[options['view']]
-        return self._plots[options['view']].render(options);
+        if options['view'] != -1:
+          return self._plots[options['view']].render(options);
 
     # TODO Add API for remove plot
 

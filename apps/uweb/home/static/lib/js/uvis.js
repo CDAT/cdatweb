@@ -200,23 +200,22 @@ uvis.plot = function(nodeId, args) {
    * Initialize the context
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.createContext = function() {
+  this.createContext = function(callback) {
     if (m_connection === null) {
       console.log("[plot:info] Connection cannot be null");
       return;
     }
-    m_viewport = vtkWeb.createViewport({session: m_connection.getSession(),
-                                        view: m_id});
-    m_viewport.bind(m_nodeId);
 
     if (this.hasValidConnection()) {
       m_connection.getSession().call("vtk:plot:createContext", m_id).then(function(res){
+        m_viewport = vtkWeb.createViewport({session: m_connection.getSession(),
+                                        view: m_id});
+        m_viewport.bind(m_nodeId);
         typeof callback === 'function' && callback();
       });
     } else {
       console.log("[error] Invalid connection");
     }
-
   };
 
   /////////////////////////////////////////////////////////////////////////////
