@@ -60,7 +60,7 @@ import MV2
 import json
 
 class VcsPlot(Plot):
-    def __init__(self, id="vcs", type="BoxFill"):
+    def __init__(self, id="vcs", type="IsoFill"):
         super(VcsPlot, self).__init__(id, type)
         self._file = None
         self._canvas = None
@@ -81,7 +81,25 @@ class VcsPlot(Plot):
         return reply
 
     def diagRender(self):
-        pass
+        """This method may require some testing."""
+        self._canvas.clear()
+        self._file = cdms2.open(self._filename)
+        varlist = self.f.plot_these
+        if isinstance(varlist,list):
+            for i in varlist:
+                self._variable = 1
+                data = self.f(self._variable)
+                d = self._canvas.plot(data,self.plotTemplate,self.f.presentation,bg=1)
+        else:
+            self._variable=varlist
+            data = self.f(self._variable)
+            d = self._canvas.plot(data,self._plotTemplate,self.f.presentation,bg=1)
+
+        png = d._repr_png_()
+        png = base64.b64encode(png)
+
+        return self.toJSON(png, True, datetime.datetime.now().time().microsecond,
+                           [550, 400], "png;base64", "", "", "")
 
     def createContext(self):
         self._canvas = vcs.init()
@@ -131,7 +149,9 @@ class VcsPlot(Plot):
           return ""
 
     def render(self, options):
-        print 'calling render on the plot 1'
+        self._plotTemplate = options.get('template', self._plotTemplate);
+        self._type = options.get('type', self._type);
+
         try:
             if (self._filename is None):
                 self.error("Invalid filename for the plot")
@@ -154,8 +174,6 @@ class VcsPlot(Plot):
 
             png = d._repr_png_()
             png = base64.b64encode(png)
-
-            print 'calling render on the plot 3'
 
             return self.toJSON(png, True, datetime.datetime.now().time().microsecond,
                                [550, 400], "png;base64", "", "", "")
