@@ -691,7 +691,8 @@
       });
     });
     function initSheet(){
-      var data = "/home/aashish/workspace/data/documents/clt.nc";
+      var data = {'filename' : '/home/aashish/workspace/data/documents/clt.nc',
+        'var' : 'clt'};
       myplot1.init(function() {
         myplot1.setData(data, function() {
           myplot1.createContext(function(){

@@ -169,11 +169,12 @@ uvis.plot = function(nodeId, args) {
    * Set data (input) for the plot.
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.setData = function(source, callback) {
+  this.setData = function(data, callback) {
     if (this.hasValidConnection()) {
-      m_connection.getSession().call("vtk:plot:setSources", m_id,
-        [source]).then(function(res){
-          m_data = source;
+      m_connection.getSession().call("vtk:plot:setData", m_id,
+        data).then(function(res){
+          console.log('data is ', data);
+          m_data = data;
           typeof callback === 'function' && callback();
         }, function(msg) {console.log(msg);});
     }

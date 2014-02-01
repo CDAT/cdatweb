@@ -1,3 +1,4 @@
+import sys
 
 class PlotFactory(object):
     _factories = {}
@@ -12,8 +13,8 @@ class Plot(object):
     def __init__(self, id=None, type=None):
         self._id = id
         self._type = type
-        self._sources = None
-        self._variables = None
+        self._filename = None
+        self._variable = None
 
     def id(self):
         return self._id
@@ -21,18 +22,18 @@ class Plot(object):
     def setId(self, id):
         self._id = id
 
-    def sources(self):
-        return self._sources
+    def data(self):
+        return {
+            'filename': self._filename,
+            'var': self._variable
+        }
 
-    def setSources(self, sources):
-        print 'calling setSources'
-        self._sources = sources
-
-    def variables(self):
-        return self._variables
-
-    def setVariables(self, variables):
-        self._variables = variables
+    def setData(self, *args, **kwargs):
+        print 'args are ', kwargs
+        print 'args are ', args
+        self._filename = args[0].get('filename', None)
+        self._variable = args[0].get('var', None)
+        print 'self._filename is ', self._filename
 
     def createContext(self):
         pass
@@ -80,29 +81,21 @@ class VcsPlot(Plot):
     def render(self, options):
         print 'calling render on the plot 1'
         try:
-            if (self._sources is None):
-              self.error("Invalid sources for the plot")
-              return
+            if (self._filename is None):
+                self.error("Invalid filename for the plot")
+                return
 
-            # vcs plot can handle only one source
-            source = self._sources[0];
-
-            print 'calling render on the plot 2'
-
-            self.f = cdms2.open(source)
+            self.f = cdms2.open(self._filename)
             if hasattr(self.f,'presentation'):
                 reply = self.diagRender()
                 return reply
 
             self._canvas.clear()
 
-            if (self._variables is None or len(self._variables) == 0):
-              self._variables = self.f.listvariable()
+            if (self._variable is None):
+                self._variable = self.f.listvariable()[0]
 
-            # use the first variable to plot the data
-            variable = self._variables[0]
-
-            data = self.f(variable)
+            data = self.f(self._variable)
 
             # Now plot the canvas
             d = self._canvas.plot(data, self._plotTemplate, self._type, bg=1)

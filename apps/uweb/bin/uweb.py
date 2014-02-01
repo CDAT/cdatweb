@@ -428,8 +428,7 @@ if __name__ == "__main__":
     AppProtocol.rsHost     = args.rsHost
     AppProtocol.rsPort     = args.rsPort
 
-    for rpc in ("id", "setId", "sources", "setSources", "variables",
-                "setVariables", "createContext", "render", "error"):
+    for rpc in ("id", "setId", "data", "setData", "createContext", "render", "error"):
         addMappedRpc(UVisProtocol, "_plots", "plot", rpc)
 
     startServer(options=args)
