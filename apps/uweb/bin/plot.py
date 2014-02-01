@@ -62,6 +62,7 @@ import json
 class VcsPlot(Plot):
     def __init__(self, id="vcs", type="BoxFill"):
         super(VcsPlot, self).__init__(id, type)
+        self._file = None
         self._canvas = None
         self._plotTemplate = "default"
         self.image_width = 550.0
@@ -90,7 +91,7 @@ class VcsPlot(Plot):
         y = evt["y"]
         cursorX = x / self.image_width
         cursorY = 1.0 - (y / self.image_height)
-        v = self.f(self._variable)
+        v = self._file(self._variable)
         disp, data = self._canvas.animate_info[0]
         data = data[0]
         t = self._canvas.gettemplate(disp.template)
@@ -136,17 +137,17 @@ class VcsPlot(Plot):
                 self.error("Invalid filename for the plot")
                 return
 
-            self.f = cdms2.open(self._filename)
-            if hasattr(self.f,'presentation'):
+            self._file = cdms2.open(self._filename)
+            if hasattr(self._file,'presentation'):
                 reply = self.diagRender()
                 return reply
 
             self._canvas.clear()
 
             if (self._variable is None):
-                self._variable = self.f.listvariable()[0]
+                self._variable = self._file.listvariable()[0]
 
-            data = self.f(self._variable)
+            data = self._file(self._variable)
 
             # Now plot the canvas
             d = self._canvas.plot(data, self._plotTemplate, self._type, bg=1)
