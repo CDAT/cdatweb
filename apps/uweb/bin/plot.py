@@ -29,11 +29,13 @@ class Plot(object):
         }
 
     def setData(self, *args, **kwargs):
-        print 'args are ', kwargs
-        print 'args are ', args
+        # When the client sends the data as JSON we get
+        # that JSON as the first value in the tuple
         self._filename = args[0].get('filename', None)
         self._variable = args[0].get('var', None)
-        print 'self._filename is ', self._filename
+
+    def getValueAt(self, evt):
+        return {}
 
     def createContext(self):
         pass
@@ -54,11 +56,16 @@ import datetime
 import vcs
 import cdms2
 
+import MV2
+import json
+
 class VcsPlot(Plot):
     def __init__(self, id="vcs", type="BoxFill"):
         super(VcsPlot, self).__init__(id, type)
         self._canvas = None
-        self._plotTemplate= "default"
+        self._plotTemplate = "default"
+        self.image_width = 550.0
+        self.image_height = 400.0
 
     def toJSON(self, imageData, state, mtime, size, format, globalId, localTime, workTime):
         reply = {}
@@ -77,6 +84,50 @@ class VcsPlot(Plot):
 
     def createContext(self):
         self._canvas = vcs.init()
+
+    def getValueAt(self, evt):
+        x = evt["x"]
+        y = evt["y"]
+        cursorX = x / self.image_width
+        cursorY = 1.0 - (y / self.image_height)
+        v = self.f(self._variable)
+        disp, data = self._canvas.animate_info[0]
+        data = data[0]
+        t = self._canvas.gettemplate(disp.template)
+        dx1 = t.data.x1
+        dx2 = t.data.x2
+        dy1 = t.data.y1
+        dy2 = t.data.y2
+        if (dx1 < cursorX < dx2) and (dy1 < cursorY < dy2):
+            X = data.getAxis(-1)
+            Y = data.getAxis(-2)
+            if (disp.g_type == "isofill"):
+                b = self._canvas.getisofill(disp.g_name)
+            if MV2.allclose(b.datawc_x1,1.e20):
+                X1 = X[0]
+                X2 = X[-1]
+            else:
+                X1 = b.datawc_x1
+                X2 = b.datawc_x2
+            if MV2.allclose(b.datawc_y1,1.e20):
+                Y1 = Y[0]
+                Y2 = Y[-1]
+            else:
+                Y1 = b.datawc_y1
+                Y2 = b.datawc_y2
+
+            L = ((cursorX-dx1)/(dx2-dx1) * (X2-X1)) + X1
+            SX = slice(*X.mapInterval((L,L,"cob")))
+            l = ((cursorY-dy1)/(dy2-dy1) * (Y2-Y1)) + Y1
+            SY = slice(*Y.mapInterval((l,l,"cob")))
+            myRank = data.rank()
+
+            if myRank > 2:
+                return {'value': str(data[...,SY,SX].flat[0])}
+            else:
+                return {'value': str(data[...,SY,SX])}
+        else:
+          return ""
 
     def render(self, options):
         print 'calling render on the plot 1'

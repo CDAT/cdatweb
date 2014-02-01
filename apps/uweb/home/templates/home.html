@@ -646,7 +646,7 @@
       evtInfo.x = evt["x"];
       evtInfo.y = evt["y"];
 
-      myplot1.getData(evtInfo, function(data){
+      myplot1.getValueAt(evtInfo, function(data){
         console.log('data ', evtInfo,data);
         $("#data1").text(data);
       });
@@ -659,7 +659,7 @@
       evtInfo.x = evt["x"];
       evtInfo.y = evt["y"];
 
-      myplot2.getData(evtInfo, function(data){
+      myplot2.getValueAt(evtInfo, function(data){
         console.log('data ', evtInfo,data);
         $("#data2").text(data);
       });
@@ -672,7 +672,7 @@
       evtInfo.x = evt["x"];
       evtInfo.y = evt["y"];
 
-      myplot3.getData(evtInfo, function(data){
+      myplot3.getValueAt(evtInfo, function(data){
         console.log('data ', evtInfo,data);
         $("#data3").text(data);
       });
@@ -685,11 +685,13 @@
       evtInfo.x = evt["x"];
       evtInfo.y = evt["y"];
 
-      myplot4.getData(evtInfo, function(data){
+      myplot4.getValueAt(evtInfo, function(data){
         console.log('data ', evtInfo,data);
         $("#data4").text(data);
       });
     });
+
+
     function initSheet(){
       var data = {'filename' : '/home/aashish/workspace/data/documents/clt.nc',
         'var' : 'clt'};

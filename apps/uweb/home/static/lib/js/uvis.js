@@ -310,10 +310,10 @@ uvis.plot = function(nodeId, args) {
    * @param callback
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.getData = function(evt, callback) {
-    m_connection.getSession().call("vtk:mouseInteraction", evt).then(function(data){
-      callback(data);
-    });
+  this.getValueAt = function(evt, callback) {
+    m_connection.getSession().call("vtk:plot:getValueAt", m_id, evt).then(function(data){
+      typeof callback === 'function' && callback(data);
+    }, function(msg){ console.log('[error] ', msg)});
   };
 };
 
