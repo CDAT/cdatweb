@@ -1,6 +1,10 @@
 import sys
 
 class PlotFactory(object):
+    """
+      PlotFactory creates a particular type of plot based on the
+      id passed such as VcsPlot.
+    """
     _factories = {}
 
     @staticmethod
@@ -10,6 +14,11 @@ class PlotFactory(object):
         return PlotFactory._factories[id].create(*args, **kwargs)
 
 class Plot(object):
+    """
+      Base class for all plots. This class provides the API for plotting
+      2D plots which should be implemented by derived classes to provide
+      concrete implementation.
+    """
     def __init__(self, id=None, type=None):
         self._id = id
         self._type = type
@@ -60,6 +69,9 @@ import MV2
 import json
 
 class VcsPlot(Plot):
+    """
+      This plot uses VCS for drawing 2D geospatial plots.
+    """
     def __init__(self, id="vcs", type="IsoFill"):
         super(VcsPlot, self).__init__(id, type)
         self._file = None
@@ -146,7 +158,7 @@ class VcsPlot(Plot):
             else:
                 return {'value': str(data[...,SY,SX])}
         else:
-          return ""
+            return ""
 
     def render(self, options):
         self._plotTemplate = options.get('template', self._plotTemplate);
