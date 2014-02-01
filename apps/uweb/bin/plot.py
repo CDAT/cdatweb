@@ -31,8 +31,8 @@ class Plot(object):
     def setData(self, *args, **kwargs):
         # When the client sends the data as JSON we get
         # that JSON as the first value in the tuple
-        self._filename = args[0].get('filename', None)
-        self._variable = args[0].get('var', None)
+        self._filename = args[0].get('filename', self._filename)
+        self._variable = args[0].get('var', self._variable)
 
     def getValueAt(self, evt):
         return {}
