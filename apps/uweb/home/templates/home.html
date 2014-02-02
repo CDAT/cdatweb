@@ -367,9 +367,15 @@
                     success:function(res){
                         myVar=res['variable'];
                         $.each(myVar, function(i,item){
-                            var myli="<li class=draggable_to_canvas style='list-style-type:none'>"+myVar[i]+"</li>";
+                            var myli="<li style='list-style-type:none;'><div class=checkbox><label class=draggable_to_canvas style='list-style-type:none'><input class=file_var type=checkbox>"+myVar[i]+"</label></div></li>";
                             $(myli).appendTo(myNode);
                         });
+                        $('.draggable_to_canvas').draggable({
+                            revert: true,
+                            help: "clone",
+                            cursor: "crosshair",
+                            cursorAt: {left: 5},
+                            });
                     },
                     error: function(){alert('Error: Unable to retrieve variables.');}
                 });
