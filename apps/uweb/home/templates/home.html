@@ -346,7 +346,7 @@
                         var myFileID=search_data[i].fileID;
                         var myURL=search_data[i].url;
                         var first_td = '<td><a class=esgf_file_toggle><img src="{{STATIC_URL}}img/folder_blue_open.png"/></a><br><br><a class=esgf_file_var_import><img src="{{STATIC_URL}}img/save.png" width=15px/></a></td>';
-                        var second_td= '<td style="word-break: break-all"><a id='+myURL+' class=esgf_file_download>'+myFileID+'</a><ul class=esgf_file_ul style="display:none;"></ul></td>';
+                        var second_td= '<td style="word-break: break-all"><a id='+myURL+' class=esgf_file_download>'+myFileID+'</a><ul style="display:none;"></ul></td>';
                         var new_element = "<tr>"+first_td+second_td+"</tr>";
                         $(new_element).appendTo("#esgf_result");
                         })
@@ -359,7 +359,6 @@
             myFile=$(this).parent().parent().children()[1].children[0].id;
             myIdLen=myFile.length;
             myFile=myFile.substring(0,myIdLen-5);
-            alert(myFile);
             if (myNode.style.display=='none'){
                 myNode.style.display='block';
                 $.ajax({ url:"http://localhost:8000/plots/variable",
@@ -367,9 +366,8 @@
                     datatype:'json',
                     success:function(res){
                         myVar=res['variable'];
-                        alert(myVar);
                         $.each(myVar, function(i,item){
-                            var myli="<li>"+myVar[i]+"</li>";
+                            var myli="<li class=draggable_to_canvas style='list-style-type:none'>"+myVar[i]+"</li>";
                             $(myli).appendTo(myNode);
                         });
                     },
@@ -380,6 +378,16 @@
                 myNode.style.display='none';
             }
         });
+
+        $('#esgf_result').on('click','.draggable_to_canvas', function(){
+            $('.draggable_to_canvas').draggable({
+                revert: true,
+                help: "clone",
+                cursor: "crosshair",
+                cursorAt: {left: 5},
+                });
+        });
+
 
         function addSheet(){
             var myelement = document.getElementById('sheetTab');
