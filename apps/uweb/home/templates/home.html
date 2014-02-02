@@ -387,6 +387,14 @@
                 cursorAt: {left: 5},
                 });
         });
+        
+        $("#Sheet1Canvas1").droppable({
+            drop: function (event,ui){
+                var draggableText=ui.draggable.text();
+                console.log(draggableText);
+                var droppableId=$(this).attr("id");
+            }
+        });
 
 
         function addSheet(){
