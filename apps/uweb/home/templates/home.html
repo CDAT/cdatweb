@@ -14,7 +14,6 @@
 
         <script src="{{STATIC_URL}}lib/js/vtkweb-all.js"></script>
         <script src="{{STATIC_URL}}lib/js/uvis.js"></script>
-        <script src="{{STATIC_URL}}lib/js/esgf_panel.js"></script>
 <body>
     <nav class="navbar navbar-default" role="navigation">
         <div class="navbar-header">
@@ -23,7 +22,7 @@
         <div>
             <p class="navbar-text navbar-right">
             <a href="#" class="navbar-link">448000</a>&nbsp;|
-            <a href="#" class="navbar-link">Logout</a>
+            <a href="logout" class="navbar-link">Logout</a>
             </p>
         </div>
     </nav>
@@ -355,7 +354,32 @@
                 error: function(){alert('ERROR: Unable to search ESGF');}
             });
         });
-        
+        $('#esgf_result').on('click','a.esgf_file_toggle',function(e){
+            myNode=$(this).parent().parent().children()[1].children[1];
+            myFile=$(this).parent().parent().children()[1].children[0].id;
+            myIdLen=myFile.length;
+            myFile=myFile.substring(0,myIdLen-5);
+            alert(myFile);
+            if (myNode.style.display=='none'){
+                myNode.style.display='block';
+                $.ajax({ url:"http://localhost:8000/plots/variable",
+                    data:{"file":myFile},
+                    datatype:'json',
+                    success:function(res){
+                        myVar=res['variable'];
+                        alert(myVar);
+                        $.each(myVar, function(i,item){
+                            var myli="<li>"+myVar[i]+"</li>";
+                            $(myli).appendTo(myNode);
+                        });
+                    },
+                    error: function(){alert('Error: Unable to retrieve variables.');}
+                });
+            }
+            else{
+                myNode.style.display='none';
+            }
+        });
 
         function addSheet(){
             var myelement = document.getElementById('sheetTab');
