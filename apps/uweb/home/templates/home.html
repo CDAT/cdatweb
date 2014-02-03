@@ -46,18 +46,18 @@
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">Curtain Plot</a></li>
-                                    <li><a href="#">Glyph Slicer</a></li>
-                                    <li><a href="#">Glyph Volume</a></li>
-                                    <li><a href="#">Hovmoller Slicer</a></li>
-                                    <li><a href="#">Hovmoller Volume</a></li>
-                                    <li><a href="#">IsoSurface</a></li>
-                                    <li><a href="#">IsoSurface With Texture</a></li>
-                                    <li><a href="#">Slicer</a></li>
-                                    <li><a href="#">Slicer With Contours</a></li>
-                                    <li><a href="#">Streamline Slicer</a></li>
-                                    <li><a href="#">Volume Render</a></li>
-                                    <li><a href="#">Volume Render With Slicer</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Curtain Plot</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Glyph Slicer</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Glyph Volume</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Hovmoller Slicer</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Hovmoller Volume</a></li>
+                                    <li><a class=draggable_to_canvas href="#">IsoSurface</a></li>
+                                    <li><a class=draggable_to_canvas href="#">IsoSurface With Texture</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Slicer</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Slicer With Contours</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Streamline Slicer</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Volume Render</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Volume Render With Slicer</a></li>
                                 </ul>
                             </div>
                             <br>
@@ -68,17 +68,17 @@
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">Boxfill</a></li>
-                                    <li><a href="#">Isofill</a></li>
-                                    <li><a href="#">Isoline</a></li>
-                                    <li><a href="#">Meshfill</a></li>
-                                   <li><a href="#">Outfill</a></li>
-                                   <li><a href="#">Scatter</a></li>
-                                   <li><a href="#">TaylorDiagram</a></li>
-                                   <li><a href="#">Vector</a></li>
-                                   <li><a href="#">XvsY</a></li>
-                                   <li><a href="#">XyvsY</a></li>
-                                   <li><a href="#">YxvsX</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Boxfill</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Isofill</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Isoline</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Meshfill</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Outfill</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Scatter</a></li>
+                                    <li><a class=draggable_to_canvas href="#">TaylorDiagram</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Vector</a></li>
+                                    <li><a class=draggable_to_canvas href="#">XvsY</a></li>
+                                    <li><a class=draggable_to_canvas href="#">XyvsY</a></li>
+                                    <li><a class=draggable_to_canvas href="#">YxvsX</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -383,6 +383,13 @@
             else{
                 myNode.style.display='none';
             }
+        });
+
+        $('.draggable_to_canvas').draggable({
+            revert: true,
+            help: "clone",
+            cursor: "crosshair",
+            cursorAt: {left: 5},
         });
 
         $('#esgf_result').on('click','.draggable_to_canvas', function(){
