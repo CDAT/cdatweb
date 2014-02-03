@@ -490,27 +490,12 @@
                             {
                                 myTitle=myList[i]['filename'];
                                 inner_html+=("<h6>"+myTitle+"</h6>"+createHiddenInput("Sheet"+(cur_sheet)+"Canvas"+(i+1),myList[i]['fullpath']));
-                                /*
-                                if (i==0)
-                                {
-                                    console.log(myTitle);
-                                    myplot1.setData(myTitle,myplot1.render);
-                                }
-                                else if (i==1)
-                                {
-                                    console.log(myTitle);
-                                    myplot2.setData(myTitle,myplot2.render);
-                                }
-                                else if (i==2)
-                                {
-                                    console.log(myTitle);
-                                    myplot3.setData(myTitle,myplot3.render);
-                                }
-                                else if (i==3)
-                                {
-                                    myplot4.setData(myTitle,myplot4.render);
-                                }
-                                */
+                                var new_var=myList[i]['varlist'].toString();
+                                varlist_str='';
+                                varlist_str='(' + new_var + ')[Sheet' + cur_sheet+']';
+                                var new_var_element='<li style=list-style-type:none>'+varlist_str+'</li>';
+                                $('#var_panel').append(new_var_element);    
+
                             }
                             myDiv.innerHTML=inner_html;
                         },
