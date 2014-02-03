@@ -38,9 +38,12 @@ def get_plot_seasons(request):
 def get_plot_variable(request):
     diagnosticType=request.GET['plot_package']
     dg_menu=diagnostics_menu()[diagnosticType]()
-    filetable1 = utils.get_filetable1()
+    filetable1 = utils.get_filetable1(diagnosticType)
     obs=request.GET['plot_obs']
-    filetable2=utils.get_filetable2(obs)
+    if obs=='':
+        filetable2=None
+    else:
+        filetable2=utils.get_filetable2(obs,diagnosticType)
     #filetable2 = utils.get_filetable2()
     diagnostics_set_name=request.GET['plot_set']
     variables=dg_menu.list_variables(filetable1,filetable2,diagnostics_set_name)
@@ -49,12 +52,14 @@ def get_plot_variable(request):
     return HttpResponse(json_res, content_type="application/json")
 
 def get_plot_aux_options(request):
-    filetable1 = utils.get_filetable1()
-    obs=request.GET['plot_obs']
-    filetable2=utils.get_filetable2(obs)
-     
-    #filetable2 = utils.get_filetable2()
     diagnosticType=request.GET['plot_package']
+    filetable1 = utils.get_filetable1(diagnosticType)
+    obs=request.GET['plot_obs']
+    if obs=='':
+        filetable2=None
+    else:
+        filetable2=utils.get_filetable2(obs,diagnosticType)
+    #filetable2 = utils.get_filetable2()
     diagnostics_set_name=request.GET['plot_set']
     dg_menu=diagnostics_menu()[diagnosticType]()
     varmenu=dg_menu.all_variables(filetable1,filetable2,diagnostics_set_name)
@@ -69,7 +74,8 @@ def get_plot_aux_options(request):
     return HttpResponse(json_res, content_type="application/json")
 
 def get_plot_obs(request):
-    obs_list=utils.get_observations()
+    diagnosticType=request.GET['plot_package']
+    obs_list=utils.get_observations(diagnosticType)
     obj={'observation_list':obs_list}
     json_res=simplejson.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
@@ -80,7 +86,10 @@ def run_elo(request):
     seasonID=request.GET['seasonID']
     variableID=request.GET['variableID']
     obs=request.GET['plot_obs']
-    filetable2=utils.get_filetable2(obs)
+    if obs=='':
+        filetable2=None
+    else:
+        filetable2=utils.get_filetable2(obs,diagnosticType)
 
     sclass,filetable1,filetable2,varid,seasonid=utils.get_input_parameter(diagnosticType,plot_set_name,seasonID,variableID,obs)
     outputPath=settings.DIAG_MEDIA

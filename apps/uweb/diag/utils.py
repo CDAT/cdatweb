@@ -20,8 +20,11 @@ class SingletonType(type):
 class ObsMenu(object):
     __metaclass__ = SingletonType
 
-    def __init__(self):
-        path2=settings.DIAG_OBS_PATH
+    def __init__(self,diag_type):
+        if diag_type=='AMWG':
+            path2=settings.DIAG_AMWG_OBS_PATH
+        elif diag_type=='LMWG':
+            path2=settings.DIAG_LMWG_OBS_PATH
         datafile2 = metrics.fileio.findfiles.dirtree_datafiles( path2)
         self.obs_menu=datafile2.check_filespec()
 
@@ -41,8 +44,11 @@ class TaskTracker(object):
             return self.task_dict[taskID]
         return None
 
-def get_filetable1():
-    path1=settings.DIAG_MODEL_PATH
+def get_filetable1(diag_type):
+    if diag_type=='AMWG':
+        path1=settings.DIAG_AMWG_PATH
+    elif diag_type=='LMWG':
+        path1=settings.DIAG_LMWG_PATH
     if not os.path.exists(tmppath):
         os.makedirs(tmppath)
     datafiles = metrics.fileio.findfiles.dirtree_datafiles( path1 )
@@ -50,9 +56,9 @@ def get_filetable1():
     print "filetable1=", filetable1
     return filetable1
 
-def get_observations():
+def get_observations(diag_type):
     obs=None
-    obs_menu=ObsMenu().obs_menu
+    obs_menu=ObsMenu(diag_type).obs_menu
     #path2=settings.DIAG_OBS_PATH
     #datafile2 = metrics.fileio.findfiles.dirtree_datafiles( path2)
     #obs_menu=datafile2.check_filespec()
@@ -60,18 +66,25 @@ def get_observations():
         obs=obs_menu.keys()
     return obs
 
-def get_filetable2(obs):
+def get_filetable2(obs,diag_type):
     if not os.path.exists(tmppath):
         os.makedirs(tmppath)
     obs_menu=ObsMenu().obs_menu
     if obs_menu:
         filt2 = obs_menu[obs]
-        path2=settings.DIAG_OBS_PATH
+        if diag_type=='AMWG':
+            path2=settings.DIAG_AMWG_OBS_PATH
+        elif diag_type=='LMWG':
+            path2=settings.DIAG_LMWG_OBS_PATH
         datafile2 = metrics.fileio.findfiles.dirtree_datafiles(path2,filt2)
         print "datafile2=", datafile2
         filetable2 = datafile2.setup_filetable(tmppath,"obs")
     else:
-        path2=settings.DIAG_OBS_PATH
+        if diag_type=='AMWG':
+            path2=settings.DIAG_AMWG_OBS_PATH
+        elif diag_type=='LMWG':
+            path2=settings.DIAG_LMWG_OBS_PATH
+
         datafile2 = metrics.fileio.findfiles.dirtree_datafiles( path2)
         obs_menu=datafile2.check_filespec()
         filt2 = obs_menu[obs]
@@ -82,8 +95,11 @@ def get_filetable2(obs):
 def get_input_parameter(package, plot_set, seasonID, variableID,obsID):
     dg_menu=diagnostics_menu()[str(package)]()
     plot_set_obj=dg_menu.list_diagnostic_sets()[str(plot_set)]
-    filetable1=get_filetable1()
-    filetable2=get_filetable2(obsID)
+    filetable1=get_filetable1(package)
+    if obsID=='':
+        filetable2=None
+    else:
+        filetable2=get_filetable2(obsID,package)
     return plot_set_obj,filetable1,filetable2, variableID, seasonID
 
 

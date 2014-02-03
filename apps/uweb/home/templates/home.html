@@ -612,8 +612,9 @@
         });
 
         $('#inputPackage').change(function() {
-                $.ajax({url:'http://localhost:8000/diag/api/get_plot_obs/',
-                data:{},
+            myPackage=$('#inputPackage').val();
+            $.ajax({url:'http://localhost:8000/diag/api/get_plot_obs/',
+                data:{'plot_package':myPackage},
                 type:'GET',
                 success:function(data){
                     plot_obs_list=data['observation_list'];
@@ -631,8 +632,7 @@
                     }
                 },
                 error: function(){alert('ERROR: unable to get plot observations');}
-                });
-            myPackage=$('#inputPackage').val();
+            });
             $.ajax({url:'http://localhost:8000/diag/api/get_plot_set/',
                 data:{'plot_package':myPackage},
                 type:'GET',
