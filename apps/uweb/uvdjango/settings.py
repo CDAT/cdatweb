@@ -17,8 +17,12 @@ import os
 ESGF_HOST = 'pcmdi9.llnl.gov'
 ESGF_PORT = 7512
 PROXY_CERT_DIR = os.environ['HOME'] + '/'
-DIAG_MODEL_PATH = os.environ['HOME'] + '/cam_output'
-DIAG_OBS_PATH = os.environ['HOME'] + '/obs_data'
+#DIAG_MODEL_PATH = os.environ['HOME'] + '/cam_output'
+DIAG_AMWG_PATH = os.environ['HOME'] + '/long_diag_run_data'
+DIAG_LMWG_PATH = os.environ['HOME'] + '/acme_clm_climo'
+DIAG_AMWG_OBS_PATH = os.environ['HOME'] + '/obs_data'
+DIAG_LMWG_OBS_PATH = os.environ['HOME'] + '/empty_obs_data'
+
 DIAG_MEDIA = os.environ['HOME']+'/uvis/apps/uweb/media/diag'
 UVIS_HOSTNAME='localhost:8000'
 
@@ -36,7 +40,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'uvdjango.db',               # Or path to database file if using sqlite3.
+        'NAME': '/export/leung25/uvis/apps/uweb/bin/uvdjango.db',               # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',

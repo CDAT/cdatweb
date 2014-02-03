@@ -36,6 +36,7 @@ def getVar(in_file):
         data=cdms2.open(in_file)
         varlist=data.variables.keys()
     except Exception, e:
+        print e
         return None
     return varlist
 

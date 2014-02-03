@@ -17,6 +17,7 @@ class ESGF_Auth_Backend:
     (eg: /esgserver/proxycerts/jsmith/jsmith.pem)
     """
     def authenticate(self, username=None, password=None, peernode=None):
+        print "AUTHENTICATE NOW"
         try:
             cert_path=os.path.join(settings.PROXY_CERT_DIR,username)
             if not os.path.exists(cert_path):
@@ -31,7 +32,9 @@ class ESGF_Auth_Backend:
                     lifetime=43200,
                     port=settings.ESGF_PORT
                     )
+            print cert_path,username
         except GetException as e:
+            print e
             # myproxy_logon failed, so return None instead of a User
             #
             # TODO: When Django 1.6 comes out, this should be changed to:
@@ -49,6 +52,7 @@ class ESGF_Auth_Backend:
             #cdms2.setHttprcDirectory(cert_path)
             homepath=os.environ['HOME']
             filepath=os.path.join(homepath,".daprc")
+            print filepath
             if not os.path.exists(filepath):
                 dodsrc_cache_root=os.path.join(cert_path,".dods_cache")
                 dodsrc_curl_ssl_certificate=os.path.join(cert_path,"%s.pem"%username)

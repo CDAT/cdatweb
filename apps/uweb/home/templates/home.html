@@ -2,6 +2,7 @@
     <title>Diagnostics</title>
     <link rel="stylesheet" href="{{STATIC_URL}}lib/css/bootstrap.min.css"/>
     <script src="{{STATIC_URL}}js/jquery-1.8.3.min.js"></script>
+    <link rel="stylesheet" href="{{STATIC_URL}}css/jquery-ui-1.10.0.css"/>
     <script src="{{STATIC_URL}}lib/js/bootstrap.min.js"></script>
     <script src="{{STATIC_URL}}js/autobahn.min.js"></script>
     <script src="{{STATIC_URL}}js/gl-matrix-min.js"></script>
@@ -17,7 +18,7 @@
         <div>
             <p class="navbar-text navbar-right">
             <a href="#" class="navbar-link">448000</a>&nbsp;|
-            <a href="#" class="navbar-link">Logout</a>
+            <a href="logout" class="navbar-link">Logout</a>
             </p>
         </div>
     </nav>
@@ -29,9 +30,54 @@
             </ul>
             <div class="tab-pane active" id="Project1">
                 <div class=row>
-                    <div class="col-md-12" id="Project1Div" style="height:800px;box-shadow: 0 0 2px grey">
+                    <div class="col-md-12" id="Project1Div" style="height:720px;box-shadow: 0 0 2px grey">
                     </div>
                 </div>
+                    <h4>&nbsp;<span class="label label-default">Plots</span></h4>
+                        <div id="plot_type_selection" class=col-md-13>
+                            <div class="btn-group dropup">
+                                <button type="button" class="btn btn-default" style="width:260px;">DV3D</button>
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:30px;height:34px;">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a class=draggable_to_canvas href="#">Curtain Plot</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Glyph Slicer</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Glyph Volume</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Hovmoller Slicer</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Hovmoller Volume</a></li>
+                                    <li><a class=draggable_to_canvas href="#">IsoSurface</a></li>
+                                    <li><a class=draggable_to_canvas href="#">IsoSurface With Texture</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Slicer</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Slicer With Contours</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Streamline Slicer</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Volume Render</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Volume Render With Slicer</a></li>
+                                </ul>
+                            </div>
+                            <br>
+                            <div class="btn-group dropup">
+                                <button type="button" class="btn btn-default" style="width:260px;">            VCS</button>
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:30px;height:34px;">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a class=draggable_to_canvas href="#">Boxfill</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Isofill</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Isoline</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Meshfill</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Outfill</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Scatter</a></li>
+                                    <li><a class=draggable_to_canvas href="#">TaylorDiagram</a></li>
+                                    <li><a class=draggable_to_canvas href="#">Vector</a></li>
+                                    <li><a class=draggable_to_canvas href="#">XvsY</a></li>
+                                    <li><a class=draggable_to_canvas href="#">XyvsY</a></li>
+                                    <li><a class=draggable_to_canvas href="#">YxvsX</a></li>
+                                </ul>
+                            </div>
+                        </div>
             </div>
         </div>
         <div class="col-md-7" id="Center">
@@ -88,8 +134,8 @@
         <div class="col-md-3" id="Right">
             <ul class="nav nav-tabs" id=diagTab>
                 <li> <a href="#Variables" data-toggle="tab">Variables</a></li>
-                <li class=active> <a href="#Diagnostic" data-toggle="tab">Diagnostic</a></li>
-                <li> <a href="#ESGF" data-toggle="tab">ESGF</a></li>
+                <li> <a href="#Diagnostic" data-toggle="tab">Diagnostic</a></li>
+                <li class=active> <a href="#ESGF" data-toggle="tab">ESGF</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane" id="Variables">
@@ -182,6 +228,7 @@
                                                 <select class="form-control" id="inputPackage">
                                                     <option value="AMWG"></option>
                                                     <option value="AMWG">AMWG</option>
+                                                    <option value="LMWG">LMWG</option>
                                                 </select>
                                             </div>
                                     </div>
@@ -242,34 +289,160 @@
                         </div>
                 </div>
             </div>
-                <div class="tab-pane" id="ESGF">
-                    <form class="form-horizontal" role="form">
+                <div class="tab-pane active" id="ESGF">
+                    <!--<form class="form-horizontal" role="form">-->
                         <br>
                         <div class="form-group">
-                            <label for="inputDataNode" class="col-sm-2 control-label">Text Search</label>
+                            <label for="inputEsgfSearch" class="col-sm-2 control-label">
+                                <img class=img-rounded src={{STATIC_URL}}img/search.png style="height:25px;width:25px;vertical-align:middle;"/>
+                            </label>
                             <div class="col-sm-9">
-                                <input type=text class=form-control size=48>
+                                <input type=text class=form-control id=inputEsgfSearch value="cmip5.output1.INM.inmcm4.1pctCo2.mon">
                             </div>
-                            <br>
-                    </div>
-                                    <div class="form-group">
-                                        <label for="inputDataNode" class="col-sm-2 control-label">Data Node</label>
-                                            <div class="col-sm-9">
-                                                <select class="form-control" id="inputDataNode">
-                                                </select>
-                                            </div>
-                                    </div>
-                                   <div class="form-group">
-                                       <div class="col-sm-offset-2 col-md-2">
-                                           <button type="submit" class="btn btn-primary" id="run_esgf_search">Search</button>
-                                       </div>
-                                   </div>
-                    </form>
+                        </div>
+                            
+                        <div class="form-group">
+                            <label for="inputDataNode" class="col-sm-2 control-label">
+                                <img class=img-rounded src={{STATIC_URL}}img/database.png style="height:25px;width:25px;vertical-align:middle;"/>
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="form-control" id="inputDataNode">
+                                    {% for data_node in data_node_list %}
+                                        {% if data_node == "pcmdi9.llnl.gov" %}
+                                            <option value={{data_node}} selected>{{data_node}}</option>
+                                        {% else %}
+                                            <option value={{data_node}}>{{data_node}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-9 col-md-2">
+                                <button type="submit" class="btn btn-primary" id="run_esgf_search">Search</button>
+                            </div>
+                        </div>
+                        <!--</form>-->
+                    <table id=esgf_result class="table table-striped">
                 </div>
         </div>
     </div>
 </div>
     <script type="text/javascript">
+        $("#run_esgf_search").click(function() {
+            var search_str=$("#inputEsgfSearch").val();
+            $.ajax({url:'http://localhost:8000/plots/esgf',
+                data:{"search_str":search_str},
+                type:'GET',
+                datatype:'json',
+                success:function(res){
+                    search_data = res["res"];
+                    $("#esgf_result").empty();
+                    $.each(search_data, function(i,item) {
+                        var myFileID=search_data[i].fileID;
+                        var myURL=search_data[i].url;
+                        var first_td = '<td><a class=esgf_file_toggle><img src="{{STATIC_URL}}img/folder_blue_open.png"/></a><br><br><a class=esgf_file_var_import><img src="{{STATIC_URL}}img/save.png" width=15px/></a></td>';
+                        var second_td= '<td style="word-break: break-all"><a id='+myURL+' class=esgf_file_download>'+myFileID+'</a><ul style="display:none;"></ul></td>';
+                        var new_element = "<tr>"+first_td+second_td+"</tr>";
+                        $(new_element).appendTo("#esgf_result");
+                        })
+                    },
+                error: function(){alert('ERROR: Unable to search ESGF');}
+            });
+        });
+        $('#esgf_result').on('click','a.esgf_file_toggle',function(e){
+            myNode=$(this).parent().parent().children()[1].children[1];
+            myFile=$(this).parent().parent().children()[1].children[0].id;
+            myIdLen=myFile.length;
+            myFile=myFile.substring(0,myIdLen-5);
+            if (myNode.style.display=='none'){
+                myNode.style.display='block';
+                $.ajax({ url:"http://localhost:8000/plots/variable",
+                    data:{"file":myFile},
+                    datatype:'json',
+                    success:function(res){
+                        myVar=res['variable'];
+                        $.each(myVar, function(i,item){
+                            var myli="<li style='list-style-type:none;'><div class=checkbox><label class=draggable_to_canvas style='list-style-type:none'><input class=file_var type=checkbox>"+myVar[i]+"</label></div></li>";
+                            $(myli).appendTo(myNode);
+                        });
+                        $('.draggable_to_canvas').draggable({
+                            revert: true,
+                            help: "clone",
+                            cursor: "crosshair",
+                            cursorAt: {left: 5},
+                            });
+                    },
+                    error: function(){alert('Error: Unable to retrieve variables.');}
+                });
+            }
+            else{
+                myNode.style.display='none';
+            }
+        });
+
+        $('.draggable_to_canvas').draggable({
+            revert: true,
+            help: "clone",
+            cursor: "crosshair",
+            cursorAt: {left: 5},
+        });
+
+        $('#esgf_result').on('click','.draggable_to_canvas', function(){
+            $('.draggable_to_canvas').draggable({
+                revert: true,
+                help: "clone",
+                cursor: "crosshair",
+                cursorAt: {left: 5},
+                });
+        });
+        
+        $("#Sheet1Canvas1").droppable({
+            drop: function (event,ui){
+                var draggableText=ui.draggable.text();
+                var droppableId=$(this).attr("id");
+                var draggableNodeName=ui.draggable[0].nodeName;
+
+                if (draggableNodeName=='A')
+                {
+                    sessionStorage.setItem('canvas1_plot_type',draggableText);     
+                    if (!(sessionStorage.getItem('canvas1_filename')))
+                    {
+                        $("#data1").text("Please drag and drop a variable into this canvas.");
+                    }
+                    else
+                    {
+                        myFilename=sessionStorage.getItem('canvas1_filename');
+                        myVarname=sessionStorage.getItem('canvas1_var');
+                        myPlotType=sessionStorage.getItem('canvas1_plot_type');
+                        $("#data1").text(myFilename +', ' + myVarname +', '+ myPlotType);
+                        //myplot1.render();
+                    }
+
+                }
+                else
+                {
+                    sessionStorage.setItem('canvas1_var',draggableText);
+                    var myFileName=ui.draggable[0].parentElement.parentElement.parentElement.parentElement.children[0].id;
+                    sessionStorage.setItem('canvas1_filename',myFileName);
+                    if (!(sessionStorage.getItem('canvas1_plot_type')))
+                    {
+                        $("#data1").text("Please drag and drop a plot type into this canvas.");
+                    }
+                    else
+                    {
+                        myFilename=sessionStorage.getItem('canvas1_filename');
+                        myVarname=sessionStorage.getItem('canvas1_var');
+                        myPlotType=sessionStorage.getItem('canvas1_plot_type');
+                        $("#data1").text(myFilename +', ' + myVarname +', '+ myPlotType);
+                        //myplot1.render();
+                    }
+                }
+                
+            }
+        });
+
+
         function addSheet(){
             var myelement = document.getElementById('sheetTab');
             var lastNode=document.getElementById('lastSheet');
@@ -356,27 +529,14 @@
                             {
                                 myTitle=myList[i]['filename'];
                                 inner_html+=("<h6>"+myTitle+"</h6>"+createHiddenInput("Sheet"+(cur_sheet)+"Canvas"+(i+1),myList[i]['fullpath']));
-                                /*
-                                if (i==0)
-                                {
-                                    console.log(myTitle);
-                                    myplot1.setData(myTitle,myplot1.render);
-                                }
-                                else if (i==1)
-                                {
-                                    console.log(myTitle);
-                                    myplot2.setData(myTitle,myplot2.render);
-                                }
-                                else if (i==2)
-                                {
-                                    console.log(myTitle);
-                                    myplot3.setData(myTitle,myplot3.render);
-                                }
-                                else if (i==3)
-                                {
-                                    myplot4.setData(myTitle,myplot4.render);
-                                }
-                                */
+                                var new_var=myList[i]['varlist'].toString();
+                                varlist_str='';
+                                varlist_str='(' + new_var + ')[Sheet' + cur_sheet+']';
+                                var new_var_element='<li style=list-style-type:none>'+varlist_str+'</li>';
+                                $('#var_panel').append(new_var_element);    
+                                var new_prj_element='<li style=list-style-type:none>'+myTitle+'</li>';
+                                $('#Project1Div').append(new_prj_element);
+
                             }
                             myDiv.innerHTML=inner_html;
                         },
@@ -447,8 +607,9 @@
         });
 
         $('#inputPackage').change(function() {
-                $.ajax({url:'http://localhost:8000/diag/api/get_plot_obs/',
-                data:{},
+            myPackage=$('#inputPackage').val();
+            $.ajax({url:'http://localhost:8000/diag/api/get_plot_obs/',
+                data:{'plot_package':myPackage},
                 type:'GET',
                 success:function(data){
                     plot_obs_list=data['observation_list'];
@@ -466,8 +627,7 @@
                     }
                 },
                 error: function(){alert('ERROR: unable to get plot observations');}
-                });
-            myPackage=$('#inputPackage').val();
+            });
             $.ajax({url:'http://localhost:8000/diag/api/get_plot_set/',
                 data:{'plot_package':myPackage},
                 type:'GET',
