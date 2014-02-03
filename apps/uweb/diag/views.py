@@ -10,6 +10,7 @@ from lib_util.plots import save_plot as save_plot
 from django.conf import settings
 import time
 import xml.etree.ElementTree as ET
+import cdms2
 
 def get_plot_package(request):
     packageList=diagnostics_menu().keys()
@@ -134,7 +135,12 @@ def load_output(request, taskID):
     root=tree.getroot()
     elementlist=root.findall('ncfile')
     for element in elementlist:
-        mylist.append({'fullpath':os.path.join(outfile,element.text),'filename':element.text})
+        full_filepath=os.path.join(outfile,element.text)
+        f=cdms2.open(full_filepath)
+        varlist=f.plot_these
+        plot_type=f.presentation
+        mylist.append({'varlist':varlist,'plot_type':plot_type,'fullpath':os.path.join(outfile,element.text),'filename':element.text})
+
     """
     f = open(os.path.join(outfile,outfilename))
     #f = open("/export/leung25/uvis/apps/uweb/media/diag/1/1389223541.14.diagoutput")
