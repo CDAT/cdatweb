@@ -322,20 +322,19 @@
                             if (myList.length > 0) {
                                 count = myList.length;
                                 index = 0;
-                                myplot1.setData(myList[index++]['fullpath'],function(){
-                                    myplot1.save()
+                                myplot1.setData({'filename':myList[index++]['fullpath']},function(){
                                     myplot1.clear();
                                     myplot1.render();
                                     if (index < count){
-                                        myplot2.setData(myList[index++]['fullpath'],function(){
+                                        myplot2.setData({'filename':myList[index++]['fullpath']},function(){
                                             myplot2.clear();
                                             myplot2.render();
                                             if (index < count){
-                                                myplot3.setData(myList[index++]['fullpath'], function(){
+                                                myplot3.setData({'filename':myList[index++]['fullpath']}, function(){
                                                     myplot3.clear();
                                                     myplot3.render();
                                                     if (index < count) {
-                                                        myplot4.setData(myList[index++]['fullpath'], function() {
+                                                        myplot4.setData({'filename':myList[index++]['fullpath']}, function() {
                                                             myplot4.clear();
                                                             myplot4.render();
                                                         });
@@ -604,7 +603,6 @@
 //            pv = {};
 //        }
 //    }
-/*
     var remoteConnection = new uvis.remoteConnection(),
         myplot1 = new uvis.plot("#viewport-container1",
                                {"connection": remoteConnection}),
@@ -615,18 +613,13 @@
         myview = new uvis.view(),
         myplot2 = new uvis.plot("#viewport-container2",
                                {"connection": remoteConnection});
-*/
-    var remoteConnection = new uvis.remoteConnection();
-    var myplot1 = new uvis.plot("#viewport-container1", {"connection": remoteConnection});
-    var data = {'filename' : '/export/leung25/Downloads/clt.nc','var' : 'clt'};  
-    myplot1.init(function() {
-        myplot1.setData(data, function() {
-            myplot1.createContext(function(){
-                myplot1.render();
-            });
-        });
-    });
-
+    function initSheet(){
+      myplot1.init(function() {
+          myplot1.createContext(function(){
+          });
+      });
+    }
+    remoteConnection.connect(initSheet);
     myview.addPlot(myplot1);
     myview.addPlot(myplot2);
     myview.addPlot(myplot3);
@@ -716,6 +709,7 @@
     });
 
     */
+    /*
     function initSheet(){
       var data = {'filename' : '/home/aashish/workspace/data/documents/clt.nc',
         'var' : 'clt'};
@@ -729,7 +723,7 @@
 
     }
     remoteConnection.connect(initSheet);
-
+    */
     /**
     function testDisplay() {
       var data = "/export/leung25/Downloads/clt.nc";
