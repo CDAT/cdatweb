@@ -404,8 +404,45 @@
         $("#Sheet1Canvas1").droppable({
             drop: function (event,ui){
                 var draggableText=ui.draggable.text();
-                console.log(draggableText);
                 var droppableId=$(this).attr("id");
+                var draggableNodeName=ui.draggable[0].nodeName;
+
+                if (draggableNodeName=='A')
+                {
+                    sessionStorage.setItem('canvas1_plot_type',draggableText);     
+                    if (!(sessionStorage.getItem('canvas1_filename')))
+                    {
+                        $("#data1").text("Please drag and drop a variable into this canvas.");
+                    }
+                    else
+                    {
+                        myFilename=sessionStorage.getItem('canvas1_filename');
+                        myVarname=sessionStorage.getItem('canvas1_var');
+                        myPlotType=sessionStorage.getItem('canvas1_plot_type');
+                        $("#data1").text(myFilename +', ' + myVarname +', '+ myPlotType);
+                        //myplot1.render();
+                    }
+
+                }
+                else
+                {
+                    sessionStorage.setItem('canvas1_var',draggableText);
+                    var myFileName=ui.draggable[0].parentElement.parentElement.parentElement.parentElement.children[0].id;
+                    sessionStorage.setItem('canvas1_filename',myFileName);
+                    if (!(sessionStorage.getItem('canvas1_plot_type')))
+                    {
+                        $("#data1").text("Please drag and drop a plot type into this canvas.");
+                    }
+                    else
+                    {
+                        myFilename=sessionStorage.getItem('canvas1_filename');
+                        myVarname=sessionStorage.getItem('canvas1_var');
+                        myPlotType=sessionStorage.getItem('canvas1_plot_type');
+                        $("#data1").text(myFilename +', ' + myVarname +', '+ myPlotType);
+                        //myplot1.render();
+                    }
+                }
+                
             }
         });
 
