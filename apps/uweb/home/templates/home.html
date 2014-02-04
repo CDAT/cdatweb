@@ -819,6 +819,7 @@
         myID=mySheet+myCanvas;
         return $('#'+myID).val();
     }
+    /*
     myplot1.on('mousemove', function(evt) {
         var elem_position = $(evt.delegateTarget).offset();
         evt["x"] = evt.pageX - elem_position.left;
@@ -831,8 +832,7 @@
             $("#data1").text(data['value']);
         });
     });
-
-   /*
+    */
     myplot1.on('mousemove', function(evt) {
       var elem_position = $(evt.delegateTarget).offset();
           evt["x"] = evt.pageX - elem_position.left;
@@ -843,7 +843,7 @@
 
       myplot1.getValueAt(evtInfo, function(data){
         console.log('data ', evtInfo,data);
-        $("#data1").text(data);
+        $("#data1").text(data['value']);
       });
     });
     myplot2.on('mousemove', function(evt) {
@@ -856,7 +856,7 @@
 
       myplot2.getValueAt(evtInfo, function(data){
         console.log('data ', evtInfo,data);
-        $("#data2").text(data);
+        $("#data2").text(data['value']);
       });
     });
     myplot3.on('mousemove', function(evt) {
@@ -869,7 +869,7 @@
 
       myplot3.getValueAt(evtInfo, function(data){
         console.log('data ', evtInfo,data);
-        $("#data3").text(data);
+        $("#data3").text(data['value']);
       });
     });
     myplot4.on('mousemove', function(evt) {
@@ -882,11 +882,9 @@
 
       myplot4.getValueAt(evtInfo, function(data){
         console.log('data ', evtInfo,data);
-        $("#data4").text(data);
+        $("#data4").text(data['value']);
       });
     });
-
-    */
     /*
     function initSheet(){
       var data = {'filename' : '/home/aashish/workspace/data/documents/clt.nc',
