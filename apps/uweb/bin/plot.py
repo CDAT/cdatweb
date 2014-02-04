@@ -19,11 +19,12 @@ class Plot(object):
       2D plots which should be implemented by derived classes to provide
       concrete implementation.
     """
-    def __init__(self, id=None, type=None):
+    def __init__(self, id=None, config={}):
         self._id = id
-        self._type = type
+        self._config['type'] = type
         self._filename = None
         self._variable = None
+        self._config = config
 
     def id(self):
         return self._id
@@ -43,6 +44,12 @@ class Plot(object):
         self._filename = args[0].get('filename', self._filename)
         self._variable = args[0].get('var', self._variable)
         print "setData", self._filename
+
+    def config(self):
+        return self._config
+
+    def setConfig(self, config):
+        self._config = config
 
     def getValueAt(self, evt):
         return {}
@@ -73,11 +80,10 @@ class VcsPlot(Plot):
     """
       This plot uses VCS for drawing 2D geospatial plots.
     """
-    def __init__(self, id="vcs", type="IsoFill"):
-        super(VcsPlot, self).__init__(id, type)
+    def __init__(self, id="vcs", config= {'type':'IsoFill', 'template':'default'}):
+        super(VcsPlot, self).__init__(id, config)
         self._file = None
         self._canvas = None
-        self._plotTemplate = "default"
         self.image_width = 564.0
         self.image_height = 400.0
 
@@ -106,7 +112,7 @@ class VcsPlot(Plot):
         else:
             self._variable=varlist
             data = self._file(self._variable)
-            d = self._canvas.plot(data,self._plotTemplate,self._file.presentation,bg=1)
+            d = self._canvas.plot(data,self._config['template'],self._file.presentation,bg=1)
 
         png = d._repr_png_()
         png = base64.b64encode(png)
@@ -164,10 +170,10 @@ class VcsPlot(Plot):
 
     def render(self, options):
         print "rendering in plot.py", self._canvas
-        #self._plotTemplate = options.get('template', self._plotTemplate);
-        #self._type = options.get('type', self._type);
-        self._plotTemplate = 'default';
-        self._type = 'isofill';
+        #self._config['template'] = options.get('template', self._config['template']);
+        #self._config['type'] = options.get('type', self._config['type']);
+        # self._config['template'] = 'default';
+        # self._config['type'] = 'isofill';
         print "rendering", self._filename
         try:
             if (self._canvas is None):
@@ -191,7 +197,7 @@ class VcsPlot(Plot):
             data = self._file(self._variable)
 
             # Now plot the canvas
-            d = self._canvas.plot(data, self._plotTemplate, self._type, bg=1)
+            d = self._canvas.plot(data, self._config['template'], self._config['type'], bg=1)
 
             png = d._repr_png_()
             png = base64.b64encode(png)

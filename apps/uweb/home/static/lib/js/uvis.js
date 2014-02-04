@@ -92,6 +92,7 @@ uvis.plot = function(nodeId, args) {
       m_remote = true,
       m_type = null,
       m_data = null,
+      m_config = {},
       m_this = this,
       m_actions = {'blur':[], 'focus':[], 'focusin':[], 'focusout':[],
         'load':[], 'resize':[], 'scroll':[], 'unload':[], 'click':[],
@@ -175,6 +176,35 @@ uvis.plot = function(nodeId, args) {
         data).then(function(res){
           console.log('data is ', data);
           m_data = data;
+          typeof callback === 'function' && callback();
+        }, function(msg) {console.log(msg);});
+    }
+  };
+
+  /////////////////////////////////////////////////////////////////////////////
+  /**
+   * Get plot configuration
+   *
+   * @returns {{}}
+   */
+  /////////////////////////////////////////////////////////////////////////////
+  this.getConfig = function() {
+    return m_config;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////
+  /**
+   * Set plot configuration
+   *
+   * @param config
+   * @param callback
+   */
+  /////////////////////////////////////////////////////////////////////////////
+  this.setConfig = function(config, callback) {
+    if (this.hasValidConnection()) {
+      m_connection.getSession().call("vtk:plot:setConfig", m_id,
+        config).then(function(res){
+          m_config = config;
           typeof callback === 'function' && callback();
         }, function(msg) {console.log(msg);});
     }
