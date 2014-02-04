@@ -93,7 +93,7 @@ class VcsPlot(Plot):
         reply['workTime'] = workTime
         return reply
 
-    def diagRender(self):
+    def diagRender(self, options):
         """This method may require some testing."""
         self._canvas.clear()
         self._file = cdms2.open(self._filename)
@@ -180,7 +180,7 @@ class VcsPlot(Plot):
 
             self._file = cdms2.open(self._filename)
             if hasattr(self._file,'presentation'):
-                reply = self.diagRender()
+                reply = self.diagRender(options)
                 return reply
 
             self._canvas.clear()
