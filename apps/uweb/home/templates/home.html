@@ -495,21 +495,25 @@
                             if (myList.length > 0) {
                                 count = myList.length;
                                 index = 0;
-                                myplot1.setData({'filename':myList[index++]['fullpath']},function(){
+                                myplot1.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
                                     myplot1.clear();
-                                    myplot1.render();
+                                    myplot1.render({'template':'default','type':myList[index]['plot_type']});
+                                    index=index+1;
                                     if (index < count){
-                                        myplot2.setData({'filename':myList[index++]['fullpath']},function(){
+                                        myplot2.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
                                             myplot2.clear();
-                                            myplot2.render();
+                                            myplot2.render({'template':'default','type':myList[index]['plot_type']});
+                                            index=index+1;
                                             if (index < count){
-                                                myplot3.setData({'filename':myList[index++]['fullpath']}, function(){
+                                                    myplot3.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
                                                     myplot3.clear();
-                                                    myplot3.render();
+                                                    myplot3.render({'template':'default','type':myList[index]['plot_type']});
+                                                    index=index+1;
                                                     if (index < count) {
-                                                        myplot4.setData({'filename':myList[index++]['fullpath']}, function() {
+                                                        myplot4.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
                                                             myplot4.clear();
-                                                            myplot4.render();
+                                                            myplot4.render({'template':'default','type':myList[index]['plot_type']});
+                                                            index=index+1;
                                                         });
                                                     }
                                                 });
@@ -531,7 +535,7 @@
                                 inner_html+=("<h6>"+myTitle+"</h6>"+createHiddenInput("Sheet"+(cur_sheet)+"Canvas"+(i+1),myList[i]['fullpath']));
                                 var new_var=myList[i]['varlist'].toString();
                                 varlist_str='';
-                                varlist_str='(' + new_var + ')[Sheet' + cur_sheet+']';
+                                varlist_str=+ new_var +' [Sheet' + cur_sheet+']';
                                 var new_var_element='<li style=list-style-type:none>'+varlist_str+'</li>';
                                 $('#var_panel').append(new_var_element);    
                                 var new_prj_element='<li style=list-style-type:none>'+myTitle+'</li>';
@@ -613,17 +617,23 @@
                 type:'GET',
                 success:function(data){
                     plot_obs_list=data['observation_list'];
-                    plot_obs_list.sort();
+                    if (plot_obs_list)
+                    {
+                        plot_obs_list.sort();
+                    }
                     $('#inputObs').empty();
                     $('#inputObs').append("<option value=''></option>");
-                    for (var i = 0; i< plot_obs_list.length; i++)
+                    if (plot_obs_list)
                     {
-                        opt=plot_obs_list[i];
-                        if (opt=="NCEP")
+                        for (var i = 0; i< plot_obs_list.length; i++)
                         {
-                            $('#inputObs').append("<option value="+'"' + opt +'"'+" selected>"+opt+"</option>");
-                        };
-                        $('#inputObs').append("<option value="+'"' + opt +'"'+">"+opt+"</option>");
+                            opt=plot_obs_list[i];
+                            if (opt=="NCEP")
+                            {
+                                $('#inputObs').append("<option value="+'"' + opt +'"'+" selected>"+opt+"</option>");
+                            };
+                            $('#inputObs').append("<option value="+'"' + opt +'"'+">"+opt+"</option>");
+                        }
                     }
                 },
                 error: function(){alert('ERROR: unable to get plot observations');}
@@ -633,7 +643,10 @@
                 type:'GET',
                 success:function(data){
                     plot_set_list=data['plot_set'];
-                    plot_set_list.sort();
+                    if (plot_obs_list)
+                    {
+                        plot_obs_list.sort();
+                    }
                     $('#inputPlotSet').empty();
                     $('#inputPlotSet').append("<option value=''></option>");
                     for (var i = 0; i< plot_set_list.length; i++)
