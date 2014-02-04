@@ -495,28 +495,28 @@
                             if (myList.length > 0) {
                                 count = myList.length;
                                 index = 0;
+                                myplot1.clear();
+                                myplot2.clear();
+                                myplot3.clear();
+                                myplot4.clear();
                                 myplot1.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
-                                    myplot1.clear();
                                     myplot1.render();
                                     index=index+1;
                                     if (index <  count)
                                     {
                                         myplot2.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
-                                            myplot2.clear();
                                             myplot2.render();
                                             index=index+1;
                                     
                                             if (index <  count)
                                             {
                                                 myplot3.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
-                                                    myplot3.clear();
                                                     myplot3.render();
                                                     index=index+1;
                                                     if (index <  count)
                                                     {
                                                         console.log("Going for myplot4");
                                                         myplot4.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
-                                                            myplot4.clear();
                                                             myplot4.render();
                                                             //myplot4.render({'template':'default','type':myList[index]['plot_type']});
                                                         });
