@@ -78,9 +78,13 @@ class UVisProtocol(pv_protocols.ParaViewWebProtocol):
           return i
 
     @exportRpc("stillRender")
-    def stillRender(self, options):
+    def stillRender(self,options):
+        print options
+        print "at stillRender"
         if options['view'] != -1:
             return self._plots[options['view']].render(options);
+        else:
+            return {};
 
 #//////////////////////////////////////////////////////////////////////////////
 #

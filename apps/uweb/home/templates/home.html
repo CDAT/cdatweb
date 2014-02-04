@@ -497,32 +497,35 @@
                                 index = 0;
                                 myplot1.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
                                     myplot1.clear();
-                                    myplot1.render({'template':'default','type':myList[index]['plot_type']});
+                                    myplot1.render();
+                                    index=index+1;
+                                    if (index <  count)
+                                    {
+                                        myplot2.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
+                                            myplot2.clear();
+                                            myplot2.render();
+                                            index=index+1;
+                                    
+                                            if (index <  count)
+                                            {
+                                                myplot3.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
+                                                    myplot3.clear();
+                                                    myplot3.render();
+                                                    index=index+1;
+                                                    if (index <  count)
+                                                    {
+                                                        console.log("Going for myplot4");
+                                                        myplot4.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
+                                                            myplot4.clear();
+                                                            myplot4.render();
+                                                            //myplot4.render({'template':'default','type':myList[index]['plot_type']});
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
                                 });
-                                index=index+1;
-                                if (index <  count)
-                                {
-                                    myplot2.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
-                                        myplot2.clear();
-                                        myplot2.render({'template':'default','type':myList[index]['plot_type']});
-                                    });
-                                    index=index+1;
-                                }
-                                if (index <  count)
-                                {
-                                    myplot3.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
-                                        myplot3.clear();
-                                        myplot3.render({'template':'default','type':myList[index]['plot_type']});
-                                    });
-                                    index=index+1;
-                                }
-                                if (index <  count)
-                                {
-                                    myplot4.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
-                                        myplot4.clear();
-                                        myplot4.render({'template':'default','type':myList[index]['plot_type']});
-                                    });
-                                }
                             }
                             var cur_sheet=1;
                             if (sessionStorage.diagcount){
@@ -614,11 +617,13 @@
 
         $('#inputPackage').change(function() {
             myPackage=$('#inputPackage').val();
+            console.log(myPackage);
             $.ajax({url:'http://localhost:8000/diag/api/get_plot_obs/',
                 data:{'plot_package':myPackage},
                 type:'GET',
                 success:function(data){
                     plot_obs_list=data['observation_list'];
+                    console.log("got obs list: " +plot_obs_list)
                     if (plot_obs_list)
                     {
                         plot_obs_list.sort();
@@ -676,6 +681,7 @@
         $('#inputPlotSet').change(function() {
             myPlotSet=$('#inputPlotSet').val();
             myPackage=$('#inputPackage').val();
+            console.log("get Var: "+ myPackage);
             myObs=$('#inputObs').val();
             $.ajax({url:'http://localhost:8000/diag/api/get_plot_variable/',
                 data:{'plot_package':myPackage,'plot_set':myPlotSet,'plot_obs':myObs},

@@ -189,6 +189,7 @@ uvis.plot = function(nodeId, args) {
     if (this.hasValidConnection()) {
       m_connection.getSession().call("vtk:createPlot", "VcsPlot").then(function(res){
         m_id = res;
+        console.log("M_ID: "+m_id);
         typeof callback === 'function' && callback();
       });
     } else {
@@ -209,6 +210,7 @@ uvis.plot = function(nodeId, args) {
 
     if (this.hasValidConnection()) {
       m_connection.getSession().call("vtk:plot:createContext", m_id).then(function(res){
+        console.log("CreateContext: "+m_id);
         m_viewport = vtkWeb.createViewport({session: m_connection.getSession(),
                                         view: m_id});
         m_viewport.bind(m_nodeId);
@@ -234,7 +236,8 @@ uvis.plot = function(nodeId, args) {
    * Render plot
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.render = function() {
+  this.render = function(options) {
+
     // @todo Provide right abstraction
     m_viewport.render();
   };

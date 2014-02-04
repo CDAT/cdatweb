@@ -42,6 +42,7 @@ class Plot(object):
         # that JSON as the first value in the tuple
         self._filename = args[0].get('filename', self._filename)
         self._variable = args[0].get('var', self._variable)
+        print "setData", self._filename
 
     def getValueAt(self, evt):
         return {}
@@ -77,7 +78,7 @@ class VcsPlot(Plot):
         self._file = None
         self._canvas = None
         self._plotTemplate = "default"
-        self.image_width = 550.0
+        self.image_width = 564.0
         self.image_height = 400.0
 
     def toJSON(self, imageData, state, mtime, size, format, globalId, localTime, workTime):
@@ -111,7 +112,7 @@ class VcsPlot(Plot):
         png = base64.b64encode(png)
 
         return self.toJSON(png, True, datetime.datetime.now().time().microsecond,
-                           [550, 400], "png;base64", "", "", "")
+                           [564, 400], "png;base64", "", "", "")
 
     def createContext(self):
         self._canvas = vcs.init()
@@ -163,13 +164,19 @@ class VcsPlot(Plot):
 
     def render(self, options):
         print "rendering in plot.py", self._canvas
-        self._plotTemplate = options.get('template', self._plotTemplate);
-        self._type = options.get('type', self._type);
-
+        #self._plotTemplate = options.get('template', self._plotTemplate);
+        #self._type = options.get('type', self._type);
+        self._plotTemplate = 'default';
+        self._type = 'isofill';
+        print "rendering", self._filename
         try:
+            if (self._canvas is None):
+                return self.toJSON(None, True, datetime.datetime.now().time().microsecond,
+                               [564, 400], "png;base64", "", "", "")
             if (self._filename is None):
                 self.error("Invalid filename for the plot")
-                return
+                return self.toJSON(None, True, datetime.datetime.now().time().microsecond,
+                               [564, 400], "png;base64", "", "", "")
 
             self._file = cdms2.open(self._filename)
             if hasattr(self._file,'presentation'):
@@ -190,7 +197,7 @@ class VcsPlot(Plot):
             png = base64.b64encode(png)
 
             return self.toJSON(png, True, datetime.datetime.now().time().microsecond,
-                               [550, 400], "png;base64", "", "", "")
+                               [564, 400], "png;base64", "", "", "")
 
         except Exception as e:
             print e
