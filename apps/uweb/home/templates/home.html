@@ -497,7 +497,9 @@
                                 index = 0;
                                 myplot1.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
                                     myplot1.clear();
-                                    myplot1.render({'template':'default','type':myList[index]['plot_type']});
+                                    myplot1.createContext(function(){
+                                        myplot1.render({'template':'default','type':myList[index]['plot_type']});
+                                    });
                                     index=index+1;
                                     if (index < count){
                                         myplot2.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
@@ -643,10 +645,7 @@
                 type:'GET',
                 success:function(data){
                     plot_set_list=data['plot_set'];
-                    if (plot_obs_list)
-                    {
-                        plot_obs_list.sort();
-                    }
+                    plot_set_list.sort();
                     $('#inputPlotSet').empty();
                     $('#inputPlotSet').append("<option value=''></option>");
                     for (var i = 0; i< plot_set_list.length; i++)
@@ -789,6 +788,18 @@
     function initSheet(){
       myplot1.init(function() {
           myplot1.createContext(function(){
+          });
+      });
+      myplot2.init(function() {
+          myplot2.createContext(function(){
+          });
+      });
+      myplot3.init(function() {
+          myplot3.createContext(function(){
+          });
+      });
+      myplot4.init(function() {
+          myplot4.createContext(function(){
           });
       });
     }
