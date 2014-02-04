@@ -497,32 +497,32 @@
                                 index = 0;
                                 myplot1.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
                                     myplot1.clear();
-                                    myplot1.createContext(function(){
-                                        myplot1.render({'template':'default','type':myList[index]['plot_type']});
+                                    myplot1.render({'template':'default','type':myList[index]['plot_type']});
+                                });
+                                index=index+1;
+                                if (index <  count)
+                                {
+                                    myplot2.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
+                                        myplot2.clear();
+                                        myplot2.render({'template':'default','type':myList[index]['plot_type']});
                                     });
                                     index=index+1;
-                                    if (index < count){
-                                        myplot2.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
-                                            myplot2.clear();
-                                            myplot2.render({'template':'default','type':myList[index]['plot_type']});
-                                            index=index+1;
-                                            if (index < count){
-                                                    myplot3.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
-                                                    myplot3.clear();
-                                                    myplot3.render({'template':'default','type':myList[index]['plot_type']});
-                                                    index=index+1;
-                                                    if (index < count) {
-                                                        myplot4.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
-                                                            myplot4.clear();
-                                                            myplot4.render({'template':'default','type':myList[index]['plot_type']});
-                                                            index=index+1;
-                                                        });
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
+                                }
+                                if (index <  count)
+                                {
+                                    myplot3.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
+                                        myplot3.clear();
+                                        myplot3.render({'template':'default','type':myList[index]['plot_type']});
+                                    });
+                                    index=index+1;
+                                }
+                                if (index <  count)
+                                {
+                                    myplot4.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
+                                        myplot4.clear();
+                                        myplot4.render({'template':'default','type':myList[index]['plot_type']});
+                                    });
+                                }
                             }
                             var cur_sheet=1;
                             if (sessionStorage.diagcount){
@@ -786,22 +786,10 @@
         myplot2 = new uvis.plot("#viewport-container2",
                                {"connection": remoteConnection});
     function initSheet(){
-      myplot1.init(function() {
-          myplot1.createContext(function(){
-          });
-      });
-      myplot2.init(function() {
-          myplot2.createContext(function(){
-          });
-      });
-      myplot3.init(function() {
-          myplot3.createContext(function(){
-          });
-      });
-      myplot4.init(function() {
-          myplot4.createContext(function(){
-          });
-      });
+        myplot1.init(function(){myplot1.createContext()});
+        myplot2.init(function(){myplot2.createContext()});
+        myplot3.init(function(){myplot3.createContext()});
+        myplot4.init(function(){myplot4.createContext()});
     }
     remoteConnection.connect(initSheet);
     myview.addPlot(myplot1);

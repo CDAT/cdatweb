@@ -96,16 +96,16 @@ class VcsPlot(Plot):
         """This method may require some testing."""
         self._canvas.clear()
         self._file = cdms2.open(self._filename)
-        varlist = self.f.plot_these
+        varlist = self._file.plot_these
         if isinstance(varlist,list):
             for i in varlist:
                 self._variable = 1
-                data = self.f(self._variable)
-                d = self._canvas.plot(data,self.plotTemplate,self.f.presentation,bg=1)
+                data = self._file(self._variable)
+                d = self._canvas.plot(data,self.plotTemplate,self._file.presentation,bg=1)
         else:
             self._variable=varlist
-            data = self.f(self._variable)
-            d = self._canvas.plot(data,self._plotTemplate,self.f.presentation,bg=1)
+            data = self._file(self._variable)
+            d = self._canvas.plot(data,self._plotTemplate,self._file.presentation,bg=1)
 
         png = d._repr_png_()
         png = base64.b64encode(png)
@@ -115,6 +115,7 @@ class VcsPlot(Plot):
 
     def createContext(self):
         self._canvas = vcs.init()
+        print "createContext", self._canvas
 
     def getValueAt(self, evt):
         x = evt["x"]
@@ -161,6 +162,7 @@ class VcsPlot(Plot):
             return ""
 
     def render(self, options):
+        print "rendering in plot.py", self._canvas
         self._plotTemplate = options.get('template', self._plotTemplate);
         self._type = options.get('type', self._type);
 
