@@ -24,7 +24,7 @@ def get_data_node_list(host):
         filtered_data_node_list.append(data_node)
     if found_pcmdi9:
         for data_node in data_node_list:
-            if data_node.startswith('pcmdi') and data_node != 'pcmdi9.llnl.gov':
+            if data_node.startswith('pcmdi') and (data_node != 'pcmdi9.llnl.gov' and data_node != 'pcmdi11.llnl.gov'):
                 filtered_data_node_list.remove(data_node)
     return filtered_data_node_list
 

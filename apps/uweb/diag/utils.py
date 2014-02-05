@@ -18,13 +18,13 @@ class SingletonType(type):
             return cls.__instance
 
 class ObsMenu(object):
-    __metaclass__ = SingletonType
 
     def __init__(self,diag_type):
         if diag_type=='AMWG':
             path2=settings.DIAG_AMWG_OBS_PATH
         elif diag_type=='LMWG':
             path2=settings.DIAG_LMWG_OBS_PATH
+        print path2
         datafile2 = metrics.fileio.findfiles.dirtree_datafiles( path2)
         self.obs_menu=datafile2.check_filespec()
 
@@ -69,7 +69,7 @@ def get_observations(diag_type):
 def get_filetable2(obs,diag_type):
     if not os.path.exists(tmppath):
         os.makedirs(tmppath)
-    obs_menu=ObsMenu().obs_menu
+    obs_menu=ObsMenu(diag_type).obs_menu
     if obs_menu:
         filt2 = obs_menu[obs]
         if diag_type=='AMWG':

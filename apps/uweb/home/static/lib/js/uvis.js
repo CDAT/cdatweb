@@ -60,6 +60,9 @@ uvis.remoteConnection = function (url) {
       m_isConnected = true;
 
       typeof callback === 'function' && callback();
+    },
+    function(code, reason) {
+      console.log(reason);
     });
   };
 
@@ -82,12 +85,14 @@ uvis.remoteConnection = function (url) {
 //////////////////////////////////////////////////////////////////////////////
 uvis.plot = function(nodeId, args) {
   var m_name = "default",
+      m_id = null,
       m_nodeId = nodeId,
       m_connection = null,
       m_viewport = null,
       m_remote = true,
       m_type = null,
       m_data = null,
+      m_config = {},
       m_this = this,
       m_actions = {'blur':[], 'focus':[], 'focusin':[], 'focusout':[],
         'load':[], 'resize':[], 'scroll':[], 'unload':[], 'click':[],
@@ -167,11 +172,58 @@ uvis.plot = function(nodeId, args) {
   /////////////////////////////////////////////////////////////////////////////
   this.setData = function(data, callback) {
     if (this.hasValidConnection()) {
-      m_connection.getSession().call("vtk:setFileName",data).then(function(res){
-        m_data = data;
+      m_connection.getSession().call("vtk:plot:setData", m_id,
+        data).then(function(res){
+          console.log('data is ', data);
+          m_data = data;
+          typeof callback === 'function' && callback();
+        }, function(msg) {console.log(msg);});
+    }
+  };
 
+  /////////////////////////////////////////////////////////////////////////////
+  /**
+   * Get plot configuration
+   *
+   * @returns {{}}
+   */
+  /////////////////////////////////////////////////////////////////////////////
+  this.getConfig = function() {
+    return m_config;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////
+  /**
+   * Set plot configuration
+   *
+   * @param config
+   * @param callback
+   */
+  /////////////////////////////////////////////////////////////////////////////
+  this.setConfig = function(config, callback) {
+    if (this.hasValidConnection()) {
+      m_connection.getSession().call("vtk:plot:setConfig", m_id,
+        config).then(function(res){
+          m_config = config;
+          typeof callback === 'function' && callback();
+        }, function(msg) {console.log(msg);});
+    }
+  };
+
+  /////////////////////////////////////////////////////////////////////////////
+  /**
+   * Perform initialization code
+   */
+  /////////////////////////////////////////////////////////////////////////////
+  this.init = function(callback) {
+    if (this.hasValidConnection()) {
+      m_connection.getSession().call("vtk:createPlot", "VcsPlot").then(function(res){
+        m_id = res;
+        console.log("M_ID: "+m_id);
         typeof callback === 'function' && callback();
       });
+    } else {
+      console.log("[error] Invalid connection");
     }
   };
 
@@ -180,13 +232,23 @@ uvis.plot = function(nodeId, args) {
    * Initialize the context
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.createContext = function() {
+  this.createContext = function(callback) {
     if (m_connection === null) {
       console.log("[plot:info] Connection cannot be null");
       return;
     }
-    m_viewport = vtkWeb.createViewport({session: m_connection.getSession()});
-    m_viewport.bind(m_nodeId);
+
+    if (this.hasValidConnection()) {
+      m_connection.getSession().call("vtk:plot:createContext", m_id).then(function(res){
+        console.log("CreateContext: "+m_id);
+        m_viewport = vtkWeb.createViewport({session: m_connection.getSession(),
+                                        view: m_id});
+        m_viewport.bind(m_nodeId);
+        typeof callback === 'function' && callback();
+      });
+    } else {
+      console.log("[error] Invalid connection");
+    }
   };
 
   /////////////////////////////////////////////////////////////////////////////
@@ -204,7 +266,8 @@ uvis.plot = function(nodeId, args) {
    * Render plot
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.render = function() {
+  this.render = function(options) {
+
     // @todo Provide right abstraction
     m_viewport.render();
   };
@@ -280,10 +343,10 @@ uvis.plot = function(nodeId, args) {
    * @param callback
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.getData = function(evt, callback) {
-    m_connection.getSession().call("vtk:mouseInteraction", evt).then(function(data){
-      callback(data);
-    });
+  this.getValueAt = function(evt, callback) {
+    m_connection.getSession().call("vtk:plot:getValueAt", m_id, evt).then(function(data){
+      typeof callback === 'function' && callback(data);
+    }, function(msg){ console.log('[error] ', msg)});
   };
 };
 
