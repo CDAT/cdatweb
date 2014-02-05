@@ -14,7 +14,7 @@ uvis.remoteConnection = function (url) {
 
   // Use localhost by default
   if (typeof url === 'undefined') {
-    url = "ws://localhost:8080/ws";
+    url = "ws://" + location.hostname + ":8080/ws";
   }
   m_meta.connection = {sessionURL: url};
 

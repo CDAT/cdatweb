@@ -131,6 +131,8 @@ def addArguments(parser):
             action="store_true")
       parser.add_argument("-p", "--port", type=int, default=8080,
             help="port number on which the server will listen (default: 8080)")
+      parser.add_argument("-i", "--host", type=str, default='localhost',
+            help="the interface for the web-server to listen on (default: localhost)")
       parser.add_argument("-t", "--timeout", type=int, default=300,
             help="timeout for reaping process on idle in seconds (default: 300s)")
       parser.add_argument("-c", "--content", default=None,
@@ -173,7 +175,7 @@ def startServer(options, protocol=pv_protocols.ParaViewWebProtocol, disableLoggi
 
     # Set up the server factory
     wampFactory = wamp.ReapingWampServerFactory(
-        "ws://localhost:%d" % options.port, options.debug, options.timeout)
+        "ws://%s:%d" % (options.host, options.port), options.debug, options.timeout)
     wampFactory.protocol = AppProtocol
 
     # Set up the site
