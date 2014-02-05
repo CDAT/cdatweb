@@ -37,7 +37,7 @@
             $("#plot_package").change(function()
             {
                 var plot_package=$("plot_package option:selected").val();
-                $.ajax({"url":"http://localhost:8000/diag/api/get_plot_set",
+                $.ajax({"url":"/diag/api/get_plot_set",
                     data:{"plot_package":plot_package},
                     type:'GET',
                     datatype:'json',

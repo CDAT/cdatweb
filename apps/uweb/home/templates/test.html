@@ -69,7 +69,7 @@
 
             $("#loading").hide();
             //pv.connection = { sessionURL: "ws://" + location.hostname + ":" + location.port + "/ws"};
-      pv.connection = { sessionURL: "ws://localhost:8080/ws"};
+      pv.connection = { sessionURL: "ws://" + location.hostname + ":8080/ws"};
             connect();
 
             function connect() {
