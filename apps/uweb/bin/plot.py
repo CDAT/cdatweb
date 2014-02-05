@@ -21,7 +21,6 @@ class Plot(object):
     """
     def __init__(self, id=None, config={}):
         self._id = id
-        self._config['type'] = type
         self._filename = None
         self._variable = None
         self._config = config
@@ -80,7 +79,7 @@ class VcsPlot(Plot):
     """
       This plot uses VCS for drawing 2D geospatial plots.
     """
-    def __init__(self, id="vcs", config= {'type':'IsoFill', 'template':'default'}):
+    def __init__(self, id="vcs", config={'type':'IsoFill', 'template':'default'}):
         super(VcsPlot, self).__init__(id, config)
         self._file = None
         self._canvas = None
