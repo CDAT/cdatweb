@@ -30,7 +30,7 @@
             </ul>
             <div class="tab-pane active" id="Project1">
                 <div class=row>
-                    <div class="col-md-12" id="Project1Div" style="height:720px;box-shadow: 0 0 2px grey">
+                    <div class="col-md-12" id="Project1Div" style="height:720px;box-shadow: 0 0 2px grey;word-break:break-all;">
                     </div>
                 </div>
                     <h4>&nbsp;<span class="label label-default">Plots</span></h4>
@@ -402,7 +402,6 @@
                 var draggableText=ui.draggable.text();
                 var droppableId=$(this).attr("id");
                 var draggableNodeName=ui.draggable[0].nodeName;
-
                 if (draggableNodeName=='A')
                 {
                     sessionStorage.setItem('canvas1_plot_type',draggableText);     
@@ -415,13 +414,18 @@
                         myFilename=sessionStorage.getItem('canvas1_filename');
                         myVarname=sessionStorage.getItem('canvas1_var');
                         myPlotType=sessionStorage.getItem('canvas1_plot_type');
-                        $("#data1").text(myFilename +', ' + myVarname +', '+ myPlotType);
                         myplot1.setData({'filename':myFilename.substring(0,myFilename.length-5),'var':myVarname},function(){
                             myplot1.setConfig({'template':'default','type':myPlotType});
+                            myplot1.clear();
+                            $("#data1").text('');
                             myplot1.render();
                         });
-                    }
-
+                        var varlist_str= myVarname +' [Sheet1]';
+                        var new_var_element='<li style=list-style-type:none>'+varlist_str+'</li>';
+                        $('#var_panel').append(new_var_element);    
+                        var new_prj_element='<li style=list-style-type:none>'+myFilename+'</li>';
+                        $('#Project1Div').append(new_prj_element);
+                    }   
                 }
                 else
                 {
@@ -437,15 +441,19 @@
                         myFilename=sessionStorage.getItem('canvas1_filename');
                         myVarname=sessionStorage.getItem('canvas1_var');
                         myPlotType=sessionStorage.getItem('canvas1_plot_type');
-                        $("#data1").text(myFilename +', ' + myVarname +', '+ myPlotType);
                         myplot1.setData({'filename':myFilename.substring(0,myFilename.length-5),'var':myVarname},function(){
                             myplot1.setConfig({'template':'default','type':myPlotType});
                             myplot1.clear();
+                            $("#data1").text('');
                             myplot1.render();
                         });
+                        var varlist_str= myVarname +' [Sheet1]';
+                        var new_var_element='<li style=list-style-type:none>'+varlist_str+'</li>';
+                        $('#var_panel').append(new_var_element);    
+                        var new_prj_element='<li style=list-style-type:none;>'+myFilename+'</li>';
+                        $('#Project1Div').append(new_prj_element);
                     }
                 }
-                
             }
         });
 
@@ -545,9 +553,9 @@
                             {
                                 myTitle=myList[i]['filename'];
                                 inner_html+=("<h6>"+myTitle+"</h6>"+createHiddenInput("Sheet"+(cur_sheet)+"Canvas"+(i+1),myList[i]['fullpath']));
-                                var new_var=myList[i]['varlist'].toString();
-                                varlist_str='';
-                                varlist_str=+ new_var +' [Sheet' + cur_sheet+']';
+                                //var new_var=myList[i]['varlist'].toString();
+                                var new_var=myTitle.substring(0,myTitle.length-3);
+                                varlist_str= new_var +' [Sheet' + cur_sheet+']';
                                 var new_var_element='<li style=list-style-type:none>'+varlist_str+'</li>';
                                 $('#var_panel').append(new_var_element);    
                                 var new_prj_element='<li style=list-style-type:none>'+myTitle+'</li>';
@@ -576,7 +584,6 @@
                 e.preventDefault();
                 if (sessionStorage.diagcount){
                     sessionStorage.diagcount=Number(sessionStorage.diagcount)+1;
-
                 }
                 else {
                     sessionStorage.diagcount=1;
