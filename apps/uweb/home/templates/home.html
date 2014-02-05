@@ -416,7 +416,10 @@
                         myVarname=sessionStorage.getItem('canvas1_var');
                         myPlotType=sessionStorage.getItem('canvas1_plot_type');
                         $("#data1").text(myFilename +', ' + myVarname +', '+ myPlotType);
-                        //myplot1.render();
+                        myplot1.setData({'filename':myFilename.substring(0,myFilename.length-5),'var':myVarname},function(){
+                            myplot1.setConfig({'template':'default','type':myPlotType});
+                            myplot1.render();
+                        });
                     }
 
                 }
@@ -435,7 +438,11 @@
                         myVarname=sessionStorage.getItem('canvas1_var');
                         myPlotType=sessionStorage.getItem('canvas1_plot_type');
                         $("#data1").text(myFilename +', ' + myVarname +', '+ myPlotType);
-                        //myplot1.render();
+                        myplot1.setData({'filename':myFilename.substring(0,myFilename.length-5),'var':myVarname},function(){
+                            myplot1.setConfig({'template':'default','type':myPlotType});
+                            myplot1.clear();
+                            myplot1.render();
+                        });
                     }
                 }
                 

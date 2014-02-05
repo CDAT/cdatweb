@@ -192,12 +192,18 @@ class VcsPlot(Plot):
 
             if (self._variable is None):
                 self._variable = self._file.listvariable()[0]
-
-            data = self._file(self._variable)
+            print "variable:" + self._variable
+            data = self._file(self._variable,slice(0,1))
 
             # Now plot the canvas
-            d = self._canvas.plot(data, self._config['template'], self._config['type'], bg=1)
+            print data.shape
+            print self._config['template']
+            print self._config['type'].lower()
+            if self._config["type"].lower()=="isofill":
+                g = self._canvas.createisofill()
 
+            d = self._canvas.plot(data,g, bg=1)
+            print "done plotting"
             png = d._repr_png_()
             png = base64.b64encode(png)
 
