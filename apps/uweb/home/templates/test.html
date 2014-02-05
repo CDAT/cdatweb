@@ -69,7 +69,7 @@
 
             $("#loading").hide();
             //pv.connection = { sessionURL: "ws://" + location.hostname + ":" + location.port + "/ws"};
-	    pv.connection = { sessionURL: "ws://localhost:8080/ws"};
+      pv.connection = { sessionURL: "ws://localhost:8080/ws"};
             connect();
 
             function connect() {
@@ -108,26 +108,26 @@
             function setPlotType(){
                 if (pv.connection && pv.connection.session) {
                     var selected = $('#plotTypeSelection').val();
-		    pv.connection.session.call("vtk:is_initRender").then(function(res) {
-			if (res)
-			{
-					
-                    		pv.connection.session.call("vtk:setPlotType",selected).then(function(res){
-                            		console.log(res);
-                            		pv.viewport.render();
-				});
-			}
-			else
-			{
-				pv.connection.session.call("vtk:setPlotType",selected).then(function(res){
-                            		console.log(res);
-                            		initRender();
-				});
-			}
-		    });
+        pv.connection.session.call("vtk:is_initRender").then(function(res) {
+      if (res)
+      {
+
+                        pv.connection.session.call("vtk:setPlotType",selected).then(function(res){
+                                console.log(res);
+                                pv.viewport.render();
+        });
+      }
+      else
+      {
+        pv.connection.session.call("vtk:setPlotType",selected).then(function(res){
+                                console.log(res);
+                                initRender();
+        });
+      }
+        });
                 }
             }
-            
+
 
             $(window).resize(function() {
                 $(".splitter").height(window.innerHeight - 35);
@@ -151,7 +151,7 @@
 
             var container = $(".viewport-container");
 
-	    container.bind('mouse', function(evt){
+      container.bind('mouse', function(evt){
             //if(renderer.hasClass('active')){
                 // stop default event handling by the browser.
                 evt.preventDefault();

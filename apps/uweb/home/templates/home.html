@@ -300,7 +300,7 @@
                                 <input type=text class=form-control id=inputEsgfSearch value="cmip5.output1.INM.inmcm4.1pctCo2.mon">
                             </div>
                         </div>
-                            
+
                         <div class="form-group">
                             <label for="inputDataNode" class="col-sm-2 control-label">
                                 <img class=img-rounded src={{STATIC_URL}}img/database.png style="height:25px;width:25px;vertical-align:middle;"/>
@@ -396,7 +396,7 @@
                 cursorAt: {left: 5},
                 });
         });
-        
+
         $("#Sheet1Canvas1").droppable({
             drop: function (event,ui){
                 var draggableText=ui.draggable.text();
@@ -404,7 +404,7 @@
                 var draggableNodeName=ui.draggable[0].nodeName;
                 if (draggableNodeName=='A')
                 {
-                    sessionStorage.setItem('canvas1_plot_type',draggableText);     
+                    sessionStorage.setItem('canvas1_plot_type',draggableText);
                     if (!(sessionStorage.getItem('canvas1_filename')))
                     {
                         $("#data1").text("Please drag and drop a variable into this canvas.");
@@ -422,10 +422,10 @@
                         });
                         var varlist_str= myVarname +' [Sheet1]';
                         var new_var_element='<li style=list-style-type:none>'+varlist_str+'</li>';
-                        $('#var_panel').append(new_var_element);    
+                        $('#var_panel').append(new_var_element);
                         var new_prj_element='<li style=list-style-type:none>'+myFilename+'</li>';
                         $('#Project1Div').append(new_prj_element);
-                    }   
+                    }
                 }
                 else
                 {
@@ -449,7 +449,7 @@
                         });
                         var varlist_str= myVarname +' [Sheet1]';
                         var new_var_element='<li style=list-style-type:none>'+varlist_str+'</li>';
-                        $('#var_panel').append(new_var_element);    
+                        $('#var_panel').append(new_var_element);
                         var new_prj_element='<li style=list-style-type:none;>'+myFilename+'</li>';
                         $('#Project1Div').append(new_prj_element);
                     }
@@ -522,7 +522,7 @@
                                         myplot2.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
                                             myplot2.render();
                                             index=index+1;
-                                    
+
                                             if (index <  count)
                                             {
                                                 myplot3.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
@@ -557,7 +557,7 @@
                                 var new_var=myTitle.substring(0,myTitle.length-3);
                                 varlist_str= new_var +' [Sheet' + cur_sheet+']';
                                 var new_var_element='<li style=list-style-type:none>'+varlist_str+'</li>';
-                                $('#var_panel').append(new_var_element);    
+                                $('#var_panel').append(new_var_element);
                                 var new_prj_element='<li style=list-style-type:none>'+myTitle+'</li>';
                                 $('#Project1Div').append(new_prj_element);
 
