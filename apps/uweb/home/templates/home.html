@@ -901,7 +901,7 @@
       var elem_position = $(evt.delegateTarget).offset();
           evt["x"] = evt.pageX - elem_position.left;
           evt["y"] = evt.pageY - elem_position.top;
-      console.log('evt', elem_position.left, elem_position.top);
+      console.log('evt', evt["x"],evt["y"],elem_position.left, elem_position.top);
       var evtInfo = {};
       evtInfo.x = evt["x"]+15.98;
       evtInfo.y = evt["y"]+20;
@@ -932,6 +932,7 @@
         console.log('data ', evtInfo,data);
         $("#data2").text(data['value']);
       });
+            myModel=$('#inputModel').val();
     });
     myplot3.on('mousemove', function(evt) {
       var elem_position = $(evt.delegateTarget).offset();

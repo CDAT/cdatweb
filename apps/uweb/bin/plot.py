@@ -83,8 +83,8 @@ class VcsPlot(Plot):
         super(VcsPlot, self).__init__(id, config)
         self._file = None
         self._canvas = None
-        self.image_width = 569.0
-        self.image_height = 399.0
+        self.image_width = 806.0
+        self.image_height = 614.0
 
     def toJSON(self, imageData, state, mtime, size, format, globalId, localTime, workTime):
         reply = {}
@@ -114,8 +114,10 @@ class VcsPlot(Plot):
             d = self._canvas.plot(data,self._config['template'],self._file.presentation,bg=1)
 
         png = d._repr_png_()
+        f=open("/export/leung25/test.png",'w')
+        f.write(png)
+        f.close()
         png = base64.b64encode(png)
-
         return self.toJSON(png, True, datetime.datetime.now().time().microsecond,
                            [self.image_width, self.image_height], "png;base64", options['view'], "", "")
 
@@ -136,8 +138,8 @@ class VcsPlot(Plot):
         dx2 = t.data.x2
         dy1 = t.data.y1
         dy2 = t.data.y2
-        print "x ", x,cursorX,dx1,dx2
-        print "y ", y, cursorY, dy1,dy2
+        #print "x ", x,cursorX,dx1,dx2
+        #print "y ", y, cursorY, dy1,dy2
         if (dx1 < cursorX < dx2) and (dy1 < cursorY < dy2):
             X = data.getAxis(-1)
             Y = data.getAxis(-2)
