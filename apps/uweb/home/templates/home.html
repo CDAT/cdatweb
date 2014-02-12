@@ -414,7 +414,7 @@
                         myFilename=sessionStorage.getItem('canvas1_filename');
                         myVarname=sessionStorage.getItem('canvas1_var');
                         myPlotType=sessionStorage.getItem('canvas1_plot_type');
-                        myplot1.setData({'filename':myFilename.substring(0,myFilename.length-5),'var':myVarname},function(){
+                        myplot1.setData({'filename':myFilename.substring(0,myFilename.length-5),'variable':myVarname},function(){
                             myplot1.setConfig({'template':'default','type':myPlotType});
                             myplot1.clear();
                             $("#data1").text('');
@@ -441,7 +441,7 @@
                         myFilename=sessionStorage.getItem('canvas1_filename');
                         myVarname=sessionStorage.getItem('canvas1_var');
                         myPlotType=sessionStorage.getItem('canvas1_plot_type');
-                        myplot1.setData({'filename':myFilename.substring(0,myFilename.length-5),'var':myVarname},function(){
+                        myplot1.setData({'filename':myFilename.substring(0,myFilename.length-5),'variable':myVarname},function(){
                             myplot1.setConfig({'template':'default','type':myPlotType});
                             myplot1.clear();
                             $("#data1").text('');
@@ -514,24 +514,24 @@
                                 myplot2.clear();
                                 myplot3.clear();
                                 myplot4.clear();
-                                myplot1.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
+                                myplot1.setData({'filename':myList[index]['fullpath'],'variable':myList[index]['varlist']},function(){
                                     myplot1.render();
                                     index=index+1;
                                     if (index <  count)
                                     {
-                                        myplot2.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
+                                        myplot2.setData({'filename':myList[index]['fullpath'],'variable':myList[index]['varlist']},function(){
                                             myplot2.render();
                                             index=index+1;
 
                                             if (index <  count)
                                             {
-                                                myplot3.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
+                                                myplot3.setData({'filename':myList[index]['fullpath'],'variable':myList[index]['varlist']},function(){
                                                     myplot3.render();
                                                     index=index+1;
                                                     if (index <  count)
                                                     {
                                                         console.log("Going for myplot4");
-                                                        myplot4.setData({'filename':myList[index]['fullpath'],'var':myList[index]['varlist']},function(){
+                                                        myplot4.setData({'filename':myList[index]['fullpath'],'variable':myList[index]['varlist']},function(){
                                                             myplot4.render();
                                                             //myplot4.render({'template':'default','type':myList[index]['plot_type']});
                                                         });
@@ -802,7 +802,7 @@
                                {"connection": remoteConnection}),
         myplot4 = new uvis.plot("#viewport-container4",
                                {"connection": remoteConnection}),
-        myview = new uvis.view(),
+        //myview = new uvis.view(),
         myplot2 = new uvis.plot("#viewport-container2",
                                {"connection": remoteConnection});
     function initSheet(){
@@ -811,11 +811,11 @@
         myplot3.init(function(){myplot3.createContext()});
         myplot4.init(function(){myplot4.createContext()});
     }
-    remoteConnection.connect(initSheet);
-    myview.addPlot(myplot1);
-    myview.addPlot(myplot2);
-    myview.addPlot(myplot3);
-    myview.addPlot(myplot4);
+    //remoteConnection.connect(initSheet);
+    //myview.addPlot(myplot1);
+    //myview.addPlot(myplot2);
+    //myview.addPlot(myplot3);
+    //myview.addPlot(myplot4);
 
     function getActiveSheet(){
         var childrenList=$("#sheetTab").children();

@@ -215,9 +215,9 @@ uvis.plot = function(nodeId, args) {
    * Perform initialization code
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.init = function(callback) {
+  this.init = function(plot, callback) {
     if (this.hasValidConnection()) {
-      m_connection.getSession().call("vtk:createPlot", "VcsPlot").then(function(res){
+      m_connection.getSession().call("vtk:createPlot", plot).then(function(res){
         m_id = res;
         console.log("M_ID: "+m_id);
         typeof callback === 'function' && callback();

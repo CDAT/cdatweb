@@ -79,13 +79,16 @@ class UVisProtocol(pv_protocols.ParaViewWebProtocol):
 
     @exportRpc("stillRender")
     def stillRender(self,options):
-        print options
-        print "at stillRender"
         if options['view'] != -1:
             return self._plots[options['view']].render(options);
         else:
             return {};
 
+    @exportRpc("mouseInteraction")
+    def mouseInteraction(self, event):
+      view = event['view']
+      if view != -1:
+        return self._plots[view].mouseInteraction(event)
 #//////////////////////////////////////////////////////////////////////////////
 #
 # Application protocol
@@ -105,12 +108,6 @@ class AppProtocol(pv_wamp.PVServerProtocol):
           AppProtocol.dsHost, AppProtocol.dsPort, AppProtocol.rsHost, AppProtocol.rsPort))
 
         self._imageDelivery = UVisProtocol()
-
-        self.registerVtkWebProtocol(pv_protocols.ParaViewWebMouseHandler())
-        self.registerVtkWebProtocol(pv_protocols.ParaViewWebViewPort())
-        self.registerVtkWebProtocol(pv_protocols.ParaViewWebViewPortGeometryDelivery())
-        self.registerVtkWebProtocol(pv_protocols.ParaViewWebTimeHandler())
-        self.registerVtkWebProtocol(pv_protocols.ParaViewWebRemoteConnection())
         self.registerVtkWebProtocol(self._imageDelivery)
 
         # Update authentication key to use
@@ -200,6 +197,16 @@ def startServer(options, protocol=pv_protocols.ParaViewWebProtocol, disableLoggi
     wampFactory.stopFactory()
 
 if __name__ == "__main__":
+
+    from PyQt4 import QtGui
+    global qapp
+    qapp = QtGui.QApplication(sys.argv)
+    import qt4reactor
+    import sys
+    del sys.modules['twisted.internet.reactor']
+    import qt4reactor
+    qt4reactor.install()
+
     # Create argument parser
     parser = argparse.ArgumentParser(description="ParaView/Web Pipeline Manager web-application")
 
@@ -226,7 +233,8 @@ if __name__ == "__main__":
     AppProtocol.rsPort     = args.rsPort
 
     for rpc in ("id", "setId", "data", "setData", "config", "setConfig",
-                "createContext", "render", "getValueAt", "error"):
+                "createContext", "render", "getValueAt", "error",
+                "mouseInteraction"):
         addMappedRpc(UVisProtocol, "_plots", "plot", rpc)
 
     startServer(options=args)
