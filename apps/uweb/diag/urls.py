@@ -4,6 +4,7 @@ import views
 
 urlpatterns = patterns('diag.views',
         url(r'^api/get_plot_package', 'get_plot_package'),
+        url(r'^api/get_plot_models', 'get_plot_models'),
         url(r'^api/run_elo', views.run_elo),
         url(r'^api/get_status/(?P<taskID>\d+)/$', 'get_status'),
         url(r'^api/load_output/(?P<taskID>\d+\.?\d+)/$', views.load_output),

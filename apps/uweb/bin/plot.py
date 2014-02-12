@@ -83,8 +83,8 @@ class VcsPlot(Plot):
         super(VcsPlot, self).__init__(id, config)
         self._file = None
         self._canvas = None
-        self.image_width = 564.0
-        self.image_height = 400.0
+        self.image_width = 569.0
+        self.image_height = 399.0
 
     def toJSON(self, imageData, state, mtime, size, format, globalId, localTime, workTime):
         reply = {}
@@ -117,7 +117,7 @@ class VcsPlot(Plot):
         png = base64.b64encode(png)
 
         return self.toJSON(png, True, datetime.datetime.now().time().microsecond,
-                           [564, 400], "png;base64", options['view'], "", "")
+                           [self.image_width, self.image_height], "png;base64", options['view'], "", "")
 
     def createContext(self):
         self._canvas = vcs.init()
@@ -136,6 +136,8 @@ class VcsPlot(Plot):
         dx2 = t.data.x2
         dy1 = t.data.y1
         dy2 = t.data.y2
+        print "x ", x,cursorX,dx1,dx2
+        print "y ", y, cursorY, dy1,dy2
         if (dx1 < cursorX < dx2) and (dy1 < cursorY < dy2):
             X = data.getAxis(-1)
             Y = data.getAxis(-2)
@@ -177,11 +179,11 @@ class VcsPlot(Plot):
         try:
             if (self._canvas is None):
                 return self.toJSON(None, True, datetime.datetime.now().time().microsecond,
-                               [564, 400], "png;base64", options['view'], "", "")
+                               [self.image_width, self.image_height], "png;base64", options['view'], "", "")
             if (self._filename is None):
                 self.error("Invalid filename for the plot")
                 return self.toJSON(None, True, datetime.datetime.now().time().microsecond,
-                               [564, 400], "png;base64", options['view'], "", "")
+                               [self.image_width, self.image_height], "png;base64", options['view'], "", "")
 
             self._file = cdms2.open(self._filename)
             if hasattr(self._file,'presentation'):
@@ -208,7 +210,7 @@ class VcsPlot(Plot):
             png = base64.b64encode(png)
 
             return self.toJSON(png, True, datetime.datetime.now().time().microsecond,
-                               [564, 400], "png;base64", options['view'], "", "")
+                               [self.image_width, self.image_height], "png;base64", options['view'], "", "")
 
         except Exception as e:
             print e
