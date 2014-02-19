@@ -33,7 +33,7 @@
                     <div class="col-md-12" id="Project1Div" style="height:720px;box-shadow: 0 0 2px grey;word-break:break-all;">
                     </div>
                 </div>
-                    <h4>&nbsp;<span class="label label-default">Plots</span></h4>
+                    <h4>&nbsp;<span class="label label-default">Plot Types</span></h4>
                         <div id="plot_type_selection" class=col-md-13>
                             <div class="btn-group dropup">
                                 <button type="button" class="btn btn-default" style="width:260px;">DV3D</button>
@@ -849,8 +849,8 @@
     */
     myplot1.on('mousemove', function(evt) {
       var elem_position = $(evt.delegateTarget).offset();
-          evt["x"] = evt.pageX - elem_position.left;
-          evt["y"] = evt.pageY - elem_position.top;
+          evt["x"] = evt.pageX - elem_position.left + 20;
+          evt["y"] = evt.pageY - elem_position.top + 20;
       var evtInfo = {};
       evtInfo.x = evt["x"];
       evtInfo.y = evt["y"];
@@ -862,8 +862,8 @@
     });
     myplot2.on('mousemove', function(evt) {
       var elem_position = $(evt.delegateTarget).offset();
-          evt["x"] = evt.pageX - elem_position.left;
-          evt["y"] = evt.pageY - elem_position.top;
+          evt["x"] = evt.pageX - elem_position.left + 20;
+          evt["y"] = evt.pageY - elem_position.top + 20;
       var evtInfo = {};
       evtInfo.x = evt["x"];
       evtInfo.y = evt["y"];
@@ -875,8 +875,8 @@
     });
     myplot3.on('mousemove', function(evt) {
       var elem_position = $(evt.delegateTarget).offset();
-          evt["x"] = evt.pageX - elem_position.left;
-          evt["y"] = evt.pageY - elem_position.top;
+          evt["x"] = evt.pageX - elem_position.left + 20;
+          evt["y"] = evt.pageY - elem_position.top  + 20;
       var evtInfo = {};
       evtInfo.x = evt["x"];
       evtInfo.y = evt["y"];
@@ -888,8 +888,8 @@
     });
     myplot4.on('mousemove', function(evt) {
       var elem_position = $(evt.delegateTarget).offset();
-          evt["x"] = evt.pageX - elem_position.left;
-          evt["y"] = evt.pageY - elem_position.top;
+          evt["x"] = evt.pageX - elem_position.left + 20;
+          evt["y"] = evt.pageY - elem_position.top + 20;
       var evtInfo = {};
       evtInfo.x = evt["x"];
       evtInfo.y = evt["y"];
