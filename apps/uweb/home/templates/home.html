@@ -901,7 +901,7 @@
       var elem_position = $(evt.delegateTarget).offset();
           evt["x"] = evt.pageX - elem_position.left;
           evt["y"] = evt.pageY - elem_position.top;
-      console.log('evt', evt["x"],evt["y"],elem_position.left, elem_position.top);
+      console.log('evt', evt["x"],evt["y"],$("#viewport-container1").height(),$('#viewport-container1').width(),elem_position.left, elem_position.top);
       var evtInfo = {};
       evtInfo.x = evt["x"]+15.98;
       evtInfo.y = evt["y"]+20;
