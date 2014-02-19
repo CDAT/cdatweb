@@ -280,7 +280,9 @@ class DV3DPlot(Plot):
         return
 
       # pass the options to VTK
-      return self._image_delivery.stillRender(options)
+      data = self._image_delivery.stillRender(options)
+      data['global_id'] = options['view']
+      return data
 
 
     def mouseInteraction(self, event):
