@@ -87,7 +87,7 @@
             </ul>
             <div class="tab-pane active" id="Sheet1">
                     <div class="btn-group btn-group-xs">
-                        <button type="button" class="btn btn-default">
+                        <button type="button" class="btn btn-default" id=delete_canvas>
                             <img src="{{STATIC_URL}}img/delete.png" class="img-rounded" style="height:25px;width:25px;vertical-align:middle;"></img>
                         </button>
                         <button type="button" class="btn btn-default">
@@ -329,6 +329,13 @@
     </div>
 </div>
     <script type="text/javascript">
+        $("#delete_canvas").click(function(){
+            myplot1.clear();
+            myplot2.clear();
+            myplot3.clear();
+            myplot4.clear();
+        });
+
         $("#run_esgf_search").click(function() {
             var search_str=$("#inputEsgfSearch").val();
             $.ajax({url:'/plots/esgf',
@@ -810,8 +817,13 @@
         myplot2.init(function(){myplot2.createContext()});
         myplot3.init(function(){myplot3.createContext()});
         myplot4.init(function(){myplot4.createContext()});
+        //var data2 = {'filename' : '/export/leung25/sample_data/geos5.bkg.prs.20110501_0000z.nc4',
+        //  'variable' : 'uwnd', 'gridfile': null};
+        //  myplot1.setData(data2, function() {
+        //      myplot1.render();
+        //  });
     }
-    //remoteConnection.connect(initSheet);
+    remoteConnection.connect(initSheet);
     //myview.addPlot(myplot1);
     //myview.addPlot(myplot2);
     //myview.addPlot(myplot3);
@@ -899,21 +911,31 @@
         $("#data4").text(data['value']);
       });
     });
-    /*
+/**
     function initSheet(){
-      var data = {'filename' : '/home/aashish/workspace/data/documents/clt.nc',
-        'var' : 'clt'};
-      myplot1.init(function() {
-        myplot1.setData(data, function() {
-          myplot1.createContext(function(){
-            myplot1.render();
+//       var data1 = {'filename' : '/home/cjh/work/source/geoweb-data/documents/clt.nc',
+//         'variable' : 'clt'};
+//       myplot1.init("VcsPlot", function() {
+//         myplot1.setData(data1, function() {
+//           myplot1.createContext(function(){
+//             myplot1.render();
+//           });
+//         });
+//       });
+
+      var data2 = {'filename' : '/export/leung25/sample_data/geos5.bkg.prs.20110501_0000z.nc4',
+          'variable' : 'uwnd', 'gridfile': null};
+        myplot1.init("DV3DPlot", function() {
+          myplot1.setData(data2, function() {
+            myplot1.createContext(function(){
+              myplot1.render();
+            });
           });
         });
-      });
 
     }
     remoteConnection.connect(initSheet);
-    */
+**/
     /**
     function testDisplay() {
       var data = "/export/leung25/Downloads/clt.nc";
