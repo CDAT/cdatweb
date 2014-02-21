@@ -220,6 +220,7 @@ uvis.plot = function(nodeId, args) {
       m_connection.getSession().call("vtk:createPlot", plot).then(function(res){
         m_id = res;
         console.log("M_ID: "+m_id);
+        console.log("plotType in init" + plot);
         typeof callback === 'function' && callback();
       });
     } else {
@@ -267,9 +268,10 @@ uvis.plot = function(nodeId, args) {
    */
   /////////////////////////////////////////////////////////////////////////////
   this.render = function(options) {
-
+    console.log('Calling m_viewport.render()');
     // @todo Provide right abstraction
     m_viewport.render();
+    console.log('Called m_viewport.render()');
   };
 
   /////////////////////////////////////////////////////////////////////////////

@@ -10,6 +10,7 @@ class PlotFactory(object):
 
     @staticmethod
     def createPlot(id, *args, **kwargs):
+        print "createPlot ........ ", id
         try:
           if not PlotFactory._factories.has_key(id):
               PlotFactory._factories[id] = eval(id + '.Factory()')
@@ -117,7 +118,7 @@ class VcsPlot(Plot):
 
         png = d._repr_png_()
         png = base64.b64encode(png)
-
+        print "at diagRender ********************************"
         return self.toJSON(png, True, datetime.datetime.now().time().microsecond,
                            [564, 400], "png;base64", options['view'], "", "")
 
@@ -282,6 +283,7 @@ class DV3DPlot(Plot):
       # pass the options to VTK
       data = self._image_delivery.stillRender(options)
       data['global_id'] = options['view']
+      print "DV3D plot rendering.........................."
       return data
 
 

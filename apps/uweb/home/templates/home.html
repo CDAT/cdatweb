@@ -31,6 +31,7 @@
             <div class="tab-pane active" id="Project1">
                 <div class=row>
                     <div class="col-md-12" id="Project1Div" style="height:720px;box-shadow: 0 0 2px grey;word-break:break-all;">
+                        <li class=prj_draggable_to_canvas style="list-style-type:none;">geos5.bkg.prs.20110501_0000z.nc4</li>                   
                     </div>
                 </div>
                     <h4>&nbsp;<span class="label label-default">Plots</span></h4>
@@ -370,10 +371,10 @@
                     success:function(res){
                         myVar=res['variable'];
                         $.each(myVar, function(i,item){
-                            var myli="<li style='list-style-type:none;'><div class=checkbox><label class=draggable_to_canvas style='list-style-type:none'><input class=file_var type=checkbox>"+myVar[i]+"</label></div></li>";
+                            var myli="<li style='list-style-type:none;'><div class=checkbox><label class=esgf_draggable_to_canvas style='list-style-type:none'><input class=file_var type=checkbox>"+myVar[i]+"</label></div></li>";
                             $(myli).appendTo(myNode);
                         });
-                        $('.draggable_to_canvas').draggable({
+                        $('.esgf_draggable_to_canvas').draggable({
                             revert: true,
                             help: "clone",
                             cursor: "crosshair",
@@ -394,15 +395,35 @@
             cursor: "crosshair",
             cursorAt: {left: 5},
         });
+        $('.prj_draggable_to_canvas').draggable({
+            revert: true,
+            help: "clone",
+            cursor: "crosshair",
+            cursorAt: {left: 5},
+        });
 
-        $('#esgf_result').on('click','.draggable_to_canvas', function(){
-            $('.draggable_to_canvas').draggable({
+        $('#esgf_result').on('click','.esgf_draggable_to_canvas', function(){
+            $('.esgf_draggable_to_canvas').draggable({
                 revert: true,
                 help: "clone",
                 cursor: "crosshair",
                 cursorAt: {left: 5},
                 });
         });
+
+        function createDV3DPlot()
+        {
+                            var data2 = {'filename' : '/export/leung25/sample_data/geos5.bkg.prs.20110501_0000z.nc4','variable' : 'uwnd', 'gridfile': null};
+                            var plot1 = new uvis.plot("#viewport-container1",{"connection": remoteConnection});
+                            myPlotArray[0]=new myPlotObject("#viewport-container1","DV3DPlot",plot1);
+                            myPlotArray[0].plotObj.init("DV3DPlot", function(){
+                                myPlotArray[0].plotObj.setData(data2, function() {
+                                    myPlotArray[0].plotObj.createContext(function(){
+                                        myPlotArray[0].plotObj.render();
+                                    });
+                                 });
+                            });
+        }
 
         $("#Sheet1Canvas1").droppable({
             drop: function (event,ui){
@@ -421,38 +442,74 @@
                         myFilename=sessionStorage.getItem('canvas1_filename');
                         myVarname=sessionStorage.getItem('canvas1_var');
                         myPlotType=sessionStorage.getItem('canvas1_plot_type');
-                        myplot1.setData({'filename':myFilename.substring(0,myFilename.length-5),'variable':myVarname},function(){
-                            myplot1.setConfig({'template':'default','type':myPlotType});
-                            myplot1.clear();
-                            $("#data1").text('');
-                            myplot1.render();
-                        });
-                        var varlist_str= myVarname +' [Sheet1]';
-                        var new_var_element='<li style=list-style-type:none>'+varlist_str+'</li>';
-                        $('#var_panel').append(new_var_element);
-                        var new_prj_element='<li style=list-style-type:none>'+myFilename+'</li>';
-                        $('#Project1Div').append(new_prj_element);
+                        if (myFilename=='/export/leung25/sample_data/geos5.bkg.prs.20110501_0000z.nc4')
+                        {
+                            remoteConnection.connect(createDV3DPlot);
+                        }
+                        else
+                        {
+                            if (!(myPlotArray[0].plotType=='VcsPlot'))
+                            {
+                                var plot1 = new uvis.plot("#viewport-container1",{"connection": remoteConnection});
+                                plot1.init("VcsPlot",function(){plot1.createContext()});
+                                myPlotArray[0]=new myPlotObject("#viewport-container1","VcsPlot",plot1);
+                            }
+                            myPlotArray[0].plotObj.setData({'filename':myFilename.substring(0,myFilename.length-5),'variable':myVarname},function(){
+                                myPlotArray[0].plotObj.setConfig({'template':'default','type':myPlotType});
+                                myPlotArray[0].plotObj.clear();
+                                $("#data1").text('');
+                                myPlotArray[0].plotObj.render();
+                            });
+                            var varlist_str= myVarname +' [Sheet1]';
+                            var new_var_element='<li style=list-style-type:none>'+varlist_str+'</li>';
+                            $('#var_panel').append(new_var_element);
+                            var new_prj_element='<li style=list-style-type:none>'+myFilename+'</li>';
+                            $('#Project1Div').append(new_prj_element);
+                        }
                     }
                 }
                 else
                 {
-                    sessionStorage.setItem('canvas1_var',draggableText);
-                    var myFileName=ui.draggable[0].parentElement.parentElement.parentElement.parentElement.children[0].id;
-                    sessionStorage.setItem('canvas1_filename',myFileName);
+                    if (ui.draggable[0].classList[0]=='prj_draggable_to_canvas')
+                    {
+                        sessionStorage.setItem('canvas1_filename','/export/leung25/sample_data/geos5.bkg.prs.20110501_0000z.nc4');
+                        sessionStorage.setItem('canvas1_var','uwnd');
+                        /**
+                        var data2 = {'filename' : '/export/leung25/sample_data/geos5.bkg.prs.20110501_0000z.nc4',
+                           'variable' : 'uwnd', 'gridfile': null};
+                         myPlotArray[0].plotObj.setData(data2, function() {
+                             myPlotArray[0].plotObj.createContext(function(){
+                                myPlotArray[0].plotObj.render();
+                            });
+                        });
+                        **/
+                    }
+                    else
+                    {
+                        sessionStorage.setItem('canvas1_var',draggableText);
+                        var myFileName=ui.draggable[0].parentElement.parentElement.parentElement.parentElement.children[0].id;
+                        sessionStorage.setItem('canvas1_filename',myFileName);
+                    }
                     if (!(sessionStorage.getItem('canvas1_plot_type')))
                     {
                         $("#data1").text("Please drag and drop a plot type into this canvas.");
                     }
                     else
                     {
+                        if (!(myPlotArray[0].plotType=='VcsPlot'))
+                        {
+                            var plot1 = new uvis.plot("#viewport-container1",{"connection": remoteConnection});
+                            plot1.init("VcsPlot",function(){plot1.createContext()});
+                            myPlotArray[0]=new myPlotObject("#viewport-container1","VcsPlot",plot1);
+                        }
                         myFilename=sessionStorage.getItem('canvas1_filename');
                         myVarname=sessionStorage.getItem('canvas1_var');
                         myPlotType=sessionStorage.getItem('canvas1_plot_type');
-                        myplot1.setData({'filename':myFilename.substring(0,myFilename.length-5),'variable':myVarname},function(){
-                            myplot1.setConfig({'template':'default','type':myPlotType});
-                            myplot1.clear();
+                        myPlotArray[0].setData({'filename':myFilename.substring(0,myFilename.length-5),'variable':myVarname},function(){
+                            myPlotArray[0].setConfig({'template':'default','type':myPlotType});
+                            myPlotArray[0].clear();
                             $("#data1").text('');
-                            myplot1.render();
+                            myPlotArray[0].render();
                         });
                         var varlist_str= myVarname +' [Sheet1]';
                         var new_var_element='<li style=list-style-type:none>'+varlist_str+'</li>';
@@ -517,10 +574,40 @@
                             if (myList.length > 0) {
                                 count = myList.length;
                                 index = 0;
-                                myplot1.clear();
-                                myplot2.clear();
-                                myplot3.clear();
-                                myplot4.clear();
+                                myPlotArray[0].plotObj.clear();
+                                myPlotArray[1].plotObj.clear();
+                                myPlotArray[2].plotObj.clear();
+                                myPlotArray[3].plotObj.clear();
+                                var data1 = {'filename' : myList[index]['fullpath'],'variable' : myList[index]['varlist']};
+                                myPlotArray[0].plotObj.setData(data1, function() {
+                                    myPlotArray[0].plotObj.render();
+                                });
+                                index=index+1;
+                                if (index <  count)
+                                {
+                                    var data2 = {'filename' : myList[index]['fullpath'],'variable' : myList[index]['varlist']};
+                                    myPlotArray[1].plotObj.setData(data2, function() {
+                                            myPlotArray[1].plotObj.render();
+                                    });
+                                    index=index+1;
+                                }
+                                if (index <  count)
+                                {
+                                    var data3 = {'filename' : myList[index]['fullpath'],'variable' : myList[index]['varlist']};
+                                    myPlotArray[2].plotObj.setData(data3, function() {
+                                        myPlotArray[2].plotObj.render();
+                                    });
+                                    index=index+1;
+                                }
+                                if (index <  count)
+                                {
+                                    var data4 = {'filename' : myList[index]['fullpath'],'variable' : myList[index]['varlist']};
+                                    myPlotArray[3].plotObj.setData(data4, function() {
+                                        myPlotArray[3].plotObj.render();
+                                    });
+                                    index=index+1;
+                                }
+                                /**
                                 myplot1.setData({'filename':myList[index]['fullpath'],'variable':myList[index]['varlist']},function(){
                                     myplot1.render();
                                     index=index+1;
@@ -548,6 +635,7 @@
                                         });
                                     }
                                 });
+                                **/
                             }
                             var cur_sheet=1;
                             if (sessionStorage.diagcount){
@@ -802,6 +890,7 @@
 //            pv = {};
 //        }
 //    }
+/**
     var remoteConnection = new uvis.remoteConnection(),
         myplot1 = new uvis.plot("#viewport-container1",
                                {"connection": remoteConnection}),
@@ -809,25 +898,52 @@
                                {"connection": remoteConnection}),
         myplot4 = new uvis.plot("#viewport-container4",
                                {"connection": remoteConnection}),
-        //myview = new uvis.view(),
         myplot2 = new uvis.plot("#viewport-container2",
                                {"connection": remoteConnection});
     function initSheet(){
-        myplot1.init(function(){myplot1.createContext()});
-        myplot2.init(function(){myplot2.createContext()});
-        myplot3.init(function(){myplot3.createContext()});
-        myplot4.init(function(){myplot4.createContext()});
-        //var data2 = {'filename' : '/export/leung25/sample_data/geos5.bkg.prs.20110501_0000z.nc4',
-        //  'variable' : 'uwnd', 'gridfile': null};
-        //  myplot1.setData(data2, function() {
+        myplot1.init("DV3DPlot",function(){myplot1.createContext()});
+        myplot2.init("VcsPlot",function(){myplot2.createContext()});
+        myplot3.init("VcsPlot",function(){myplot3.createContext()});
+        myplot4.init("VcsPlot",function(){myplot4.createContext()});
+       // var data2 = {'filename' : '/export/leung25/sample_data/geos5.bkg.prs.20110501_0000z.nc4',
+       //   'variable' : 'uwnd', 'gridfile': null};
+       // myplot1.init("DV3DPlot", function() {
+       //   myplot1.setData(data2, function() {
+       //     myplot1.createContext(function(){
         //      myplot1.render();
+        //    });
         //  });
+        //});
+    }
+**/
+    var remoteConnection = new uvis.remoteConnection();
+    var myPlotArray = new Array();
+    function myPlotObject(viewPortID,plotType,plotObj)
+    {
+        this.viewPortID = viewPortID;
+        this.plotType = plotType;
+        this.plotObj = plotObj;
+    }
+    function initSheet() {
+        var plot1 = new uvis.plot("#viewport-container1",
+                             {"connection": remoteConnection}),
+        plot2 = new uvis.plot("#viewport-container2",
+                             {"connection": remoteConnection}),
+        plot3 = new uvis.plot("#viewport-container3",
+                             {"connection": remoteConnection}),
+        plot4 = new uvis.plot("#viewport-container4",
+                             {"connection": remoteConnection});
+        plot1.init("VcsPlot",function(){plot1.createContext()});
+        plot2.init("VcsPlot",function(){plot2.createContext()});
+        plot3.init("VcsPlot",function(){plot3.createContext()});
+        plot4.init("VcsPlot",function(){plot4.createContext()});
+        
+        myPlotArray[0]=new myPlotObject("#viewport-container1","VcsPlot",plot1);
+        myPlotArray[1]=new myPlotObject("#viewport-container2","VcsPlot",plot2);
+        myPlotArray[2]=new myPlotObject("#viewport-container3","VcsPlot",plot3);
+        myPlotArray[3]=new myPlotObject("#viewport-container4","VcsPlot",plot4);
     }
     remoteConnection.connect(initSheet);
-    //myview.addPlot(myplot1);
-    //myview.addPlot(myplot2);
-    //myview.addPlot(myplot3);
-    //myview.addPlot(myplot4);
 
     function getActiveSheet(){
         var childrenList=$("#sheetTab").children();
@@ -845,21 +961,8 @@
         myID=mySheet+myCanvas;
         return $('#'+myID).val();
     }
-    /*
-    myplot1.on('mousemove', function(evt) {
-        var elem_position = $(evt.delegateTarget).offset();
-        evt["x"] = evt.pageX - elem_position.left;
-        evt["y"] = evt.pageY - elem_position.top;
-        var evtInfo = {};
-        evtInfo.x = evt["x"];
-        evtInfo.y = evt["y"];
 
-        myplot1.getValueAt(evtInfo, function(data){
-            $("#data1").text(data['value']);
-        });
-    });
-    */
-    myplot1.on('mousemove', function(evt) {
+    myPlotArray[0].plotObj.on('mousemove', function(evt) {
       var elem_position = $(evt.delegateTarget).offset();
           evt["x"] = evt.pageX - elem_position.left;
           evt["y"] = evt.pageY - elem_position.top;
@@ -867,12 +970,12 @@
       evtInfo.x = evt["x"];
       evtInfo.y = evt["y"];
 
-      myplot1.getValueAt(evtInfo, function(data){
+      myPlotArray[0].plotObj.getValueAt(evtInfo, function(data){
         console.log('data ', evtInfo,data);
         $("#data1").text(data['value']);
       });
     });
-    myplot2.on('mousemove', function(evt) {
+    myPlotArray[1].plotObj.on('mousemove', function(evt) {
       var elem_position = $(evt.delegateTarget).offset();
           evt["x"] = evt.pageX - elem_position.left;
           evt["y"] = evt.pageY - elem_position.top;
@@ -880,12 +983,12 @@
       evtInfo.x = evt["x"];
       evtInfo.y = evt["y"];
 
-      myplot2.getValueAt(evtInfo, function(data){
+      myPlotArray[1].plotObj.getValueAt(evtInfo, function(data){
         console.log('data ', evtInfo,data);
         $("#data2").text(data['value']);
       });
     });
-    myplot3.on('mousemove', function(evt) {
+    myPlotArray[2].plotObj.on('mousemove', function(evt) {
       var elem_position = $(evt.delegateTarget).offset();
           evt["x"] = evt.pageX - elem_position.left;
           evt["y"] = evt.pageY - elem_position.top;
@@ -893,12 +996,12 @@
       evtInfo.x = evt["x"];
       evtInfo.y = evt["y"];
 
-      myplot3.getValueAt(evtInfo, function(data){
+      myPlotArray[2].plotObj.getValueAt(evtInfo, function(data){
         console.log('data ', evtInfo,data);
         $("#data3").text(data['value']);
       });
     });
-    myplot4.on('mousemove', function(evt) {
+    myPlotArray[3].plotObj.on('mousemove', function(evt) {
       var elem_position = $(evt.delegateTarget).offset();
           evt["x"] = evt.pageX - elem_position.left;
           evt["y"] = evt.pageY - elem_position.top;
@@ -906,11 +1009,12 @@
       evtInfo.x = evt["x"];
       evtInfo.y = evt["y"];
 
-      myplot4.getValueAt(evtInfo, function(data){
+      myPlotArray[3].plotObj.getValueAt(evtInfo, function(data){
         console.log('data ', evtInfo,data);
         $("#data4").text(data['value']);
       });
     });
+
 /**
     function initSheet(){
 //       var data1 = {'filename' : '/home/cjh/work/source/geoweb-data/documents/clt.nc',
