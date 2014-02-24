@@ -424,6 +424,32 @@
                                  });
                             });
         }
+        function createVcsPlot(myfilename, myVar)
+        {
+                            var data2 = {'filename' : myfilename,'variable' : myVar};
+                            var plot1 = new uvis.plot("#viewport-container1",{"connection": remoteConnection});
+                            myPlotArray[0]=new myPlotObject("#viewport-container1","VcsPlot",plot1);
+                            myPlotArray[0].plotObj.init("VcsPlot", function(){
+                                myPlotArray[0].plotObj.setData(data2, function() {
+                                    myPlotArray[0].plotObj.createContext(function(){
+                                        myPlotArray[0].plotObj.render();
+                                    });
+                                 });
+                            });
+    myPlotArray[0].plotObj.on('mousemove', function(evt) {
+      var elem_position = $(evt.delegateTarget).offset();
+          evt["x"] = evt.pageX - elem_position.left;
+          evt["y"] = evt.pageY - elem_position.top;
+      var evtInfo = {};
+      evtInfo.x = evt["x"];
+      evtInfo.y = evt["y"];
+
+      myPlotArray[0].plotObj.getValueAt(evtInfo, function(data){
+        console.log('data ', evtInfo,data);
+        $("#data1").text(data['value']);
+      });
+    });
+        }
 
         $("#Sheet1Canvas1").droppable({
             drop: function (event,ui){
@@ -574,14 +600,15 @@
                             if (myList.length > 0) {
                                 count = myList.length;
                                 index = 0;
-                                myPlotArray[0].plotObj.clear();
+                                myPlotArray[0].plotObj.closeContext();
                                 myPlotArray[1].plotObj.clear();
                                 myPlotArray[2].plotObj.clear();
                                 myPlotArray[3].plotObj.clear();
-                                var data1 = {'filename' : myList[index]['fullpath'],'variable' : myList[index]['varlist']};
-                                myPlotArray[0].plotObj.setData(data1, function() {
-                                    myPlotArray[0].plotObj.render();
-                                });
+                                createVcsPlot(myList[index]['fullpath'],myList[index]['varlist']);
+                                //var data1 = {'filename' : myList[index]['fullpath'],'variable' : myList[index]['varlist']};
+                                //myPlotArray[0].plotObj.setData(data1, function() {
+                                //    myPlotArray[0].plotObj.render();
+                                //});
                                 index=index+1;
                                 if (index <  count)
                                 {
@@ -589,6 +616,7 @@
                                     myPlotArray[1].plotObj.setData(data2, function() {
                                             myPlotArray[1].plotObj.render();
                                     });
+                                    //createVcsPlot(myList[index]['fullpath'],myList[index]['varlist']);
                                     index=index+1;
                                 }
                                 if (index <  count)
@@ -933,7 +961,7 @@
                              {"connection": remoteConnection}),
         plot4 = new uvis.plot("#viewport-container4",
                              {"connection": remoteConnection});
-        plot1.init("VcsPlot",function(){plot1.createContext()});
+        //plot1.init("VcsPlot",function(){plot1.createContext()});
         plot2.init("VcsPlot",function(){plot2.createContext()});
         plot3.init("VcsPlot",function(){plot3.createContext()});
         plot4.init("VcsPlot",function(){plot4.createContext()});
@@ -942,6 +970,49 @@
         myPlotArray[1]=new myPlotObject("#viewport-container2","VcsPlot",plot2);
         myPlotArray[2]=new myPlotObject("#viewport-container3","VcsPlot",plot3);
         myPlotArray[3]=new myPlotObject("#viewport-container4","VcsPlot",plot4);
+
+    myPlotArray[1].plotObj.on('mousemove', function(evt) {
+      var elem_position = $(evt.delegateTarget).offset();
+          evt["x"] = evt.pageX - elem_position.left;
+          evt["y"] = evt.pageY - elem_position.top;
+      var evtInfo = {};
+      evtInfo.x = evt["x"];
+      evtInfo.y = evt["y"];
+
+      myPlotArray[1].plotObj.getValueAt(evtInfo, function(data){
+        console.log('data ', evtInfo,data);
+        $("#data2").text(data['value']);
+      });
+    });
+
+    myPlotArray[2].plotObj.on('mousemove', function(evt) {
+      var elem_position = $(evt.delegateTarget).offset();
+          evt["x"] = evt.pageX - elem_position.left;
+          evt["y"] = evt.pageY - elem_position.top;
+      var evtInfo = {};
+      evtInfo.x = evt["x"];
+      evtInfo.y = evt["y"];
+
+      myPlotArray[2].plotObj.getValueAt(evtInfo, function(data){
+        console.log('data ', evtInfo,data);
+        $("#data3").text(data['value']);
+      });
+    });
+
+    myPlotArray[3].plotObj.on('mousemove', function(evt) {
+      var elem_position = $(evt.delegateTarget).offset();
+          evt["x"] = evt.pageX - elem_position.left;
+          evt["y"] = evt.pageY - elem_position.top;
+      var evtInfo = {};
+      evtInfo.x = evt["x"];
+      evtInfo.y = evt["y"];
+
+      myPlotArray[3].plotObj.getValueAt(evtInfo, function(data){
+        console.log('data ', evtInfo,data);
+        $("#data4").text(data['value']);
+      });
+    });
+
     }
     remoteConnection.connect(initSheet);
 
@@ -961,7 +1032,7 @@
         myID=mySheet+myCanvas;
         return $('#'+myID).val();
     }
-
+   /**
     myPlotArray[0].plotObj.on('mousemove', function(evt) {
       var elem_position = $(evt.delegateTarget).offset();
           evt["x"] = evt.pageX - elem_position.left;
@@ -1014,7 +1085,7 @@
         $("#data4").text(data['value']);
       });
     });
-
+    **/
 /**
     function initSheet(){
 //       var data1 = {'filename' : '/home/cjh/work/source/geoweb-data/documents/clt.nc',
