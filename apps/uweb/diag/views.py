@@ -139,7 +139,7 @@ def load_output(request, taskID):
             outfilename=filename
             break
     mylist=[]
-    
+
     tree = ET.parse(os.path.join(outfile,outfilename))
     root=tree.getroot()
     elementlist=root.findall('ncfile')
