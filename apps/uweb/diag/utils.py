@@ -44,11 +44,19 @@ class TaskTracker(object):
             return self.task_dict[taskID]
         return None
 
-def get_filetable1(diag_type):
-    if diag_type=='AMWG':
-        path1=settings.DIAG_AMWG_PATH
-    elif diag_type=='LMWG':
-        path1=settings.DIAG_LMWG_PATH
+def get_filetable1(diag_model):
+    if diag_model=='CAM_HIRES':
+        path1=settings.DIAG_HIRES_CAM_PATH
+    elif diag_model=='CAM_LORES':
+        path1=settings.DIAG_LORES_CAM_PATH
+    elif diag_model=='CAM_OUTPUT':
+        path1=settings.DIAG_CAM_OUTPUT_PATH
+    elif diag_model=='CLM_HIRES':
+        path1=settings.DIAG_HIRES_CLM_PATH
+    elif diag_model=='CLM_LORES':
+        path1=settings.DIAG_LORES_CLM_PATH
+    elif diag_model=='CLM_OUTPUT':
+        path1=settings.DIAG_CLM_OUTPUT_PATH
     if not os.path.exists(tmppath):
         os.makedirs(tmppath)
     datafiles = metrics.fileio.findfiles.dirtree_datafiles( path1 )
@@ -92,10 +100,10 @@ def get_filetable2(obs,diag_type):
         filetable2 = datafile2.setup_filetable(tmppath,"obs")
     return filetable2
 
-def get_input_parameter(package, plot_set, seasonID, variableID,obsID):
+def get_input_parameter(package, diag_model, plot_set, seasonID, variableID,obsID):
     dg_menu=diagnostics_menu()[str(package)]()
     plot_set_obj=dg_menu.list_diagnostic_sets()[str(plot_set)]
-    filetable1=get_filetable1(package)
+    filetable1=get_filetable1(diag_model)
     if obsID=='':
         filetable2=None
     else:

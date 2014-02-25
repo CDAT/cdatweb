@@ -34,7 +34,7 @@
                         <li class=prj_draggable_to_canvas style="list-style-type:none;">geos5.bkg.prs.20110501_0000z.nc4</li>                   
                     </div>
                 </div>
-                    <h4>&nbsp;<span class="label label-default">Plots</span></h4>
+                    <h4>&nbsp;<span class="label label-default">Plot Types</span></h4>
                         <div id="plot_type_selection" class=col-md-13>
                             <div class="btn-group dropup">
                                 <button type="button" class="btn btn-default" style="width:260px;">DV3D</button>
@@ -110,24 +110,46 @@
                             <img src="{{STATIC_URL}}img/file_export.png" class="img-rounded" style="height:25px;width:25px;vertical-align:middle;"></img>
                         </button>
                     </div>
-                <div class=row>
-                    <div class="col-md-6" id="Sheet1Canvas1" style="height:400px;box-shadow: 0 0 2px grey">
+                    <!--<table>
+                        <tr>
+                            <td id="Sheet1Canvas1" style="height:400px;width:500px;box-shadow: 0 0 2px grey">
                                 <div id="data1"></div>
-                  <div id="viewport-container1" ></div>
+                                <div id="viewport-container1" ></div>
+                            </td>
+                            <td id="Sheet1Canvas2" style="height:400px;width:500px;box-shadow: 0 0 2px grey">
+                                <div id="data2"></div>
+                                <div id="viewport-container2" ></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="Sheet1Canvas3" style="height:400px;width:500px;box-shadow: 0 0 2px grey">
+                                <div id="data3"></div>
+                                <div id="viewport-container3" ></div>
+                            </td>
+                            <td id="Sheet1Canvas4" style="height:400px;width:500px;box-shadow: 0 0 2px grey">
+                                <div id="data4"></div>
+                                <div id="viewport-container4" ></div>
+                            </td>
+                        </tr>
+                    </table>-->
+            <div class=row>
+                    <div class="col-md-6" id="Sheet1Canvas1" style="height:400px;box-shadow: 0 0 2px grey">
+                        <div id="data1"></div>
+                        <div id="viewport-container1" ></div>
                     </div>
                     <div class="col-md-6" id="Sheet1Canvas2" style="height:400px;box-shadow: 0 0 2px grey">
-                                <div id="data2"></div>
+                        <div id="data2"></div>
                         <div id="viewport-container2" ></div>
                     </div>
                 </div>
                 <div class=row>
                     <div class="col-md-6" id="Sheet1Canvas3" style="height:400px;box-shadow: 0 0 2px grey">
-                                <div id="data3"></div>
-                  <div id="viewport-container3" ></div>
+                        <div id="data3"></div>
+                        <div id="viewport-container3" ></div>
                     </div>
                     <div class="col-md-6" id="Sheet1Canvas4" style="height:400px;box-shadow: 0 0 2px grey">
-                                <div id="data4"></div>
-                  <div id="viewport-container4" ></div>
+                        <div id="data4"></div>
+                        <div id="viewport-container4" ></div>
                     </div>
                 </div>
             </div>
@@ -230,6 +252,13 @@
                                                     <option value="AMWG"></option>
                                                     <option value="AMWG">AMWG</option>
                                                     <option value="LMWG">LMWG</option>
+                                                </select>
+                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputModel" class="col-sm-2 control-label">Model</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" id="inputModel">
                                                 </select>
                                             </div>
                                     </div>
@@ -717,9 +746,10 @@
                 myVariable=$('#inputVariable').val();
                 mySeason=$('#inputSeason').val();
                 myObs=$('#inputObs').val();
+                myModel=$('#inputModel').val();
 
-                $.ajax({url:'/diag/api/run_elo/',
-                    data:{'plot_package':myPackage,'plot_set':myPlotSet, 'variableID':myVariable, 'seasonID':mySeason, 'plot_obs':myObs},
+                $.ajax({url:'http://localhost:8000/diag/api/run_elo/',
+                    data:{'plot_package':myPackage,'plot_model':myModel,'plot_set':myPlotSet, 'variableID':myVariable, 'seasonID':mySeason, 'plot_obs':myObs},
                     type:'GET',
                     success:function(data){
                         task_id=data['task_id'];
@@ -755,7 +785,24 @@
         $('#inputPackage').change(function() {
             myPackage=$('#inputPackage').val();
             console.log(myPackage);
-            $.ajax({url:'/diag/api/get_plot_obs/',
+            $.ajax({url:'http://localhost:8000/diag/api/get_plot_models/',
+                data:{'plot_package':myPackage},
+                type:'GET',
+                success:function(data){
+                    models_list=data['models_list'];
+                    $('#inputModel').empty();
+                    if (models_list)
+                    {
+                        for (var i = 0; i< models_list.length; i++)
+                        {
+                            opt=models_list[i];
+                            $('#inputModel').append("<option value="+'"' + opt[1] +'"'+">"+opt[0]+"</option>");
+                        }
+                    }
+                },
+                error: function(){alert('ERROR: unable to get plot observations');}
+            });
+            $.ajax({url:'http://localhost:8000/diag/api/get_plot_obs/',
                 data:{'plot_package':myPackage},
                 type:'GET',
                 success:function(data){
@@ -820,8 +867,9 @@
             myPackage=$('#inputPackage').val();
             console.log("get Var: "+ myPackage);
             myObs=$('#inputObs').val();
-            $.ajax({url:'/diag/api/get_plot_variable/',
-                data:{'plot_package':myPackage,'plot_set':myPlotSet,'plot_obs':myObs},
+            myModel=$('#inputModel').val();
+            $.ajax({url:'http://localhost:8000/diag/api/get_plot_variable/',
+                data:{'plot_package':myPackage,'plot_model':myModel,'plot_set':myPlotSet,'plot_obs':myObs},
                 type:'GET',
                 success:function(data){
                     plot_variables=data['variables_list'];
@@ -843,8 +891,9 @@
             myPackage=$('#inputPackage').val();
             myVariable=$('#inputVariable').val();
             myObs=$('#inputObs').val();
-            $.ajax({url:'/diag/api/get_plot_aux_options/',
-                data:{'plot_package':myPackage,'plot_set':myPlotSet, 'plot_variable':myVariable,'plot_obs':myObs},
+            myModel=$('#inputModel').val();
+            $.ajax({url:'http://localhost:8000/diag/api/get_plot_aux_options/',
+                data:{'plot_package':myPackage,'plot_model':myModel,'plot_set':myPlotSet, 'plot_variable':myVariable,'plot_obs':myObs},
                 type:'GET',
                 success:function(data){
                     plot_aux=data['aux_list'];
@@ -1037,6 +1086,7 @@
       var elem_position = $(evt.delegateTarget).offset();
           evt["x"] = evt.pageX - elem_position.left;
           evt["y"] = evt.pageY - elem_position.top;
+      console.log('evt', evt["x"],evt["y"],$("#viewport-container1").height(),$('#viewport-container1').width(),elem_position.left, elem_position.top);
       var evtInfo = {};
       evtInfo.x = evt["x"];
       evtInfo.y = evt["y"];
@@ -1044,6 +1094,16 @@
       myPlotArray[0].plotObj.getValueAt(evtInfo, function(data){
         console.log('data ', evtInfo,data);
         $("#data1").text(data['value']);
+      });
+      myplot3.getValueAt(evtInfo, function(data){
+        $("#data3").text(data['value']);
+      });
+      evtInfo.x = evt["x"]+15.73;
+      myplot2.getValueAt(evtInfo, function(data){
+        $("#data2").text(data['value']);
+      });
+      myplot4.getValueAt(evtInfo, function(data){
+        $("#data4").text(data['value']);
       });
     });
     myPlotArray[1].plotObj.on('mousemove', function(evt) {
@@ -1058,6 +1118,7 @@
         console.log('data ', evtInfo,data);
         $("#data2").text(data['value']);
       });
+            myModel=$('#inputModel').val();
     });
     myPlotArray[2].plotObj.on('mousemove', function(evt) {
       var elem_position = $(evt.delegateTarget).offset();
