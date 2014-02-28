@@ -51,12 +51,14 @@ uvis.remoteConnection = function (url) {
    */
   /////////////////////////////////////////////////////////////////////////////
   this.connect = function(callback) {
-    if(location.protocol == "http:") {
-      m_meta.connection.sessionURL = m_meta.connection.sessionURL.replace("wss:","ws:");
-    }
+    m_meta.connection.sessionURL = window.location.hostname + "/paraview";
+    var config = {
+      sessionManagerURL: window.location.hostname + "/paraview",
+      application: "uvis"
+    };
 
-    vtkWeb.connect(m_meta.connection, function(connectionData) {
-      m_meta.connection = connectionData;
+    vtkWeb.smartConnect(config, function(connection) {
+      m_meta.connection = connection;
       m_isConnected = true;
 
       typeof callback === 'function' && callback();
