@@ -68,6 +68,20 @@ uvis.remoteConnection = function (url) {
     });
   };
 
+
+  /////////////////////////////////////////////////////////////////////////////
+  /**
+   * Disconnect and clean up backend process
+   */
+  /////////////////////////////////////////////////////////////////////////////
+  this.disconnect = function() {
+
+    if (m_isConnected) {
+      m_meta.connection.session.call('vtk:exit');
+      m_isConnected = false;
+    }
+  };
+
   /////////////////////////////////////////////////////////////////////////////
   /**
    * Get websocket connection handler

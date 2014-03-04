@@ -10,7 +10,7 @@
     <script src="{{STATIC_URL}}js/jquery-ui-1.10.0.min.js"></script>
     <script src="{{STATIC_URL}}js/vtkweb-all.js"></script>
     <script src="{{STATIC_URL}}lib/js/uvis.js"></script>
-<body>
+<body onbeforeunload="cleanup()" onunload="cleanup()">
     <nav class="navbar navbar-default" role="navigation">
         <div class="navbar-header">
             <a class="navbar-brand" href="http://uvcdat.llnl.gov">UV-CDAT Live</a>
@@ -31,7 +31,7 @@
             <div class="tab-pane active" id="Project1">
                 <div class=row>
                     <div class="col-md-12" id="Project1Div" style="height:720px;box-shadow: 0 0 2px grey;word-break:break-all;">
-                        <li class=prj_draggable_to_canvas style="list-style-type:none;">geos5.bkg.prs.20110501_0000z.nc4</li>                   
+                        <li class=prj_draggable_to_canvas style="list-style-type:none;">geos5.bkg.prs.20110501_0000z.nc4</li>
                     </div>
                 </div>
                     <h4>&nbsp;<span class="label label-default">Plot Types</span></h4>
@@ -995,6 +995,12 @@
 **/
     var remoteConnection = new uvis.remoteConnection();
     var myPlotArray = new Array();
+
+    function cleanup() {
+      if (remoteConnection)
+        remoteConnection.disconnect();
+    };
+
     function myPlotObject(viewPortID,plotType,plotObj)
     {
         this.viewPortID = viewPortID;
@@ -1014,7 +1020,7 @@
         plot2.init("VcsPlot",function(){plot2.createContext()});
         plot3.init("VcsPlot",function(){plot3.createContext()});
         plot4.init("VcsPlot",function(){plot4.createContext()});
-        
+
         myPlotArray[0]=new myPlotObject("#viewport-container1","VcsPlot",plot1);
         myPlotArray[1]=new myPlotObject("#viewport-container2","VcsPlot",plot2);
         myPlotArray[2]=new myPlotObject("#viewport-container3","VcsPlot",plot3);
