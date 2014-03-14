@@ -7,14 +7,15 @@ import json
 
 import types
 
-from plot import *
-
 # Import VTKWeb / ParaViewWeb modules
 from vtk.web import wamp
 from paraview.web import wamp      as pv_wamp
 from paraview.web import protocols as pv_protocols
 
 from vtk.web import server
+
+import protocol
+from plot import *
 
 try:
     import argparse
@@ -23,72 +24,6 @@ except ImportError:
     # the source for the same as _argparse and we use it instead.
     import _argparse as argparse
 
-
-from autobahn.wamp import exportRpc
-
-#//////////////////////////////////////////////////////////////////////////////
-#
-# Helper function to bind RPC
-#
-#//////////////////////////////////////////////////////////////////////////////
-def bindRpc(cls, ns, name, mctor):
-  fullName = name
-  rpcName = name
-
-  if ns is not None:
-    rpcName = ns + ':' + name
-    fullName = '__' + ns + '_' + name
-
-  rpc = types.MethodType(exportRpc(rpcName)(mctor(fullName)), None, cls)
-  setattr(cls, fullName, rpc)
-
-#//////////////////////////////////////////////////////////////////////////////
-#
-# Helper function to add mapped RPC
-#
-#//////////////////////////////////////////////////////////////////////////////
-def addMappedRpc(cls, objs, ns, call):
-  call_lc = call[0].lower() + call[1:]
-
-  def createRpc(call):
-    def dispatchRpc(self, i, *args, **kwargs):
-      c = getattr(self, objs)
-      if i in c:
-        return getattr(c[i], call_lc)(*args, **kwargs)
-    return dispatchRpc
-
-  bindRpc(cls, ns, call, createRpc)
-
-#//////////////////////////////////////////////////////////////////////////////
-#
-# Web protocol for uvis framework
-#
-#//////////////////////////////////////////////////////////////////////////////
-class UVisProtocol(pv_protocols.ParaViewWebProtocol):
-    def __init__(self):
-        self._plots = {}
-        self._nextPlot = -1
-
-    @exportRpc
-    def createPlot(self, plotId, *args, **kwargs):
-          pl = PlotFactory.createPlot(plotId, *args, **kwargs);
-          self._nextPlot += 1
-          i = self._nextPlot
-          self._plots[i]= pl
-          return i
-
-    @exportRpc("stillRender")
-    def stillRender(self,options):
-        if options['view'] != -1:
-            return self._plots[options['view']].render(options);
-        else:
-            return {};
-
-    @exportRpc("mouseInteraction")
-    def mouseInteraction(self, event):
-      view = event['view']
-      if view != -1:
-        return self._plots[view].mouseInteraction(event)
 #//////////////////////////////////////////////////////////////////////////////
 #
 # Application protocol
@@ -107,7 +42,9 @@ class AppProtocol(pv_wamp.PVServerProtocol):
         self.registerVtkWebProtocol(pv_protocols.ParaViewWebStartupRemoteConnection(
           AppProtocol.dsHost, AppProtocol.dsPort, AppProtocol.rsHost, AppProtocol.rsPort))
 
-        self._imageDelivery = UVisProtocol()
+
+
+        self._imageDelivery = protocol.UVisProtocol()
         self.registerVtkWebProtocol(self._imageDelivery)
 
         # Update authentication key to use
@@ -198,43 +135,42 @@ def startServer(options, protocol=pv_protocols.ParaViewWebProtocol, disableLoggi
 
 if __name__ == "__main__":
 
-    from PyQt4 import QtGui
-    global qapp
-    qapp = QtGui.QApplication(sys.argv)
-    import qt4reactor
-    import sys
-    del sys.modules['twisted.internet.reactor']
-    import qt4reactor
-    qt4reactor.install()
+    try:
+        from PyQt4 import QtGui
+        global qapp
+        qapp = QtGui.QApplication(sys.argv)
+        import qt4reactor
+        import sys
+        del sys.modules['twisted.internet.reactor']
+        import qt4reactor
+        qt4reactor.install()
 
-    # Create argument parser
-    parser = argparse.ArgumentParser(description="ParaView/Web Pipeline Manager web-application")
+        # Create argument parser
+        parser = argparse.ArgumentParser(description="ParaView/Web Pipeline Manager web-application")
 
-    # Add default arguments
-    addArguments(parser)
+        # Add default arguments
+        addArguments(parser)
 
-    # Add local arguments
-    parser.add_argument("--ds-host", default=None, help="Hostname to connect to for DataServer",
-                        dest="dsHost")
-    parser.add_argument("--ds-port", default=11111, type=int, help="Port number to connect to for DataServer",
-                        dest="dsPort")
-    parser.add_argument("--rs-host", default=None, help="Hostname to connect to for RenderServer", dest="rsHost")
-    parser.add_argument("--rs-port", default=11111, type=int, help="Port number to connect to for RenderServer",
-                        dest="rsPort")
+        # Add local arguments
+        parser.add_argument("--ds-host", default=None, help="Hostname to connect to for DataServer",
+                            dest="dsHost")
+        parser.add_argument("--ds-port", default=11111, type=int, help="Port number to connect to for DataServer",
+                            dest="dsPort")
+        parser.add_argument("--rs-host", default=None, help="Hostname to connect to for RenderServer", dest="rsHost")
+        parser.add_argument("--rs-port", default=11111, type=int, help="Port number to connect to for RenderServer",
+                            dest="rsPort")
 
-    # Exctract arguments
-    args = parser.parse_args()
+        # Exctract arguments
+        args = parser.parse_args()
 
-    # Configure our current application
-    AppProtocol.authKey    = args.authKey
-    AppProtocol.dsHost     = args.dsHost
-    AppProtocol.dsPort     = args.dsPort
-    AppProtocol.rsHost     = args.rsHost
-    AppProtocol.rsPort     = args.rsPort
+        # Configure our current application
+        AppProtocol.authKey    = args.authKey
+        AppProtocol.dsHost     = args.dsHost
+        AppProtocol.dsPort     = args.dsPort
+        AppProtocol.rsHost     = args.rsHost
+        AppProtocol.rsPort     = args.rsPort
 
-    for rpc in ("id", "setId", "data", "setData", "config", "setConfig",
-                "createContext", "render", "getValueAt", "error",
-                "mouseInteraction"):
-        addMappedRpc(UVisProtocol, "_plots", "plot", rpc)
-
-    startServer(options=args)
+        startServer(options=args)
+    except:
+        import traceback
+        traceback.print_exc()

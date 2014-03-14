@@ -1,6 +1,8 @@
 import sys
 import traceback
 
+import rpc
+
 class PlotFactory(object):
     """
       PlotFactory creates a particular type of plot based on the
@@ -28,36 +30,47 @@ class Plot(object):
         self._data = None
         self._config = config
 
+    @rpc.export
     def id(self):
         return self._id
 
+    @rpc.export
     def setId(self, id):
         self._id = id
 
+    @rpc.export
     def data(self):
         return self._data
 
+    @rpc.export
     def setData(self, *args, **kwargs):
         self._data = args[0]
 
+    @rpc.export
     def config(self):
         return self._config
 
+    @rpc.export
     def setConfig(self, config):
         self._config = config
 
+    @rpc.export
     def getValueAt(self, evt):
         return {}
 
+    @rpc.export
     def createContext(self):
         pass
 
+    @rpc.export
     def render(self, options):
         pass
 
+    @rpc.export
     def mouseInteraction(self, event):
         pass
 
+    @rpc.export
     def error(self, message):
         sys.stderr.write("[error]: %s\n" % message)
 
