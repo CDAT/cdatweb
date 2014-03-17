@@ -173,7 +173,7 @@ function(uvis_web_server NAME)
       "-DLIB_SUFFIX=${LIB_SUFFIX}"
       "-DPYTHON_SHORT=${PYTHON_SHORT}"
       "-DAPPLICATION=${NAME}"
-      "-DSERVER_PYTHON_SCRIPT=${NAME}.py"
+      "-DSERVER_PYTHON_SCRIPT=uvis"
       "-DSOURCE_UVCDAT=${SOURCE_UVCDAT}"
       "-DCONFIGURE_ARGS=ESCAPE_QUOTES @ONLY"
       -P "${_configure_file_script}"
