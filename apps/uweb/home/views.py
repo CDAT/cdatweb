@@ -61,6 +61,11 @@ def diag_home(request):
         data_node_list=esgf_data_node_list(host)
         mycontent={'data_node_list':data_node_list,'uvis_hostname':settings.UVIS_HOSTNAME, "user":request.user.username}
         return render(request, "home.html",mycontent)
+    """
+    host=settings.ESGF_HOST 
+    data_node_list=esgf_data_node_list(host)
+    mycontent={'data_node_list':data_node_list,'uvis_hostname':settings.UVIS_HOSTNAME, "user":'williams13'}
+    """
 
 def testing(request):
     return render(request, "test.html")
