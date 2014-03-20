@@ -14,7 +14,7 @@ uvis.remoteConnection = function (url) {
 
   // Use localhost by default
   if (typeof url === 'undefined') {
-    url = "ws://localhost:8080/ws";
+    url = "ws://" + location.hostname + ":8080/ws";
   }
   m_meta.connection = {sessionURL: url};
 
@@ -51,12 +51,14 @@ uvis.remoteConnection = function (url) {
    */
   /////////////////////////////////////////////////////////////////////////////
   this.connect = function(callback) {
-    if(location.protocol == "http:") {
-      m_meta.connection.sessionURL = m_meta.connection.sessionURL.replace("wss:","ws:");
-    }
+    m_meta.connection.sessionURL = window.location.hostname + "/paraview";
+    var config = {
+      sessionManagerURL: window.location.hostname + "/paraview",
+      application: "uvis"
+    };
 
-    vtkWeb.connect(m_meta.connection, function(connectionData) {
-      m_meta.connection = connectionData;
+    vtkWeb.smartConnect(config, function(connection) {
+      m_meta.connection = connection;
       m_isConnected = true;
 
       typeof callback === 'function' && callback();
@@ -64,6 +66,20 @@ uvis.remoteConnection = function (url) {
     function(code, reason) {
       console.log(reason);
     });
+  };
+
+
+  /////////////////////////////////////////////////////////////////////////////
+  /**
+   * Disconnect and clean up backend process
+   */
+  /////////////////////////////////////////////////////////////////////////////
+  this.disconnect = function() {
+
+    if (m_isConnected) {
+      m_meta.connection.session.call('vtk:exit');
+      m_isConnected = false;
+    }
   };
 
   /////////////////////////////////////////////////////////////////////////////
@@ -215,11 +231,12 @@ uvis.plot = function(nodeId, args) {
    * Perform initialization code
    */
   /////////////////////////////////////////////////////////////////////////////
-  this.init = function(callback) {
+  this.init = function(plot, callback) {
     if (this.hasValidConnection()) {
-      m_connection.getSession().call("vtk:createPlot", "VcsPlot").then(function(res){
+      m_connection.getSession().call("vtk:createPlot", plot).then(function(res){
         m_id = res;
         console.log("M_ID: "+m_id);
+        console.log("plotType in init" + plot);
         typeof callback === 'function' && callback();
       });
     } else {
@@ -258,7 +275,7 @@ uvis.plot = function(nodeId, args) {
   /////////////////////////////////////////////////////////////////////////////
   this.closeContext = function() {
     m_viewport.unbind();
-    vtkweb.stop(m_connection.getMeta());
+    //vtkweb.stop(m_connection.getMeta());
   };
 
   /////////////////////////////////////////////////////////////////////////////
@@ -267,9 +284,10 @@ uvis.plot = function(nodeId, args) {
    */
   /////////////////////////////////////////////////////////////////////////////
   this.render = function(options) {
-
+    console.log('Calling m_viewport.render()');
     // @todo Provide right abstraction
     m_viewport.render();
+    console.log('Called m_viewport.render()');
   };
 
   /////////////////////////////////////////////////////////////////////////////

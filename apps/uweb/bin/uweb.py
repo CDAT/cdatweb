@@ -79,13 +79,16 @@ class UVisProtocol(pv_protocols.ParaViewWebProtocol):
 
     @exportRpc("stillRender")
     def stillRender(self,options):
-        print options
-        print "at stillRender"
         if options['view'] != -1:
             return self._plots[options['view']].render(options);
         else:
             return {};
 
+    @exportRpc("mouseInteraction")
+    def mouseInteraction(self, event):
+      view = event['view']
+      if view != -1:
+        return self._plots[view].mouseInteraction(event)
 #//////////////////////////////////////////////////////////////////////////////
 #
 # Application protocol
@@ -105,12 +108,6 @@ class AppProtocol(pv_wamp.PVServerProtocol):
           AppProtocol.dsHost, AppProtocol.dsPort, AppProtocol.rsHost, AppProtocol.rsPort))
 
         self._imageDelivery = UVisProtocol()
-
-        self.registerVtkWebProtocol(pv_protocols.ParaViewWebMouseHandler())
-        self.registerVtkWebProtocol(pv_protocols.ParaViewWebViewPort())
-        self.registerVtkWebProtocol(pv_protocols.ParaViewWebViewPortGeometryDelivery())
-        self.registerVtkWebProtocol(pv_protocols.ParaViewWebTimeHandler())
-        self.registerVtkWebProtocol(pv_protocols.ParaViewWebRemoteConnection())
         self.registerVtkWebProtocol(self._imageDelivery)
 
         # Update authentication key to use
@@ -131,6 +128,8 @@ def addArguments(parser):
             action="store_true")
       parser.add_argument("-p", "--port", type=int, default=8080,
             help="port number on which the server will listen (default: 8080)")
+      parser.add_argument("-i", "--host", type=str, default='localhost',
+            help="the interface for the web-server to listen on (default: localhost)")
       parser.add_argument("-t", "--timeout", type=int, default=300,
             help="timeout for reaping process on idle in seconds (default: 300s)")
       parser.add_argument("-c", "--content", default=None,
@@ -173,7 +172,7 @@ def startServer(options, protocol=pv_protocols.ParaViewWebProtocol, disableLoggi
 
     # Set up the server factory
     wampFactory = wamp.ReapingWampServerFactory(
-        "ws://localhost:%d" % options.port, options.debug, options.timeout)
+        "ws://%s:%d" % (options.host, options.port), options.debug, options.timeout)
     wampFactory.protocol = AppProtocol
 
     # Set up the site
@@ -198,6 +197,16 @@ def startServer(options, protocol=pv_protocols.ParaViewWebProtocol, disableLoggi
     wampFactory.stopFactory()
 
 if __name__ == "__main__":
+
+    from PyQt4 import QtGui
+    global qapp
+    qapp = QtGui.QApplication(sys.argv)
+    import qt4reactor
+    import sys
+    del sys.modules['twisted.internet.reactor']
+    import qt4reactor
+    qt4reactor.install()
+
     # Create argument parser
     parser = argparse.ArgumentParser(description="ParaView/Web Pipeline Manager web-application")
 
@@ -224,7 +233,8 @@ if __name__ == "__main__":
     AppProtocol.rsPort     = args.rsPort
 
     for rpc in ("id", "setId", "data", "setData", "config", "setConfig",
-                "createContext", "render", "getValueAt", "error"):
+                "createContext", "render", "getValueAt", "error",
+                "mouseInteraction"):
         addMappedRpc(UVisProtocol, "_plots", "plot", rpc)
 
     startServer(options=args)

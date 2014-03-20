@@ -37,8 +37,9 @@ def get_plot_seasons(request):
 
 def get_plot_variable(request):
     diagnosticType=request.GET['plot_package']
+    modelType=request.GET['plot_model']
     dg_menu=diagnostics_menu()[diagnosticType]()
-    filetable1 = utils.get_filetable1(diagnosticType)
+    filetable1 = utils.get_filetable1(modelType)
     obs=request.GET['plot_obs']
     if obs=='':
         filetable2=None
@@ -53,7 +54,8 @@ def get_plot_variable(request):
 
 def get_plot_aux_options(request):
     diagnosticType=request.GET['plot_package']
-    filetable1 = utils.get_filetable1(diagnosticType)
+    modelType=request.GET['plot_model']
+    filetable1 = utils.get_filetable1(modelType)
     obs=request.GET['plot_obs']
     if obs=='':
         filetable2=None
@@ -73,6 +75,22 @@ def get_plot_aux_options(request):
     json_res = simplejson.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 
+def get_plot_models(request):
+    diagnosticType=request.GET['plot_package']
+    models_list=[]
+    if diagnosticType=='AMWG':
+        models_list.append(['CAM_HIRES','CAM_HIRES'])
+        models_list.append(['CAM_LORES','CAM_LORES'])
+        models_list.append(['CAM_OUTPUT','CAM_OUTPUT'])
+    elif diagnosticType=='LMWG':
+        models_list.append(['CLM_HIRES','CLM_HIRES'])
+        models_list.append(['CLM_LORES','CLM_LORES'])
+        models_list.append(['CLM_OUTPUT','CLM_OUTPUT'])
+
+    obj={'models_list':models_list}
+    json_res=simplejson.dumps(obj)
+    return HttpResponse(json_res, content_type="application/json")
+
 def get_plot_obs(request):
     diagnosticType=request.GET['plot_package']
     obs_list=utils.get_observations(diagnosticType)
@@ -82,6 +100,7 @@ def get_plot_obs(request):
 
 def run_elo(request):
     diagnosticType=request.GET['plot_package']
+    modelType=request.GET['plot_model']
     plot_set_name=request.GET['plot_set']
     seasonID=request.GET['seasonID']
     variableID=request.GET['variableID']
@@ -91,7 +110,7 @@ def run_elo(request):
     else:
         filetable2=utils.get_filetable2(obs,diagnosticType)
 
-    sclass,filetable1,filetable2,varid,seasonid=utils.get_input_parameter(diagnosticType,plot_set_name,seasonID,variableID,obs)
+    sclass,filetable1,filetable2,varid,seasonid=utils.get_input_parameter(diagnosticType,modelType,plot_set_name,seasonID,variableID,obs)
     outputPath=settings.DIAG_MEDIA
     taskID = str(time.time()) # TODO: this taskID should be a unique identifier.
     output_parent_path=settings.DIAG_MEDIA
@@ -139,7 +158,7 @@ def load_output(request, taskID):
             outfilename=filename
             break
     mylist=[]
-    
+
     tree = ET.parse(os.path.join(outfile,outfilename))
     root=tree.getroot()
     elementlist=root.findall('ncfile')

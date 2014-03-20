@@ -1,4 +1,5 @@
 import sys
+import traceback
 
 class PlotFactory(object):
     """
@@ -9,10 +10,13 @@ class PlotFactory(object):
 
     @staticmethod
     def createPlot(id, *args, **kwargs):
-        if not PlotFactory._factories.has_key(id):
-            PlotFactory._factories[id] = eval(id + '.Factory()')
-        return PlotFactory._factories[id].create(*args, **kwargs)
-
+        print "createPlot ........ ", id
+        try:
+          if not PlotFactory._factories.has_key(id):
+              PlotFactory._factories[id] = eval(id + '.Factory()')
+          return PlotFactory._factories[id].create(*args, **kwargs)
+        except:
+          print >> sys.stderr, traceback.format_exc()
 class Plot(object):
     """
       Base class for all plots. This class provides the API for plotting
@@ -21,8 +25,7 @@ class Plot(object):
     """
     def __init__(self, id=None, config={}):
         self._id = id
-        self._filename = None
-        self._variable = None
+        self._data = None
         self._config = config
 
     def id(self):
@@ -32,17 +35,10 @@ class Plot(object):
         self._id = id
 
     def data(self):
-        return {
-            'filename': self._filename,
-            'var': self._variable
-        }
+        return self._data
 
     def setData(self, *args, **kwargs):
-        # When the client sends the data as JSON we get
-        # that JSON as the first value in the tuple
-        self._filename = args[0].get('filename', self._filename)
-        self._variable = args[0].get('var', self._variable)
-        print "setData", self._filename
+        self._data = args[0]
 
     def config(self):
         return self._config
@@ -57,6 +53,9 @@ class Plot(object):
         pass
 
     def render(self, options):
+        pass
+
+    def mouseInteraction(self, event):
         pass
 
     def error(self, message):
@@ -82,6 +81,7 @@ class VcsPlot(Plot):
     def __init__(self, id="vcs", config={'type':'IsoFill', 'template':'default'}):
         super(VcsPlot, self).__init__(id, config)
         self._file = None
+        self._data = {'filename': None, 'variable': None}
         self._canvas = None
         self.image_width = 564.0
         self.image_height = 400.0
@@ -100,35 +100,41 @@ class VcsPlot(Plot):
 
     def diagRender(self, options):
         """This method may require some testing."""
+        filename = self._data['filename']
+        variable = self._data['variable']
         self._canvas.clear()
-        self._file = cdms2.open(self._filename)
+        self._file = cdms2.open(filename)
+
         varlist = self._file.plot_these
         if isinstance(varlist,list):
             for i in varlist:
-                self._variable = 1
-                data = self._file(self._variable)
+                variable = 1
+                data = self._file(variable)
                 d = self._canvas.plot(data,self.plotTemplate,self._file.presentation,bg=1)
         else:
-            self._variable=varlist
-            data = self._file(self._variable)
+            variable=varlist
+            data = self._file(variable)
             d = self._canvas.plot(data,self._config['template'],self._file.presentation,bg=1)
 
         png = d._repr_png_()
+        f=open("/export/leung25/test.png",'w')
+        f.write(png)
+        f.close()
         png = base64.b64encode(png)
-
         return self.toJSON(png, True, datetime.datetime.now().time().microsecond,
-                           [564, 400], "png;base64", options['view'], "", "")
+                           [self.image_width, self.image_height], "png;base64", options['view'], "", "")
 
     def createContext(self):
         self._canvas = vcs.init()
         print "createContext", self._canvas
 
     def getValueAt(self, evt):
+        variable = self._data['variable']
         x = evt["x"]
         y = evt["y"]
         cursorX = x / self.image_width
         cursorY = 1.0 - (y / self.image_height)
-        v = self._file(self._variable)
+        v = self._file(variable)
         disp, data = self._canvas.animate_info[0]
         data = data[0]
         t = self._canvas.gettemplate(disp.template)
@@ -136,6 +142,8 @@ class VcsPlot(Plot):
         dx2 = t.data.x2
         dy1 = t.data.y1
         dy2 = t.data.y2
+        #print "x ", x,cursorX,dx1,dx2
+        #print "y ", y, cursorY, dy1,dy2
         if (dx1 < cursorX < dx2) and (dy1 < cursorY < dy2):
             X = data.getAxis(-1)
             Y = data.getAxis(-2)
@@ -168,32 +176,33 @@ class VcsPlot(Plot):
             return ""
 
     def render(self, options):
-        print "rendering in plot.py", self._canvas
         #self._config['template'] = options.get('template', self._config['template']);
         #self._config['type'] = options.get('type', self._config['type']);
         # self._config['template'] = 'default';
         # self._config['type'] = 'isofill';
-        print "rendering", self._filename
+        filename = self._data['filename']
+        variable = self._data['variable']
         try:
             if (self._canvas is None):
                 return self.toJSON(None, True, datetime.datetime.now().time().microsecond,
-                               [564, 400], "png;base64", options['view'], "", "")
-            if (self._filename is None):
+                               [self.image_width, self.image_height], "png;base64", options['view'], "", "")
+            if (filename is None):
                 self.error("Invalid filename for the plot")
                 return self.toJSON(None, True, datetime.datetime.now().time().microsecond,
-                               [564, 400], "png;base64", options['view'], "", "")
+                               [self.image_width, self.image_height], "png;base64", options['view'], "", "")
 
-            self._file = cdms2.open(self._filename)
+            self._file = cdms2.open(filename)
+
             if hasattr(self._file,'presentation'):
                 reply = self.diagRender(options)
                 return reply
 
             self._canvas.clear()
 
-            if (self._variable is None):
-                self._variable = self._file.listvariable()[0]
-            print "variable:" + self._variable
-            data = self._file(self._variable,slice(0,1))
+            if (variable is None):
+                variable = self._file.listvariable()[0]
+
+            data = self._file(variable,slice(0,1))
 
             # Now plot the canvas
             print data.shape
@@ -208,7 +217,7 @@ class VcsPlot(Plot):
             png = base64.b64encode(png)
 
             return self.toJSON(png, True, datetime.datetime.now().time().microsecond,
-                               [564, 400], "png;base64", options['view'], "", "")
+                               [self.image_width, self.image_height], "png;base64", options['view'], "", "")
 
         except Exception as e:
             print e
@@ -218,3 +227,79 @@ class VcsPlot(Plot):
     class Factory:
         def create(self, *args, **kwargs):
             return VcsPlot(*args, **kwargs)
+
+from vtk.vtkWebCorePython import vtkWebApplication
+from vtk.web.protocols import vtkWebMouseHandler, vtkWebViewPortImageDelivery
+import os.path, sys, argparse
+from PyQt4 import QtCore, QtGui
+from packages.CPCViewer.DistributedPointCollections import kill_all_zombies
+from packages.CPCViewer.PointCloudViewer import CPCPlot
+import multiprocessing
+
+class DV3DPlot(Plot):
+    def __init__(self, id="dv3d", type="CPC"):
+        super(DV3DPlot, self).__init__(id, type)
+        self._grid_file = None
+        self._height_varname = None
+        self._n_overview_points = 50000000
+        self._var_proc_op = None
+        self._canvas = None
+        self._plotTemplate = "default"
+        self._n_cores = multiprocessing.cpu_count()
+        self._application = vtkWebApplication()
+        self._image_delivery = vtkWebViewPortImageDelivery()
+        self._image_delivery.setApplication(self._application)
+        self._mouse_handler = vtkWebMouseHandler();
+        self._mouse_handler.setApplication(self._application)
+
+    def createContext(self):
+      filename = self._data['filename']
+      variable = self._data['variable']
+      gridfile = self._data.get('gridfile', None)
+
+      try:
+        self._plot = CPCPlot( )
+        self._plot.init(
+          init_args = ( gridfile,
+                        filename,
+                        variable,
+                        self._height_varname,
+                        self._var_proc_op ),
+                        n_overview_points=self._n_overview_points,
+                        n_cores=self._n_cores, show=True )
+
+        self._plot.createConfigDialog(True)
+        self._render_window = self._plot.renderWindow
+        # Give the render window to the application so it can handle interaction etc.
+        self._application.GetObjectIdMap().SetActiveObject("VIEW",
+                                                           self._plot.renderWindow)
+      except:
+        print >> sys.stderr, traceback.format_exc()
+
+    def getValueAt(self, evt):
+      pass
+
+    def render(self, options):
+      # If we don't have a render window then there is nothing to render
+      if not self._render_window:
+        return
+
+      # pass the options to VTK
+      data = self._image_delivery.stillRender(options)
+      data['global_id'] = options['view']
+      print "DV3D plot rendering.........................."
+      return data
+
+
+    def mouseInteraction(self, event):
+      # If we don't have a render window then just return as not interaction
+      # can occur.
+      if not self._render_window:
+        return
+
+      # pass the event on the vtkWebMouseHandler
+      return self._mouse_handler.mouseInteraction(event);
+
+    class Factory:
+        def create(self, *args, **kwargs):
+            return DV3DPlot(*args, **kwargs)

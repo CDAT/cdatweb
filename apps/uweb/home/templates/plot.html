@@ -4,8 +4,8 @@
 <meta charset="ISO-8859-1">
 <title>UV-CDAT Live</title>
 
-	<link rel="stylesheet" href="{{STATIC_URL}}ext/widgets/jquery-ui/jquery-ui-1.10.0.css" type='text/css'>
-	<link rel="stylesheet" href="{{STATIC_URL}}css/plot.css" type="text/css" >
+  <link rel="stylesheet" href="{{STATIC_URL}}ext/widgets/jquery-ui/jquery-ui-1.10.0.css" type='text/css'>
+  <link rel="stylesheet" href="{{STATIC_URL}}css/plot.css" type="text/css" >
         <link rel='stylesheet' href='{{STATIC_URL}}css/main.css' type='text/css'>
 
         <script src="{{STATIC_URL}}ext/js-core/autobahn.min.js"></script>
@@ -17,7 +17,7 @@
         <script src="{{STATIC_URL}}ext/widgets/jquery-ui/jquery-ui-1.10.0.min.js"></script>
 
         <script src="{{STATIC_URL}}lib/js/vtkweb-all.js"></script>
-	
+
 </head>
 <body>
 
@@ -29,8 +29,8 @@
                 <img class=var_icon src={{STATIC_URL}}img/open.png/>
                 <img class=var_icon src={{STATIC_URL}}img/file_save.png/>
                 <img class=var_icon src={{STATIC_URL}}img/close.png/>
-		<select id="plotTypeSelection">
-            	<option value="boxfill" selected>boxfill</option>
+    <select id="plotTypeSelection">
+              <option value="boxfill" selected>boxfill</option>
                 <option value="isofill">isofill</option>
             </select>
         </div>
@@ -49,7 +49,7 @@
                             <li id={{myvar}} >
                                 <input id={{myvar}} type=checkbox value={{myvar}} class={{myfile.id}}>
                                 <label for={{myvar}} id=label_{{myfile.id}}_{{myvar}} class="draggable">{{myvar}}</label>
-                            </li> 
+                            </li>
                             {% endfor %}
                         </ul>
                     </td>
@@ -75,7 +75,7 @@
                     <option value="2" >2</option>
                     </select>
                 </td>
-		
+
                 <td><img class=var_icon src={{STATIC_URL}}img/delete.png onclick="deleteCanvas()"/></td>
                 <td><img class=var_icon src={{STATIC_URL}}img/source.png/></td>
                 <td><img class=var_icon src={{STATIC_URL}}img/edit.png/></td>
@@ -90,14 +90,14 @@
         <table id=plot_panel width="100%">
             <tr id=plot_row1>
                 <td id=plot_1_1 class="droppable">
-		    <div class="splitter">
-            		<div class="viewport-container" ></div>
-            		<div class="control-panel" style="display: none;"></div>
-        	    </div>
-        	    <div><p id="data"></p></div>
-		</td> 
-		
-  		<td id=plot_1_2 class="droppable" ></td>
+        <div class="splitter">
+                <div class="viewport-container" ></div>
+                <div class="control-panel" style="display: none;"></div>
+              </div>
+              <div><p id="data"></p></div>
+    </td>
+
+      <td id=plot_1_2 class="droppable" ></td>
             </tr>
             <tr id=plot_row2>
                 <td id=plot_2_1 class="droppable" ></td>
@@ -113,7 +113,7 @@
             <img class=var_icon src={{STATIC_URL}}img/edit.png onclick="editSelectedVariables()"/>
             <img class=var_icon src={{STATIC_URL}}img/file_save.png/>
             <img class=var_icon src={{STATIC_URL}}img/preferences.png onclick="resetVariables()"/>
-	    
+
         </div>
        <div id=coord_div>
             <img id=map_icon src="{{STATIC_URL}}img/map-icon.png" />
@@ -126,7 +126,7 @@
             <label id="input_label">W:</label>
             <input id="w_text_input" type="text" value="180">
             <button id="delete-button">Reset</button>
-		
+
         </div>
 
         <div id="var_panel">
@@ -181,8 +181,8 @@
                 <td colspan=2><input type=text id=invalid_replacement_value placeholder="Replacement Value"/></td></tr>
             </table>
         </div>
-    </div>    
-        
+    </div>
+
 <script type="text/javascript">
 
     function toggle(tag_id)
@@ -227,7 +227,7 @@
                 $(this).prop('type','hidden');
                 inputValue=$(this).val();
                 labelId="cbinp"+suffix;
-                $("#"+labelId).html(inputValue); 
+                $("#"+labelId).html(inputValue);
             }
         });
 
@@ -235,7 +235,7 @@
 
     function downloadFile(filename, class_id){
         var values= $('.'+class_id+':checked').map(function(){ return this.value;}).get();
-        url='http://localhost:8000/download?fnm='+filename+'&varlist[]='+values;
+        url='http://' + location.hostname + ':8000/download?fnm='+filename+'&varlist[]='+values;
         window.location=url;
     }
 
@@ -247,10 +247,10 @@
             my_element=document.getElementById(new_id);
             my_element.setAttribute('type','text');
             var label_id="cbinp"+ids[i].substring(2);
-            $("#"+label_id).html(""); 
+            $("#"+label_id).html("");
         }
     }
-    
+
     function deleteCanvas() {
         $("#plot_1_1").empty();
     }
@@ -271,27 +271,27 @@
         $(".variables").each(function (index,domEle) {
             if (!($(domEle).prop("checked")))
             {
-                $(domEle).prop('checked',true);           
+                $(domEle).prop('checked',true);
             }
         });
     }
-    
+
     function resetVariables() {
         $(".variables").each(function(index,domEle){
             if ($(domEle).prop("checked"))
             {
-                $(domEle).prop('checked',false);           
+                $(domEle).prop('checked',false);
                 elementId=$(domEle).attr('id');
                 inputId="input"+elementId.substring(2);
                 inputElement=document.getElementById(inputId);
                 $(inputElement).prop('type','hidden');
                 inputValue=$(inputElement).val();
                 labelId="cbinp"+elementId.substring(2);
-                $("#"+labelId).html(inputValue); 
+                $("#"+labelId).html(inputValue);
             }
         });
     }
- 
+
 $(document).ready(function(){
     $(".calc_button").click(function() {
         var ids= $('.variables:checked').map(function(){ return this.id;}).get();
@@ -319,10 +319,10 @@ $(document).ready(function(){
             var myfile = document.getElementById(myfileid).innerHTML;
             var myvar =$('#array_name').val();
             var cmd=$(this).val();
-            $.ajax({url:'http://localhost:8000/calculate',
-                data:{"myfile":myfile,"myvar":myvariable,"mynewvar":myvar,"cmd":cmd}, 
+            $.ajax({url:'/calculate',
+                data:{"myfile":myfile,"myvar":myvariable,"mynewvar":myvar,"cmd":cmd},
                 type:'GET',
-                datatype:'json', 
+                datatype:'json',
                 success:function(data){
                     outfile=data["outfile"];
                     myfileid=data["myfileid"];
@@ -344,7 +344,7 @@ $(document).ready(function(){
                             $(this).prop('type','hidden');
                             inputValue=$(this).val();
                             labelId="cbinp"+suffix;
-                            $("#"+labelId).html(inputValue); 
+                            $("#"+labelId).html(inputValue);
                         }
                     });
                     },
@@ -354,14 +354,14 @@ $(document).ready(function(){
     });
 
 
-   
+
     $(".draggable").draggable({
         revert: true,
         help: "clone",
         cursor: "crosshair",
         cursorAt: {left: 5},
     });
-   
+
  $(".droppable").droppable({
         zIndex:2,
         drop: function (event,ui){
@@ -399,12 +399,12 @@ $(document).ready(function(){
                         $(this).prop('type','hidden');
                         inputValue=$(this).val();
                         labelId="cbinp"+suffix;
-                        $("#"+labelId).html(inputValue); 
+                        $("#"+labelId).html(inputValue);
                     }
                 });
             }
-		
-	    $.ajax({url:'http://localhost:8000/plot/boxfill',
+
+      $.ajax({url:'/plot/boxfill',
                 data:{"n":n,"s":s,"e":e,"w":w,"fnm":myfile,"var":myvar},
                 type:'GET',
                 datatype:'json',
@@ -419,13 +419,13 @@ $(document).ready(function(){
         }
     });
 
-	
+
     $("#flip2").click(function(){
-	$("#dataset_div").slideToggle("slow");
-	});
+  $("#dataset_div").slideToggle("slow");
+  });
     $("#calc").click(function(){
-	$("#calculator").slideToggle("slow");
-	});
+  $("#calculator").slideToggle("slow");
+  });
    $("#plot_1_2").hide();
    $("#plot_2_1").hide();
    $("#plot_2_2").hide();
@@ -452,7 +452,7 @@ $(document).ready(function(){
         }
         else if (selected_val == '2')
         {
-    	    if (col == '1')
+          if (col == '1')
             {
                 $("#plot_2_1").show();
                 $("#plot_1_1").width(850).height(400);
@@ -461,8 +461,8 @@ $(document).ready(function(){
             else if (col == '2')
             {
                 $("#plot_1_2").show();
-   		$("#plot_2_1").css("display","block");
-   		$("#plot_2_2").css("display","block");
+       $("#plot_2_1").css("display","block");
+       $("#plot_2_2").css("display","block");
                 $("#plot_1_2").width(425).height(400);
                 $("#plot_2_2").width(425).height(400);
                 $("#plot_2_1").width(425).height(400);
@@ -470,7 +470,7 @@ $(document).ready(function(){
             }
 
         }
-    	  
+
    });
    $("#col").change(function() {
         var select_tag = $("#col option:selected");
@@ -508,7 +508,7 @@ $(document).ready(function(){
             {
                 $("#plot_1_2").show();
                 $("#plot_2_1").show();
-		$("#plot_2_2").show();
+    $("#plot_2_2").show();
                 $("#plot_1_2").width(425).height(400);
                 $("#plot_2_2").width(425).height(400);
                 $("#plot_2_1").width(425).height(400);
@@ -526,7 +526,7 @@ $('#plotTypeSelection').change(function (e) {
     var pv = { pipeline: null, sources: null, files: null},
     fetchDataQueueSize = 0;
     $("#loading").hide();
-    pv.connection = { sessionURL: "ws://localhost:8080/ws"};
+    pv.connection = { sessionURL: "ws://" + location.hostname + ":8080/ws"};
     connect();
 
     function connect() {
@@ -552,8 +552,8 @@ $('#plotTypeSelection').change(function (e) {
     function initRender() {
         if (pv.connection && pv.connection.session) {
             pv.connection.session.call("vtk:initRender").then(function(res) {
-            	console.log(res);
-            	pv.viewport.render();
+              console.log(res);
+              pv.viewport.render();
             });
         }
     }
@@ -561,24 +561,24 @@ $('#plotTypeSelection').change(function (e) {
     function setPlotType(){
         if (pv.connection && pv.connection.session) {
             var selected = $('#plotTypeSelection').val();
-	    pv.connection.session.call("vtk:is_initRender").then(function(res) {
-	    	if (res){
-		    pv.connection.session.call("vtk:setPlotType",selected).then(function(res){
+      pv.connection.session.call("vtk:is_initRender").then(function(res) {
+        if (res){
+        pv.connection.session.call("vtk:setPlotType",selected).then(function(res){
                         console.log("setPlotType: ready to run stillRender");
                         pv.viewport.render();
-	    	    });
-	        }
-	        else
-	        {
-	    	    pv.connection.session.call("vtk:setPlotType",selected).then(function(res){
+            });
+          }
+          else
+          {
+            pv.connection.session.call("vtk:setPlotType",selected).then(function(res){
                         console.log("Calling setPlotType: ready to run initRender");
                         initRender();
-	            });
-	        }
-	    });
+              });
+          }
+      });
         }
     }
-            
+
     $(window).resize(function() {
         $(".splitter").height(window.innerHeight - 35);
         $(".control-panel").height(window.innerHeight - 35);
