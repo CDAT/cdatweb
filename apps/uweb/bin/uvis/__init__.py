@@ -16,6 +16,7 @@ from vtk.web import server
 
 import protocol
 from plot import *
+from pygeo.pluginmgr import PluginManager
 
 try:
     import argparse
@@ -23,6 +24,7 @@ except ImportError:
     # since  Python 2.6 and earlier don't have argparse, we simply provide
     # the source for the same as _argparse and we use it instead.
     import _argparse as argparse
+
 
 #//////////////////////////////////////////////////////////////////////////////
 #
@@ -69,6 +71,14 @@ def startServer(options, protocol=pv_protocols.ParaViewWebProtocol, disableLoggi
     from twisted.web.static import File
 
     from autobahn.resource import WebSocketResource
+
+    # Register our plot plug-ins
+
+    # Get the directory this module, plots are in the directory below
+    module_dir = os.path.dirname(sys.modules[__name__].__file__)
+    pluginmgr = PluginManager([os.path.join(module_dir, 'plots')],
+                              {Plot: PlotFactory.registerFactory})
+    pluginmgr.load_plugins()
 
     # TODO Fix this
     #from paraview.webgl import WebGLResource
