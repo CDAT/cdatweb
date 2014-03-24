@@ -3,7 +3,9 @@ import base64
 import datetime
 
 # CDAT
-import vcs
+# Import vcs from the uvis package to resolve with vcs module we are refering
+# to. We can simply import vcs as we are in a module called vcs.
+from uvis import vcs
 import cdms2
 
 import MV2

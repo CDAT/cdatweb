@@ -25,6 +25,16 @@ except ImportError:
     # the source for the same as _argparse and we use it instead.
     import _argparse as argparse
 
+#
+# As vcs is not scoped in a package we have trouble importing it from with
+# a plugin that is also called vcs. So this imports it into the uvis package
+# resolving this issue. Ignore any import errors as we don't want a hard
+# dependency on vcs.
+#
+try:
+  import vcs
+except ImportErr:
+  pass
 
 #//////////////////////////////////////////////////////////////////////////////
 #
