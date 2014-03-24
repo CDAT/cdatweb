@@ -29,8 +29,9 @@ PYTHONPATH=$app_data/bin:$PYTHONPATH
 # For other modules
 PYTHONPATH=$prefix/share/uvis/modules:$PYTHONPATH
 
+echo $PYTHONPATH
 
-exec python -m @SERVER_PYTHON_SCRIPT@ $script \
+exec python -m @SERVER_PYTHON_SCRIPT@ \
   --port ${PORT:-8080} \
   --content $common_content \
   --app-content $app_content \
