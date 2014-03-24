@@ -13,12 +13,15 @@ class PlotFactory(object):
     @staticmethod
     def createPlot(id, *args, **kwargs):
         print "createPlot ........ ", id
+
         try:
           if not PlotFactory._factories.has_key(id):
-              PlotFactory._factories[id] = eval(id + '.Factory()')
-          return PlotFactory._factories[id].create(*args, **kwargs)
+              raise RuntimeError("Unable to create plot of type %s\n" % id)
+
+          return PlotFactory._factories[id](*args, **kwargs)
         except:
           print >> sys.stderr, traceback.format_exc()
+          raise
 
     @staticmethod
     def registerFactory(name, factory):
