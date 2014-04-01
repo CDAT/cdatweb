@@ -66,7 +66,6 @@ class export(object):
 
     def _registerRpc(self):
         addMappedRpc(protocol.UVisProtocol, "_plots", "plot", self.name)
-        print "registering %s" % (self.name)
 
     def __call__(self, *pargs, **kwargs):
         if len(pargs) == 1 and not kwargs and callable(pargs[0]):
