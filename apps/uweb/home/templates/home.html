@@ -626,7 +626,7 @@
 
                 if (!myDiv.hasChildNodes())
                 {
-                    $.ajax({url: '/uvlive/diag/api/load_output/'+task_id+'/',
+                    $.ajax({url: '/diag/api/load_output/'+task_id+'/',
                         data:{ 'plot_package':myPackage},
                         type: 'GET',
                         success: function(data){
