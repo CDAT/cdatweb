@@ -51,9 +51,9 @@ uvis.remoteConnection = function (url) {
    */
   /////////////////////////////////////////////////////////////////////////////
   this.connect = function(callback) {
-    m_meta.connection.sessionURL = window.location.hostname + "/paraview";
     var config = {
-      sessionManagerURL: window.location.hostname + "/paraview",
+      sessionManagerURL: window.location.origin + "/paraview",
+      sessionURL: "ws://" + location.hostname +  ":8080/ws",
       application: "uvis"
     };
 
