@@ -754,7 +754,7 @@
                 myObs=$('#inputObs').val();
                 myModel=$('#inputModel').val();
 
-                $.ajax({url:'http://localhost:8000/diag/api/run_elo/',
+                $.ajax({url:'/diag/api/run_elo/',
                     data:{'plot_package':myPackage,'plot_model':myModel,'plot_set':myPlotSet, 'variableID':myVariable, 'seasonID':mySeason, 'plot_obs':myObs},
                     type:'GET',
                     success:function(data){
@@ -762,7 +762,6 @@
       //$('#resultTable').append("<tr><td><a href=javascript:toggle("+task_id+");>"+task_id+"</a></td></tr><tr><td><div id=" + task_id+" style='display:none'></div></td></tr>");
                         $('#resultTable').append("<tr><td><a href=javascript:toggle("+task_id+");>"+task_id+"</a></td><td>&nbsp;<div id=progress"+task_id+ " class='progress progress-striped active'><div class='progress-bar'  role='progressbar' aria-valuenow=45 aria-valuemin=0 aria-valuemax=100 style='width: 40px'></div></div></td></tr><tr><td><div id=" + task_id+" style='display:none'></div></td></tr>");
                         //updateLoop(task_id);
-                        /**
                         (function updateLoop(task_id){
                             $.ajax({url:'/diag/api/get_status/'+task_id+'/', data:{},type:'GET',
                             success: function(data1){
@@ -779,9 +778,10 @@
                             },
                             error: function(){alert('ERROR in progress bar update');}});
                         })(task_id);
-                        **/
+                        /**
                         $("#progress"+task_id).remove();
-			toggle(task_id);
+                        toggle(task_id);
+                        **/
                     },
                     error: function(){alert('ERROR: unable to get task id');}
                     });
@@ -795,7 +795,7 @@
         $('#inputPackage').change(function() {
             myPackage=$('#inputPackage').val();
             console.log(myPackage);
-            $.ajax({url:'http://localhost:8000/diag/api/get_plot_models/',
+            $.ajax({url:'/diag/api/get_plot_models/',
                 data:{'plot_package':myPackage},
                 type:'GET',
                 success:function(data){
@@ -812,7 +812,7 @@
                 },
                 error: function(){alert('ERROR: unable to get plot observations');}
             });
-            $.ajax({url:'http://localhost:8000/diag/api/get_plot_obs/',
+            $.ajax({url:'/diag/api/get_plot_obs/',
                 data:{'plot_package':myPackage},
                 type:'GET',
                 success:function(data){
@@ -878,7 +878,7 @@
             console.log("get Var: "+ myPackage);
             myObs=$('#inputObs').val();
             myModel=$('#inputModel').val();
-            $.ajax({url:'http://localhost:8000/diag/api/get_plot_variable/',
+            $.ajax({url:'/diag/api/get_plot_variable/',
                 data:{'plot_package':myPackage,'plot_model':myModel,'plot_set':myPlotSet,'plot_obs':myObs},
                 type:'GET',
                 success:function(data){
@@ -902,7 +902,7 @@
             myVariable=$('#inputVariable').val();
             myObs=$('#inputObs').val();
             myModel=$('#inputModel').val();
-            $.ajax({url:'http://localhost:8000/diag/api/get_plot_aux_options/',
+            $.ajax({url:'/diag/api/get_plot_aux_options/',
                 data:{'plot_package':myPackage,'plot_model':myModel,'plot_set':myPlotSet, 'plot_variable':myVariable,'plot_obs':myObs},
                 type:'GET',
                 success:function(data){

@@ -127,7 +127,7 @@ def run_elo(request):
     return HttpResponse(json_res, content_type="application/json")
 
 def get_status(request,taskID):
-    #task_id=int(taskID)
+    task_id=int(taskID)
     p_object=utils.TaskTracker().get_task(task_id)
     status=plotdata_status(p_object)
     status1 = 1
@@ -146,18 +146,18 @@ def get_status(request,taskID):
 
 def load_output(request, taskID):
     diagnosticType=request.GET['plot_package']
-    if diagnosticType=='AMWG':
-	taskID='AMWG'
-    else:
-	taskID='LMWG'
-    #task_id=int(taskID)
-    #p_object=utils.TaskTracker().get_task(task_id)
-    #if p_object:
-    #    outfile = plotdata_results(p_object)
+    #if diagnosticType=='AMWG':
+    #    taskID='AMWG'
+    #else:
+    #    taskID='LMWG'
+    task_id=int(taskID)
+    p_object=utils.TaskTracker().get_task(task_id)
+    if p_object:
+        outfile = plotdata_results(p_object)
     #task_id=int(taskID)
     #outfile=utils.TaskTracker().get_task(task_id)
     #look for the output file that ends in diagoutput
-    outfile=os.path.join(settings.DIAG_MEDIA,taskID)
+    #outfile=os.path.join(settings.DIAG_MEDIA,taskID)
     filelist=os.listdir(outfile)
     outfilename=None
     for filename in filelist:
