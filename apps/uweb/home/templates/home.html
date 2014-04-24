@@ -327,7 +327,7 @@
                                 <img class=img-rounded src={{STATIC_URL}}img/search.png style="height:25px;width:25px;vertical-align:middle;"/>
                             </label>
                             <div class="col-sm-9">
-                                <input type=text class=form-control id=inputEsgfSearch value="cmip5.output1.INM.inmcm4.1pctCo2.mon">
+                                <input type=text class=form-control id=inputEsgfSearch value="climo">
                             </div>
                         </div>
 
@@ -501,6 +501,7 @@
                         {
                             createDV3DPlot();
                         }
+			/**
                         else
                         {
                             if (!(myPlotArray[0].plotType=='VcsPlot'))
@@ -521,6 +522,7 @@
                             var new_prj_element='<li style=list-style-type:none>'+myFilename+'</li>';
                             $('#Project1Div').append(new_prj_element);
                         }
+			**/
                     }
                 }
                 else
@@ -551,6 +553,8 @@
                     }
                     else
                     {
+                        $("#data1").text("Please drag and drop a plot type into this canvas.");
+			/**
                         if (!(myPlotArray[0].plotType=='VcsPlot'))
                         {
                             var plot1 = new uvis.plot("#viewport-container1",{"connection": remoteConnection});
@@ -571,6 +575,7 @@
                         $('#var_panel').append(new_var_element);
                         var new_prj_element='<li style=list-style-type:none;>'+myFilename+'</li>';
                         $('#Project1Div').append(new_prj_element);
+			**/
                     }
                 }
             }
@@ -617,11 +622,12 @@
             if (myDiv.style.display=='none')
             {
                 myDiv.style.display='block';
+                myPackage=$('#inputPackage').val();
 
                 if (!myDiv.hasChildNodes())
                 {
                     $.ajax({url: '/diag/api/load_output/'+task_id+'/',
-                        data:{},
+                        data:{ 'plot_package':myPackage},
                         type: 'GET',
                         success: function(data){
                             myList = data['output_list'];
@@ -748,7 +754,7 @@
                 myObs=$('#inputObs').val();
                 myModel=$('#inputModel').val();
 
-                $.ajax({url:'http://localhost:8000/diag/api/run_elo/',
+                $.ajax({url:'/diag/api/run_elo/',
                     data:{'plot_package':myPackage,'plot_model':myModel,'plot_set':myPlotSet, 'variableID':myVariable, 'seasonID':mySeason, 'plot_obs':myObs},
                     type:'GET',
                     success:function(data){
@@ -760,7 +766,7 @@
                             $.ajax({url:'/diag/api/get_status/'+task_id+'/', data:{},type:'GET',
                             success: function(data1){
                                 myStatus=data1['status'];
-                                if (myStatus=='0')
+                                if (myStatus=='1')
                                 {
                                     setTimeout(function() {updateLoop(task_id);}, 1000);
                                 }
@@ -772,6 +778,10 @@
                             },
                             error: function(){alert('ERROR in progress bar update');}});
                         })(task_id);
+                        /**
+                        $("#progress"+task_id).remove();
+                        toggle(task_id);
+                        **/
                     },
                     error: function(){alert('ERROR: unable to get task id');}
                     });
@@ -785,7 +795,7 @@
         $('#inputPackage').change(function() {
             myPackage=$('#inputPackage').val();
             console.log(myPackage);
-            $.ajax({url:'http://localhost:8000/diag/api/get_plot_models/',
+            $.ajax({url:'/diag/api/get_plot_models/',
                 data:{'plot_package':myPackage},
                 type:'GET',
                 success:function(data){
@@ -802,7 +812,7 @@
                 },
                 error: function(){alert('ERROR: unable to get plot observations');}
             });
-            $.ajax({url:'http://localhost:8000/diag/api/get_plot_obs/',
+            $.ajax({url:'/diag/api/get_plot_obs/',
                 data:{'plot_package':myPackage},
                 type:'GET',
                 success:function(data){
@@ -868,7 +878,7 @@
             console.log("get Var: "+ myPackage);
             myObs=$('#inputObs').val();
             myModel=$('#inputModel').val();
-            $.ajax({url:'http://localhost:8000/diag/api/get_plot_variable/',
+            $.ajax({url:'/diag/api/get_plot_variable/',
                 data:{'plot_package':myPackage,'plot_model':myModel,'plot_set':myPlotSet,'plot_obs':myObs},
                 type:'GET',
                 success:function(data){
@@ -892,7 +902,7 @@
             myVariable=$('#inputVariable').val();
             myObs=$('#inputObs').val();
             myModel=$('#inputModel').val();
-            $.ajax({url:'http://localhost:8000/diag/api/get_plot_aux_options/',
+            $.ajax({url:'/diag/api/get_plot_aux_options/',
                 data:{'plot_package':myPackage,'plot_model':myModel,'plot_set':myPlotSet, 'plot_variable':myVariable,'plot_obs':myObs},
                 type:'GET',
                 success:function(data){
@@ -1113,8 +1123,8 @@
     });
     myPlotArray[1].plotObj.on('mousemove', function(evt) {
       var elem_position = $(evt.delegateTarget).offset();
-          evt["x"] = evt.pageX - elem_position.left + 20;
-          evt["y"] = evt.pageY - elem_position.top + 20;
+          evt["x"] = evt.pageX - elem_position.left;
+          evt["y"] = evt.pageY - elem_position.top;
       var evtInfo = {};
       evtInfo.x = evt["x"];
       evtInfo.y = evt["y"];
@@ -1127,8 +1137,8 @@
     });
     myPlotArray[2].plotObj.on('mousemove', function(evt) {
       var elem_position = $(evt.delegateTarget).offset();
-          evt["x"] = evt.pageX - elem_position.left + 20;
-          evt["y"] = evt.pageY - elem_position.top  + 20;
+          evt["x"] = evt.pageX - elem_position.left;
+          evt["y"] = evt.pageY - elem_position.top;
       var evtInfo = {};
       evtInfo.x = evt["x"];
       evtInfo.y = evt["y"];
@@ -1140,8 +1150,8 @@
     });
     myPlotArray[3].plotObj.on('mousemove', function(evt) {
       var elem_position = $(evt.delegateTarget).offset();
-          evt["x"] = evt.pageX - elem_position.left + 20;
-          evt["y"] = evt.pageY - elem_position.top + 20;
+          evt["x"] = evt.pageX - elem_position.left;
+          evt["y"] = evt.pageY - elem_position.top;
       var evtInfo = {};
       evtInfo.x = evt["x"];
       evtInfo.y = evt["y"];

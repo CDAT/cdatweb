@@ -235,7 +235,7 @@
 
     function downloadFile(filename, class_id){
         var values= $('.'+class_id+':checked').map(function(){ return this.value;}).get();
-        url='http://' + location.hostname + ':8000/download?fnm='+filename+'&varlist[]='+values;
+        url=location.origin + '/download?fnm='+filename+'&varlist[]='+values;
         window.location=url;
     }
 
