@@ -274,7 +274,9 @@ uvis.plot = function(nodeId, args) {
    */
   /////////////////////////////////////////////////////////////////////////////
   this.closeContext = function() {
-    m_viewport.unbind();
+    if (m_viewport) {
+      m_viewport.unbind();
+    }
     //vtkweb.stop(m_connection.getMeta());
   };
 
