@@ -1,4 +1,4 @@
-uvis
+CDATWeb
 ====
 
-Web visualization framework of UV-CDAT
+Web visualization framework for CDAT
