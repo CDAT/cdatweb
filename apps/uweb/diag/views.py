@@ -1,6 +1,6 @@
 import os, sys, errno
 from django.utils import simplejson
-from metrics.diagnostic_groups import *
+from metrics.packages.diagnostic_groups import *
 from django.http import Http404,HttpResponse,HttpResponseRedirect
 import utils
 from django.shortcuts import render, get_object_or_404,render_to_response
