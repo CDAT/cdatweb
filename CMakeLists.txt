@@ -17,6 +17,9 @@ option(UVIS_ENABLE_DJANGO "UVIS uses Django" ON)
 # Variable used for configuring runtime scripts
 set(SOURCE_UVCDAT)
 
+# setup python
+find_package(PythonInterp 2.7 REQUIRED)
+
 # Find UVCDAT
 if(UVIS_ENABLE_UVCDAT)
   find_package(UVCDAT REQUIRED)
