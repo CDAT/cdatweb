@@ -175,6 +175,7 @@ function(uvis_web_server NAME)
       "-DAPPLICATION=${NAME}"
       "-DSERVER_PYTHON_SCRIPT=${NAME}.py"
       "-DSOURCE_UVCDAT=${SOURCE_UVCDAT}"
+      "-DUVCDAT_DIR=${UVCDAT_DIR}"
       "-DCONFIGURE_ARGS=ESCAPE_QUOTES @ONLY"
       -P "${_configure_file_script}"
   )

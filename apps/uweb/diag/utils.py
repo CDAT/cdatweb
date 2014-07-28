@@ -1,6 +1,6 @@
 import os,sys
 import metrics.fileio.findfiles
-from metrics.diagnostic_groups import *
+from metrics.packages.diagnostic_groups import *
 import metrics.frontend.uvcdat
 
 from django.conf import settings

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 @SOURCE_UVCDAT@
+PYTHONPATH="@UVCDAT_DIR@/vistrails/vistrails:${PYTHONPATH}"
 
 prefix=$(cd "${BASH_SOURCE%/*}/.."; pwd)
 
