@@ -40,7 +40,7 @@ if(UVDJANGO_CREATE_DATABASE)
   set(_dir  "${uvis_BINARY_DIR}/share/uvis/www/apps/${PROJECT_NAME}")
   add_custom_command(
     OUTPUT "${UVDJANGO_DBFILE}"
-    COMMAND env "PYTHONPATH=${_dir}" "${PYTHON_EXECUTABLE}" "${_dir}/bin/manage.py" syncdb --noinput
+    COMMAND env "PYTHONPATH=${_dir}:$$PYTHONPATH" "${PYTHON_EXECUTABLE}" "${_dir}/bin/manage.py" syncdb --noinput
     DEPENDS
     "${_local_settings_out}"
     "${PROJECT_NAME}-webContentDirectories"
