@@ -238,7 +238,7 @@ uvis.plot = function(nodeId, args) {
         console.log("M_ID: "+m_id);
         console.log("plotType in init" + plot);
         typeof callback === 'function' && callback();
-      });
+      }, function(error) { console.log(error); });
     } else {
       console.log("[error] Invalid connection");
     }
@@ -262,7 +262,7 @@ uvis.plot = function(nodeId, args) {
                                         view: m_id});
         m_viewport.bind(m_nodeId);
         typeof callback === 'function' && callback();
-      });
+      }, function(error) { console.log(error); });
     } else {
       console.log("[error] Invalid connection");
     }

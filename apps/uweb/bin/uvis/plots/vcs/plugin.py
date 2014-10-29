@@ -1,78 +1,16 @@
-import sys
-import traceback
-
-class PlotFactory(object):
-    """
-      PlotFactory creates a particular type of plot based on the
-      id passed such as VcsPlot.
-    """
-    _factories = {}
-
-    @staticmethod
-    def createPlot(id, *args, **kwargs):
-        print "createPlot ........ ", id
-        try:
-          if not PlotFactory._factories.has_key(id):
-              PlotFactory._factories[id] = eval(id + '.Factory()')
-          return PlotFactory._factories[id].create(*args, **kwargs)
-        except:
-          print >> sys.stderr, traceback.format_exc()
-class Plot(object):
-    """
-      Base class for all plots. This class provides the API for plotting
-      2D plots which should be implemented by derived classes to provide
-      concrete implementation.
-    """
-    def __init__(self, id=None, config={}):
-        self._id = id
-        self._data = None
-        self._config = config
-
-    def id(self):
-        return self._id
-
-    def setId(self, id):
-        self._id = id
-
-    def data(self):
-        return self._data
-
-    def setData(self, *args, **kwargs):
-        self._data = args[0]
-
-    def config(self):
-        return self._config
-
-    def setConfig(self, config):
-        self._config = config
-
-    def getValueAt(self, evt):
-        return {}
-
-    def createContext(self):
-        pass
-
-    def render(self, options):
-        pass
-
-    def mouseInteraction(self, event):
-        pass
-
-    def error(self, message):
-        sys.stderr.write("[error]: %s\n" % message)
-
-# Import required modules
-
 # base64 is required to convert image to base64 string
 import base64
 import datetime
 
 # CDAT
-import vcs
+# Import vcs from the uvis package to resolve with vcs module we are refering
+# to. We can simply import vcs as we are in a module called vcs.
+from uvis import vcs
 import cdms2
 
 import MV2
 import json
+from uvis.plot import Plot
 
 class VcsPlot(Plot):
     """
@@ -227,79 +165,3 @@ class VcsPlot(Plot):
     class Factory:
         def create(self, *args, **kwargs):
             return VcsPlot(*args, **kwargs)
-
-from vtk.vtkWebCorePython import vtkWebApplication
-from vtk.web.protocols import vtkWebMouseHandler, vtkWebViewPortImageDelivery
-import os.path, sys, argparse
-from PyQt4 import QtCore, QtGui
-from packages.CPCViewer.DistributedPointCollections import kill_all_zombies
-from packages.CPCViewer.PointCloudViewer import CPCPlot
-import multiprocessing
-
-class DV3DPlot(Plot):
-    def __init__(self, id="dv3d", type="CPC"):
-        super(DV3DPlot, self).__init__(id, type)
-        self._grid_file = None
-        self._height_varname = None
-        self._n_overview_points = 50000000
-        self._var_proc_op = None
-        self._canvas = None
-        self._plotTemplate = "default"
-        self._n_cores = multiprocessing.cpu_count()
-        self._application = vtkWebApplication()
-        self._image_delivery = vtkWebViewPortImageDelivery()
-        self._image_delivery.setApplication(self._application)
-        self._mouse_handler = vtkWebMouseHandler();
-        self._mouse_handler.setApplication(self._application)
-
-    def createContext(self):
-      filename = self._data['filename']
-      variable = self._data['variable']
-      gridfile = self._data.get('gridfile', None)
-
-      try:
-        self._plot = CPCPlot( )
-        self._plot.init(
-          init_args = ( gridfile,
-                        filename,
-                        variable,
-                        self._height_varname,
-                        self._var_proc_op ),
-                        n_overview_points=self._n_overview_points,
-                        n_cores=self._n_cores, show=True )
-
-        self._plot.createConfigDialog(True)
-        self._render_window = self._plot.renderWindow
-        # Give the render window to the application so it can handle interaction etc.
-        self._application.GetObjectIdMap().SetActiveObject("VIEW",
-                                                           self._plot.renderWindow)
-      except:
-        print >> sys.stderr, traceback.format_exc()
-
-    def getValueAt(self, evt):
-      pass
-
-    def render(self, options):
-      # If we don't have a render window then there is nothing to render
-      if not self._render_window:
-        return
-
-      # pass the options to VTK
-      data = self._image_delivery.stillRender(options)
-      data['global_id'] = options['view']
-      print "DV3D plot rendering.........................."
-      return data
-
-
-    def mouseInteraction(self, event):
-      # If we don't have a render window then just return as not interaction
-      # can occur.
-      if not self._render_window:
-        return
-
-      # pass the event on the vtkWebMouseHandler
-      return self._mouse_handler.mouseInteraction(event);
-
-    class Factory:
-        def create(self, *args, **kwargs):
-            return DV3DPlot(*args, **kwargs)

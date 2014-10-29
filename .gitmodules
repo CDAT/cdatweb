@@ -1,0 +1,3 @@
+[submodule "pygeo"]
+	path = pygeo
+	url = git://github.com/OpenGeoscience/pygeo.git

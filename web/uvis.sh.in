@@ -19,16 +19,20 @@ data=$prefix/share/uvis/www
 common_content=$data/content
 app_data=$data/apps/@APPLICATION@
 app_content=$app_data/content
-script=$app_data/bin/@SERVER_PYTHON_SCRIPT@
 django_script=$app_data/bin/manage.py
 
 # For django
 PYTHONPATH=$app_data:$PYTHONPATH
 
+# For uvis module
+PYTHONPATH=$app_data/bin:$PYTHONPATH
+
 # For other modules
 PYTHONPATH=$prefix/share/uvis/modules:$PYTHONPATH
 
-exec python $script \
+echo $PYTHONPATH
+
+exec python -m @SERVER_PYTHON_SCRIPT@ \
   --port ${PORT:-8080} \
   --content $common_content \
   --app-content $app_content \

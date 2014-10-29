@@ -6,6 +6,10 @@ endif()
 
 project(uvis)
 
+include(FindPythonInterp)
+find_package(PythonInterp 2.7)
+set(PYTHON_SHORT "python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
+
 include(cmake/functions.cmake)
 
 list(APPEND CMAKE_MODULE_PATH "${uvis_SOURCE_DIR}/cmake")
@@ -47,6 +51,8 @@ endif()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
 add_subdirectory(web)
+set(PYGEO_DEPLOY_DIR ${CMAKE_CURRENT_BINARY_DIR})
+add_subdirectory(pygeo)
 add_subdirectory(apps)
 add_subdirectory(modules)
 
