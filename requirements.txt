@@ -1,3 +1,4 @@
 django
 qt4reactor
 simplejson
+libxml2-python
