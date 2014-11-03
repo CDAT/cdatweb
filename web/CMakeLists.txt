@@ -1,6 +1,5 @@
 if (UVIS_ENABLE_PARAVIEW)
   uvis_install_files_with_prefix(
-    ext/core/autobahn.js
     ext/core/autobahn.min.js
     ext/core/gl-matrix.js
     ext/core/gl-matrix-min.js
