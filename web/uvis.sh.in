@@ -3,17 +3,9 @@
 @SOURCE_UVCDAT@
 PYTHONPATH="@UVCDAT_DIR@/vistrails/vistrails:${PYTHONPATH}"
 
-prefix=$(cd "${BASH_SOURCE%/*}/.."; pwd)
-
-LD_LIBRARY_PATH=$prefix/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
-LD_LIBRARY_PATH=$prefix/lib@LIB_SUFFIX@:$LD_LIBRARY_PATH
-
-PYTHONPATH=$prefix/lib@LIB_SUFFIX@${PYTHONPATH:+:$PYTHONPATH}
-PYTHONPATH=$prefix/lib@LIB_SUFFIX@/@PYTHON_SHORT@/site-packages:$PYTHONPATH
-PYTHONPATH=$prefix/lib/@PYTHON_SHORT@/site-packages:$PYTHONPATH
+prefix='@BUILD_PREFIX@'
 
 PATH=$prefix/bin:$PATH
-export PYTHONPATH LD_LIBRARY_PATH PATH
 
 data=$prefix/share/uvis/www
 common_content=$data/content
@@ -27,6 +19,8 @@ PYTHONPATH=$app_data:$PYTHONPATH
 
 # For other modules
 PYTHONPATH=$prefix/share/uvis/modules:$PYTHONPATH
+
+export PYTHONPATH PATH
 
 exec python $script \
   --port ${PORT:-8080} \

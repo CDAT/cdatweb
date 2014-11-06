@@ -24,7 +24,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404,render_to_response
 from django.template import Context, loader, RequestContext
 from django.conf import settings
-from django.utils import simplejson
+import json
 from django.core.servers.basehttp import FileWrapper
 if not settings.configured:
     settings.configure()
@@ -41,14 +41,14 @@ def esgf_data_node(request):
     host=settings.ESGF_HOST 
     data_node_list=esgf_data_node_list(host)
     obj={'res':data_node_list}
-    json_res=simplejson.dumps(obj)
+    json_res=json.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 
 def esgf_search(request):
     search_str=request.GET['search_str']
     obj={"res":esgf_query("pcmdi9.llnl.gov",search_str)}
     #obj={"res":[{"fileID":"fileID1","url":"url1"},{"fileID":"fileID2","url":"url2"}]}
-    json_res=simplejson.dumps(obj)
+    json_res=json.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 
 def diag_home(request):
@@ -101,7 +101,7 @@ def calculate(request):
     myfile=request.GET['myfile']
     my_new_var=eval_cdat(cdat_cmd,myfile,myvar,mynewvar)
     obj={"outfile":my_new_var,"myfileid":500}
-    json_res=simplejson.dumps(obj) 
+    json_res=json.dumps(obj) 
     return HttpResponse(json_res, content_type="application/json")
 
 def logout_view(request):
@@ -181,17 +181,17 @@ def make_boxfill(request):
         try:
             plot_filename = box_fill(myfile, myvar, selection_dict, proxy_cert = active_cert)
             obj={"png":plot_filename}
-            json_res=simplejson.dumps(obj) 
+            json_res=json.dumps(obj) 
         except Exception, err:
             obj={"png":""}
-            json_res=simplejson.dumps(obj) 
+            json_res=json.dumps(obj) 
         return HttpResponse(json_res, content_type="application/json")
 
 def get_variable(request):
     myfile=request.GET['file']
     varlist=get_var(myfile)
     obj={"variable":varlist}
-    json_res=simplejson.dumps(obj) 
+    json_res=json.dumps(obj) 
     return HttpResponse(json_res, content_type="application/json")
 
 

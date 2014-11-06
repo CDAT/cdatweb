@@ -177,6 +177,7 @@ function(uvis_web_server NAME)
       "-DSOURCE_UVCDAT=${SOURCE_UVCDAT}"
       "-DUVCDAT_DIR=${UVCDAT_DIR}"
       "-DCONFIGURE_ARGS=ESCAPE_QUOTES @ONLY"
+      "-DBUILD_PREFIX=${CMAKE_BINARY_DIR}"
       -P "${_configure_file_script}"
   )
   add_custom_target(${NAME}-server ALL DEPENDS "${_out}")

@@ -198,10 +198,6 @@ def startServer(options, protocol=pv_protocols.ParaViewWebProtocol, disableLoggi
 
 if __name__ == "__main__":
 
-    from PyQt4 import QtGui
-    global qapp
-    qapp = QtGui.QApplication(sys.argv)
-    import qt4reactor
     import sys
     del sys.modules['twisted.internet.reactor']
     import qt4reactor
