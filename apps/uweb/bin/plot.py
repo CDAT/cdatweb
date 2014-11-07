@@ -228,9 +228,15 @@ class VcsPlot(Plot):
         def create(self, *args, **kwargs):
             return VcsPlot(*args, **kwargs)
 
+
+import os.path, sys, argparse
+import vtk
+
+# necessary because reasons:
+sys.path.append(os.path.dirname(vtk.__file__))
+
 from vtk.vtkWebCorePython import vtkWebApplication
 from vtk.web.protocols import vtkWebMouseHandler, vtkWebViewPortImageDelivery
-import os.path, sys, argparse
 from PyQt4 import QtCore, QtGui
 from packages.CPCViewer.DistributedPointCollections import kill_all_zombies
 from packages.CPCViewer.PointCloudViewer import CPCPlot
