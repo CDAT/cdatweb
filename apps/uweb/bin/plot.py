@@ -1,5 +1,7 @@
 import sys
 import traceback
+from PyQt4 import QtCore, QtGui
+import tempfile
 
 class PlotFactory(object):
     """
@@ -182,6 +184,7 @@ class VcsPlot(Plot):
         # self._config['type'] = 'isofill';
         filename = self._data['filename']
         variable = self._data['variable']
+
         try:
             if (self._canvas is None):
                 return self.toJSON(None, True, datetime.datetime.now().time().microsecond,
@@ -213,7 +216,9 @@ class VcsPlot(Plot):
 
             d = self._canvas.plot(data,g, bg=1)
             print "done plotting"
-            png = d._repr_png_()
+            pngfile = tempfile.NamedTemporaryFile(suffix='.png')
+            self._canvas.png(pngfile.name)
+            png = open(pngfile.name, 'r').read()
             png = base64.b64encode(png)
 
             return self.toJSON(png, True, datetime.datetime.now().time().microsecond,
