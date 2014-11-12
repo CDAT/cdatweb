@@ -5,8 +5,6 @@ PYTHONPATH="@UVCDAT_DIR@/vistrails/vistrails:${PYTHONPATH}"
 
 prefix='@BUILD_PREFIX@'
 
-PATH=$prefix/bin:$PATH
-
 data=$prefix/share/uvis/www
 common_content=$data/content
 app_data=$data/apps/@APPLICATION@
@@ -20,12 +18,4 @@ PYTHONPATH=$app_data:$PYTHONPATH
 # For other modules
 PYTHONPATH=$prefix/share/uvis/modules:$PYTHONPATH
 
-export PYTHONPATH PATH
-
-exec python $script \
-  --port ${PORT:-8080} \
-  --content $common_content \
-  --app-content $app_content \
-  "$@" &
-
-exec python $django_script runserver 0.0.0.0:8000 &
+export PYTHONPATH

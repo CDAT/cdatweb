@@ -194,6 +194,10 @@ class VcsPlot(Plot):
                 return self.toJSON(None, True, datetime.datetime.now().time().microsecond,
                                [self.image_width, self.image_height], "png;base64", options['view'], "", "")
 
+            import os
+            if filename == 'test':
+                # I have officially given up:
+                filename = os.path.abspath(os.path.dirname(__file__) + '/../../../content/data/test.nc')
             self._file = cdms2.open(filename)
 
             if hasattr(self._file,'presentation'):
@@ -260,10 +264,12 @@ class DV3DPlot(Plot):
         self._application = vtkWebApplication()
         self._image_delivery = vtkWebViewPortImageDelivery()
         self._image_delivery.setApplication(self._application)
-        self._mouse_handler = vtkWebMouseHandler();
+        self._mouse_handler = vtkWebMouseHandler()
         self._mouse_handler.setApplication(self._application)
+        self._render_window = True
 
     def createContext(self):
+      return
       filename = self._data['filename']
       variable = self._data['variable']
       gridfile = self._data.get('gridfile', None)

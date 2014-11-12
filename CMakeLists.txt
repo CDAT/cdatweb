@@ -22,6 +22,7 @@ find_package(PythonInterp 2.7 REQUIRED)
 
 # Find UVCDAT
 if(UVIS_ENABLE_UVCDAT)
+  set(UVCDAT_DIR "$ENV{UVCDAT_SETUP_PATH}")
   find_package(UVCDAT REQUIRED)
 
   if (UNIX)
@@ -33,9 +34,19 @@ endif()
 
 # Find ParaView
 if(UVIS_ENABLE_PARAVIEW)
-  # For now run another query to look for ParaView
-  find_package(ParaView REQUIRED)
-  include(${PARAVIEW_USE_FILE})
+
+  find_path(
+    PARAVIEW_WWW_DIR
+    ext
+    PATHS
+    ${UVCDAT_DIR}/Externals/share/paraview-4.1/www
+    ${UVCDAT_DIR}/Externals/share/paraview-4.2/www
+    NO_DEFAULT_PATH
+  )
+
+  if(PARAVIEW_WWW_DIR-NOTFOUND)
+    message(FATAL_ERROR "Could not find ParaViewWeb web root")
+  endif()
 
   message("[uvis:info] Using ParaView ${ParaView_DIR}")
 endif()
