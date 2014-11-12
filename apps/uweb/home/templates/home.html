@@ -8,6 +8,7 @@
     <script src="{{STATIC_URL}}js/gl-matrix-min.js"></script>
     <script src="{{STATIC_URL}}js/jquery.hammer.min.js"></script>
     <script src="{{STATIC_URL}}js/jquery-ui-1.10.0.min.js"></script>
+    <script src="{{STATIC_URL}}js/vgl.min.js"></script>
     <script src="{{STATIC_URL}}js/vtkweb-all.js"></script>
     <script src="{{STATIC_URL}}lib/js/uvis.js"></script>
 <body onbeforeunload="cleanup()" onunload="cleanup()">
@@ -31,7 +32,7 @@
             <div class="tab-pane active" id="Project1">
                 <div class=row>
                     <div class="col-md-12" id="Project1Div" style="height:720px;box-shadow: 0 0 2px grey;word-break:break-all;">
-                        <li class=prj_draggable_to_canvas style="list-style-type:none;">geos5.bkg.prs.20110501_0000z.nc4</li>
+                        <li class=prj_draggable_to_canvas style="list-style-type:none;">test.nc</li>
                     </div>
                 </div>
                     <h4>&nbsp;<span class="label label-default">Plot Types</span></h4>
@@ -442,7 +443,7 @@
 
         function createDV3DPlot()
         {
-                            var data2 = {'filename' : '/export/leung25/sample_data/geos5.bkg.prs.20110501_0000z.nc4','variable' : 'uwnd', 'gridfile': null};
+                            var data2 = {'filename' : location.origin + '/static/data/test.nc','variable' : 'clt', 'gridfile': null};
                             var plot1 = new uvis.plot("#viewport-container1",{"connection": remoteConnection});
                             myPlotArray[0]=new myPlotObject("#viewport-container1","DV3DPlot",plot1);
                             myPlotArray[0].plotObj.init("DV3DPlot", function(){
@@ -497,9 +498,10 @@
                         myFilename=sessionStorage.getItem('canvas1_filename');
                         myVarname=sessionStorage.getItem('canvas1_var');
                         myPlotType=sessionStorage.getItem('canvas1_plot_type');
-                        if (myFilename=='/export/leung25/sample_data/geos5.bkg.prs.20110501_0000z.nc4')
+                        // sigh...
+                        if (myFilename==location.origin + '/static/data/test.nc')
                         {
-                            createDV3DPlot();
+                            createVcsPlot('test', 'clt');
                         }
 			/**
                         else
@@ -529,7 +531,7 @@
                 {
                     if (ui.draggable[0].classList[0]=='prj_draggable_to_canvas')
                     {
-                        sessionStorage.setItem('canvas1_filename','/export/leung25/sample_data/geos5.bkg.prs.20110501_0000z.nc4');
+                        sessionStorage.setItem('canvas1_filename',location.origin + '/static/data/test.nc');
                         sessionStorage.setItem('canvas1_var','uwnd');
                         /**
                         var data2 = {'filename' : '/export/leung25/sample_data/geos5.bkg.prs.20110501_0000z.nc4',

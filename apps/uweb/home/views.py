@@ -24,7 +24,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404,render_to_response
 from django.template import Context, loader, RequestContext
 from django.conf import settings
-from django.utils import simplejson
+import json
 from django.core.servers.basehttp import FileWrapper
 if not settings.configured:
     settings.configure()
@@ -41,19 +41,19 @@ def esgf_data_node(request):
     host=settings.ESGF_HOST 
     data_node_list=esgf_data_node_list(host)
     obj={'res':data_node_list}
-    json_res=simplejson.dumps(obj)
+    json_res=json.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 
 def esgf_search(request):
     search_str=request.GET['search_str']
     obj={"res":esgf_query("pcmdi9.llnl.gov",search_str)}
     #obj={"res":[{"fileID":"fileID1","url":"url1"},{"fileID":"fileID2","url":"url2"}]}
-    json_res=simplejson.dumps(obj)
+    json_res=json.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 
 def diag_home(request):
     #image_dir=request.POST['directory']
-    if not request.user.is_authenticated():
+    if False and not request.user.is_authenticated():
         # send them to the login page, with a ?redir= on the end pointing back to this page
         return HttpResponseRedirect(reverse('login:login') + "?" + urlencode({'redir':reverse('home.views.diag_home')}))
     else:
@@ -72,7 +72,7 @@ def testing(request):
 
 
 def downloadFile(request):
-    if not request.user.is_authenticated():
+    if False and not request.user.is_authenticated():
         # send them to the login page, with a ?redir= on the end pointing back to this page
         return HttpResponseRedirect(reverse('login:login') + "?" + urlencode({'redir':reverse('home.views.make_main_window')}))
     else:
@@ -101,7 +101,7 @@ def calculate(request):
     myfile=request.GET['myfile']
     my_new_var=eval_cdat(cdat_cmd,myfile,myvar,mynewvar)
     obj={"outfile":my_new_var,"myfileid":500}
-    json_res=simplejson.dumps(obj) 
+    json_res=json.dumps(obj) 
     return HttpResponse(json_res, content_type="application/json")
 
 def logout_view(request):
@@ -119,7 +119,7 @@ def show_index(request):
     return render(request, 'testplot_form.html', { })
 
 def boxfill(request):
-    if not request.user.is_authenticated():
+    if False and not request.user.is_authenticated():
         # send them to the login page, with a ?redir= on the end pointing back to this page
         return HttpResponseRedirect(reverse('login:login') + "?" + urlencode({'redir':reverse('home.views.boxfill')}))
     else:
@@ -158,15 +158,12 @@ def boxfill(request):
             active_cert = settings.PROXY_CERT_DIR + request.user.username + '.pem'
             plot_filename = box_fill(myfile, myvar, selection_dict, proxy_cert = active_cert)
             
-            if not plot_filename:
-                return render_to_response("accessDenied.html",None,context_instance=RequestContext(request))
-            
             return render(request, 'boxfill.html', {
                 'png': plot_filename,
             })
     
 def make_boxfill(request):
-    if not request.user.is_authenticated():
+    if False and not request.user.is_authenticated():
         # send them to the login page, with a ?redir= on the end pointing back to this page
         return HttpResponseRedirect(reverse('login:login') + "?" + urlencode({'redir':reverse('home.views.main_main_window')}))
     else:
@@ -181,22 +178,22 @@ def make_boxfill(request):
         try:
             plot_filename = box_fill(myfile, myvar, selection_dict, proxy_cert = active_cert)
             obj={"png":plot_filename}
-            json_res=simplejson.dumps(obj) 
+            json_res=json.dumps(obj) 
         except Exception, err:
             obj={"png":""}
-            json_res=simplejson.dumps(obj) 
+            json_res=json.dumps(obj) 
         return HttpResponse(json_res, content_type="application/json")
 
 def get_variable(request):
     myfile=request.GET['file']
     varlist=get_var(myfile)
     obj={"variable":varlist}
-    json_res=simplejson.dumps(obj) 
+    json_res=json.dumps(obj) 
     return HttpResponse(json_res, content_type="application/json")
 
 
 def make_main_window(request,json_param=None):
-    if not request.user.is_authenticated():
+    if False and not request.user.is_authenticated():
         # send them to the login page, with a ?redir= on the end pointing back to this page
         return HttpResponseRedirect(reverse('login:login') + "?" + urlencode({'redir':reverse('home.views.make_main_window')}))
     else:
@@ -229,7 +226,11 @@ def make_main_window(request,json_param=None):
                 'longitude':(0,180),
                 'time':slice(0,1)
             }
-            myfile = "http://pcmdi9.llnl.gov/thredds/dodsC/cmip5.output1.INM.inmcm4.1pctCO2.mon.atmos.Amon.r1i1p1.cl.20130207.aggregation.1"
+            try:
+                myfile = request.GET['fnm']
+            except Exception:
+                myfile = request.POST['file']
+
             # tell curl what certificate to use
             #TODO: sanitize request.user.name!
             active_cert = settings.PROXY_CERT_DIR + request.user.username + '.pem'
@@ -257,7 +258,7 @@ def make_datasetId_form(request):
 
 
 def run_main_window(request):
-    if not request.user.is_authenticated():
+    if False and not request.user.is_authenticated():
         print "NOT AUTHENTICATED"
         # send them to the login page, with a ?redir= on the end pointing back to this page
         return HttpResponseRedirect(reverse('login:login') + "?" + urlencode({'redir':reverse('home.views.run_main_window')}))

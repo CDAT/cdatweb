@@ -17,12 +17,14 @@ set(UVDJANGO_DBFILE "${CMAKE_BINARY_DIR}/uvdjango.db"
   "The uvdjango sqlite database file")
 
 # install local_settings.py to uvdjango/
+file(MAKE_DIRECTORY "${uvis_BINARY_DIR}/media")
 set(_local_settings_out ${uvis_BINARY_DIR}/share/uvis/www/apps/${PROJECT_NAME}/uvdjango/local_settings.py)
 set(_local_settings_in ${CMAKE_CURRENT_SOURCE_DIR}/uvdjango/local_settings.py.template)
 add_custom_command(
   OUTPUT "${_local_settings_out}"
   COMMAND ${CMAKE_COMMAND}
               "-DUVDJANGO_DBFILE=${UVDJANGO_DBFILE}"
+              "-DUVDJANGO_MEDIA=${uvis_BINARY_DIR}/media/"
               "-DSOURCE=${_local_settings_in}"
               "-DDESTINATION=${_local_settings_out}"
               -P "${CMAKE_SOURCE_DIR}/cmake/configure_template.cmake"
@@ -35,6 +37,7 @@ add_custom_command(
 set(UVDJANGO_CREATE_DATABASE ON CACHE BOOL
   "Create the database file if it doesn't exist"
 )
+
 
 if(UVDJANGO_CREATE_DATABASE)
   set(_dir  "${uvis_BINARY_DIR}/share/uvis/www/apps/${PROJECT_NAME}")

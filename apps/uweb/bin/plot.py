@@ -1,5 +1,7 @@
 import sys
 import traceback
+from PyQt4 import QtCore, QtGui
+import tempfile
 
 class PlotFactory(object):
     """
@@ -182,6 +184,7 @@ class VcsPlot(Plot):
         # self._config['type'] = 'isofill';
         filename = self._data['filename']
         variable = self._data['variable']
+
         try:
             if (self._canvas is None):
                 return self.toJSON(None, True, datetime.datetime.now().time().microsecond,
@@ -191,6 +194,10 @@ class VcsPlot(Plot):
                 return self.toJSON(None, True, datetime.datetime.now().time().microsecond,
                                [self.image_width, self.image_height], "png;base64", options['view'], "", "")
 
+            import os
+            if filename == 'test':
+                # I have officially given up:
+                filename = os.path.abspath(os.path.dirname(__file__) + '/../../../content/data/test.nc')
             self._file = cdms2.open(filename)
 
             if hasattr(self._file,'presentation'):
@@ -213,7 +220,9 @@ class VcsPlot(Plot):
 
             d = self._canvas.plot(data,g, bg=1)
             print "done plotting"
-            png = d._repr_png_()
+            pngfile = tempfile.NamedTemporaryFile(suffix='.png')
+            self._canvas.png(pngfile.name)
+            png = open(pngfile.name, 'r').read()
             png = base64.b64encode(png)
 
             return self.toJSON(png, True, datetime.datetime.now().time().microsecond,
@@ -228,9 +237,15 @@ class VcsPlot(Plot):
         def create(self, *args, **kwargs):
             return VcsPlot(*args, **kwargs)
 
+
+import os.path, sys, argparse
+import vtk
+
+# necessary because reasons:
+sys.path.append(os.path.dirname(vtk.__file__))
+
 from vtk.vtkWebCorePython import vtkWebApplication
 from vtk.web.protocols import vtkWebMouseHandler, vtkWebViewPortImageDelivery
-import os.path, sys, argparse
 from PyQt4 import QtCore, QtGui
 from packages.CPCViewer.DistributedPointCollections import kill_all_zombies
 from packages.CPCViewer.PointCloudViewer import CPCPlot
@@ -249,10 +264,12 @@ class DV3DPlot(Plot):
         self._application = vtkWebApplication()
         self._image_delivery = vtkWebViewPortImageDelivery()
         self._image_delivery.setApplication(self._application)
-        self._mouse_handler = vtkWebMouseHandler();
+        self._mouse_handler = vtkWebMouseHandler()
         self._mouse_handler.setApplication(self._application)
+        self._render_window = True
 
     def createContext(self):
+      return
       filename = self._data['filename']
       variable = self._data['variable']
       gridfile = self._data.get('gridfile', None)

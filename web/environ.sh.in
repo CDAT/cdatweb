@@ -1,0 +1,21 @@
+#!/bin/bash
+
+@SOURCE_UVCDAT@
+PYTHONPATH="@UVCDAT_DIR@/vistrails/vistrails:${PYTHONPATH}"
+
+prefix='@BUILD_PREFIX@'
+
+data=$prefix/share/uvis/www
+common_content=$data/content
+app_data=$data/apps/@APPLICATION@
+app_content=$app_data/content
+script=$app_data/bin/@SERVER_PYTHON_SCRIPT@
+django_script=$app_data/bin/manage.py
+
+# For django
+PYTHONPATH=$app_data:$PYTHONPATH
+
+# For other modules
+PYTHONPATH=$prefix/share/uvis/modules:$PYTHONPATH
+
+export PYTHONPATH

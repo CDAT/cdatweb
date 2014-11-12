@@ -156,20 +156,23 @@ function(uvis_install_directories_with_prefix)
 endfunction()
 
 
-set(UVIS_RUN_SERVER_SCRIPT_TEMPLATE "${uvis_SOURCE_DIR}/web/uvis.sh.in" CACHE PATH INTERNAL)
-
 # Function to create and install a script to run an application's web server
 function(uvis_web_server NAME)
   set(_configure_file_script
     "${uvis_SOURCE_DIR}/cmake/configure-file-script.cmake"
   )
-  set(_out "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${NAME}-server")
+  set(_out
+    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/uvis.sh"
+    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/environ.sh"
+    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/uvdjango.sh"
+    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/socket.sh"
+  )
   add_custom_command(
-    OUTPUT "${_out}"
-    DEPENDS "${UVIS_RUN_SERVER_SCRIPT_TEMPLATE}" "${_configure_file_script}"
+    OUTPUT "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/environ.sh"
+    DEPENDS "${uvis_SOURCE_DIR}/web/environ.sh.in" "${_configure_file_script}"
     COMMAND "${CMAKE_COMMAND}"
-      "-DINPUT_FILE=${UVIS_RUN_SERVER_SCRIPT_TEMPLATE}"
-      "-DOUTPUT_FILE=${_out}"
+      "-DINPUT_FILE=${uvis_SOURCE_DIR}/web/environ.sh.in"
+      "-DOUTPUT_FILE=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/environ.sh"
       "-DLIB_SUFFIX=${LIB_SUFFIX}"
       "-DPYTHON_SHORT=${PYTHON_SHORT}"
       "-DAPPLICATION=${NAME}"
@@ -177,8 +180,24 @@ function(uvis_web_server NAME)
       "-DSOURCE_UVCDAT=${SOURCE_UVCDAT}"
       "-DUVCDAT_DIR=${UVCDAT_DIR}"
       "-DCONFIGURE_ARGS=ESCAPE_QUOTES @ONLY"
+      "-DBUILD_PREFIX=${CMAKE_BINARY_DIR}"
       -P "${_configure_file_script}"
   )
-  add_custom_target(${NAME}-server ALL DEPENDS "${_out}")
+  add_custom_command(
+    OUTPUT "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/uvis.sh"
+    DEPENDS "${uvis_SOURCE_DIR}/web/uvis.sh"
+    COMMAND ${CMAKE_COMMAND} -E copy "${uvis_SOURCE_DIR}/web/uvis.sh" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/uvis.sh"
+  )
+  add_custom_command(
+    OUTPUT "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/uvdjango.sh"
+    DEPENDS "${uvis_SOURCE_DIR}/web/uvdjango.sh"
+    COMMAND ${CMAKE_COMMAND} -E copy "${uvis_SOURCE_DIR}/web/uvdjango.sh" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/uvdjango.sh"
+  )
+  add_custom_command(
+    OUTPUT "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/socket.sh"
+    DEPENDS "${uvis_SOURCE_DIR}/web/socket.sh"
+    COMMAND ${CMAKE_COMMAND} -E copy "${uvis_SOURCE_DIR}/web/socket.sh" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/socket.sh"
+  )
+  add_custom_target(${NAME}-binaries ALL DEPENDS ${_out})
   install(PROGRAMS "${_out}" DESTINATION bin COMPONENT Web)
 endfunction()

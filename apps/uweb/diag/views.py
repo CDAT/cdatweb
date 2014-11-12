@@ -1,5 +1,4 @@
 import os, sys, errno
-from django.utils import simplejson
 from metrics.packages.diagnostic_groups import *
 from django.http import Http404,HttpResponse,HttpResponseRedirect
 import utils
@@ -15,7 +14,7 @@ import cdms2
 def get_plot_package(request):
     packageList=diagnostics_menu().keys()
     obj={'package_list':packageList}
-    json_res=simplejson.dumps(obj)
+    json_res=json.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 
 
@@ -24,7 +23,7 @@ def get_plot_set(request):
     dg_menu=diagnostics_menu()[str(diagnosticType)]()
     sm=dg_menu.list_diagnostic_sets()
     obj={'plot_set':sm.keys()}
-    json_res=simplejson.dumps(obj)
+    json_res=json.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 
 def get_plot_seasons(request):
@@ -32,7 +31,7 @@ def get_plot_seasons(request):
     dg_menu=diagnostics_menu()[str(diagnosticType)]()
     seasons=dg_menu.list_seasons()
     obj={'season_list':seasons}
-    json_res=simplejson.dumps(obj)
+    json_res=json.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 
 def get_plot_variable(request):
@@ -49,7 +48,7 @@ def get_plot_variable(request):
     diagnostics_set_name=request.GET['plot_set']
     variables=dg_menu.list_variables(filetable1,filetable2,diagnostics_set_name)
     obj={'variables_list':variables}
-    json_res=simplejson.dumps(obj)
+    json_res=json.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 
 def get_plot_aux_options(request):
@@ -72,7 +71,7 @@ def get_plot_aux_options(request):
     else:
 	auxList = None
     obj = {'aux_list':auxList}
-    json_res = simplejson.dumps(obj)
+    json_res = json.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 
 def get_plot_models(request):
@@ -88,14 +87,14 @@ def get_plot_models(request):
         models_list.append(['CLM_OUTPUT','CLM_OUTPUT'])
 
     obj={'models_list':models_list}
-    json_res=simplejson.dumps(obj)
+    json_res=json.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 
 def get_plot_obs(request):
     diagnosticType=request.GET['plot_package']
     obs_list=utils.get_observations(diagnosticType)
     obj={'observation_list':obs_list}
-    json_res=simplejson.dumps(obj)
+    json_res=json.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 
 def run_elo(request):
@@ -122,7 +121,7 @@ def run_elo(request):
     obj={'task_id':str(pid)}
     task_tracker=utils.TaskTracker()
     task_tracker.add_task(pid,p_object)
-    json_res=simplejson.dumps(obj)
+    json_res=json.dumps(obj)
     
     return HttpResponse(json_res, content_type="application/json")
 
@@ -141,7 +140,7 @@ def get_status(request,taskID):
         pass
     print "STATUS : ", status, ", ", status1
     obj={'status': status}
-    json_res=simplejson.dumps(obj)
+    json_res=json.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
 
 def load_output(request, taskID):
@@ -210,5 +209,5 @@ def load_output(request, taskID):
         dict_list.append(mydict)
     """    
     obj={'output_list':mylist}
-    json_res=simplejson.dumps(obj)
+    json_res=json.dumps(obj)
     return HttpResponse(json_res, content_type="application/json")
