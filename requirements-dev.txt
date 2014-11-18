@@ -1,0 +1,9 @@
+django-debug-toolbar
+
+django-dynamic-fixture
+fake-factory
+
+mock
+pytest
+pytest-cov
+pytest-django
