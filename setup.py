@@ -14,6 +14,6 @@ setup(
     scripts=['scripts/manage.py'],
 
     install_requires=(
-        'django<1.7',
+        'django>=1.7',
     )
 )
