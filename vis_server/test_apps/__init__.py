@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-import cube
+import cone
 import dv3d
 
 
 def get_apps(cls):
     apps = {}
-    apps.update(cube.get_apps(cls))
+    apps.update(cone.get_apps(cls))
     apps.update(dv3d.get_apps(cls))
     return apps
 

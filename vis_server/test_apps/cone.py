@@ -4,7 +4,7 @@ import vtk
 
 def get_apps(cls):
 
-    class VTKCubeSource(cls):
+    class VTKConeSource(cls):
 
         def addActors(self, renderer, view):
             cone = vtk.vtkConeSource()
@@ -16,4 +16,4 @@ def get_apps(cls):
 
             renderer.AddActor(actor)
 
-    return {'cube': VTKCubeSource}
+    return {'cone': VTKConeSource}

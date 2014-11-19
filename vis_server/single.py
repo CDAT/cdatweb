@@ -73,7 +73,7 @@ if __name__ == '__main__':
     apps = get_apps(VTKWebApp)
 
     # parse arguments (probably use server.start_webserver instead)
-    arg = 'cube'
+    arg = 'cone'
     if len(sys.argv) > 1 and sys.argv[-1] in apps or sys.argv[-1] == 'list':
         arg = sys.argv.pop()
 
