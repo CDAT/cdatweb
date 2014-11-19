@@ -11,7 +11,7 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.index, name='index'),
     url(r'^vtk/$', vtk_views.vtk_canvas, name='index'),
-    url(r'^vtk/cone.html', vtk_views.vtk_cone)
+    url(r'^vtk/test.html', vtk_views.vtk_cone)
 )
 
 # Development
