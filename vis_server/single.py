@@ -57,6 +57,12 @@ class VTKWebApp(wamp.ServerProtocol):
             self.addActors(self._renderer, self._view)
             self._renderActiveView()
 
+        self.setView()
+
+    def addActors(self, renderer, view):
+        pass
+
+    def setView(self):
         self.Application.GetObjectIdMap().SetActiveObject('VIEW', self._view)
 
 if __name__ == '__main__':
