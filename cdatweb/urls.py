@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 from . import views
+from .apps.vtk_view.views import vtk_canvas
 
 admin.autodiscover()
 
@@ -9,6 +10,7 @@ urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.index, name='index'),
+    url(r'^vtk/', vtk_canvas, name='index')
 )
 
 # Development

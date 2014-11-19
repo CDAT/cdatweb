@@ -35,7 +35,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cdatweb.apps.vtkView'
+    'cdatweb.apps.vtk_view'
 )
 
 MIDDLEWARE_CLASSES = (
