@@ -7,6 +7,46 @@ import random
 import string
 
 _idpool = string.letters + string.digits
+_plotTypes = {}
+
+
+def registerPlotClass(name, cls):
+    '''
+    Register a new plot class to expose to the client.  All
+    registered names must be unique.
+
+    :param str name: The name to register
+    :param cls: A plotting class
+    :type cls: :py:class:`Plot`
+    :returns: Success or failure
+    :rtype: bool
+
+    >>> class MyPlot(Plot):
+    ...     pass
+    >>> registerPlotClass('myplot', MyPlot)
+    True
+    >>> class OtherPlot(Plot):
+    ...     pass
+    >>> registerPlotClass('myplot', OtherPlot)
+    False
+    '''
+
+    if name in _plotTypes:
+        return False
+    _plotTypes[name] = cls
+    return True
+
+
+def getPlotClass(name):
+    '''
+    Returns a registered plot class from its name.  If the name
+    is not registered it returns ``None``.
+
+    :param str name: The registered name
+    :returns: The plot class or ``None``
+    :rtype: :py:class:`Plot`
+    '''
+    return _plotTypes.get(name, None)
 
 
 class Plot(object):
