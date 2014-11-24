@@ -55,7 +55,7 @@ class Plot(object):
     other plotting class should implement.
     '''
 
-    def __init__(self, *args, **kw):
+    def __init__(self, **kw):
         '''
         Initialize the plot and assign a unique id. By default, all
         keyword arguments are added to the configuration object and the
