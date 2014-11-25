@@ -80,6 +80,9 @@ class Plot(object):
             [random.choice(_idpool) for i in xrange(12)]
         )
 
+        #: Stores the configuration of the currently rendered image
+        self._current = None
+
     @property
     def id(self):
         '''
@@ -115,7 +118,7 @@ class Plot(object):
         '''
         self._current = None
 
-    def render(self, options):
+    def render(self, **kw):
         '''
         Render the plot into the clients viewport.  Calls
         :py:func:`Plot.create` on the first render.
@@ -124,7 +127,7 @@ class Plot(object):
         :returns: Success or failure
         :rtype: bool
         '''
-        if not self._created:
+        if not self._current:
             self.create()
 
         return False

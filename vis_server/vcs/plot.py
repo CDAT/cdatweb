@@ -35,10 +35,10 @@ class VcsPlot(Plot):
     }
 
     def __init__(self, **kw):
-        super(self, VcsPlot).__init__(**kw)
+        super(VcsPlot, self).__init__(**kw)
 
     def create(self):
-        super(self, VcsPlot).create(self)
+        super(VcsPlot, self).create()
         self._canvas = vcs.init()
         self._current['file'] = cdms2.open(self._current['filename'])
 
@@ -49,7 +49,7 @@ class VcsPlot(Plot):
         :param float y: The y-coordinate
         :rtype:
         '''
-        super(self, VcsPlot).value(**kw)
+        super(VcsPlot, self).value(**kw)
 
         width = self._current['width']
         height = self._current['height']
@@ -109,7 +109,7 @@ class VcsPlot(Plot):
         return output
 
     def render(self, variable=None, **kw):
-        super(self, VcsPlot).render(**kw)
+        super(VcsPlot, self).render(**kw)
         if not variable:
             variable = self._current('varname', None)
         if not variable:
