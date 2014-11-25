@@ -5,6 +5,9 @@ visualization applications on top of vtkWeb.
 
 import random
 import string
+import os
+
+from settings import DATA_DIRECTORY
 
 _idpool = string.letters + string.digits
 _plotTypes = {}
@@ -55,6 +58,9 @@ class Plot(object):
     other plotting class should implement.
     '''
 
+    #: Dictionary of default options provided by the subclass
+    _defaults = {}
+
     def __init__(self, **kw):
         '''
         Initialize the plot and assign a unique id. By default, all
@@ -63,7 +69,8 @@ class Plot(object):
         '''
 
         #: Stores the instance specific configuration for the plot as a dict.
-        self.config = kw
+        self.config = self._defaults.copy()
+        self.config.update(kw)
 
         #: Stores the data used to generate the plot.
         self.data = None
@@ -72,9 +79,6 @@ class Plot(object):
         self._id = ''.join(
             [random.choice(_idpool) for i in xrange(12)]
         )
-
-        #: Private boolean indicating if create has been called or not
-        self._created = False
 
     @property
     def id(self):
@@ -100,16 +104,16 @@ class Plot(object):
         been set.  Calling this function is optional.  It will be called
         automatically by render on first draw.
         '''
-        if self._created:
+        if self._current:
             self.delete()
-        self._created = True
+        self._current = self.config.copy()
 
     def delete(self):
         '''
         Deletes the current plot object forcing it to be recreated on the
         next render.
         '''
-        self._created = False
+        self._current = None
 
     def render(self, options):
         '''
@@ -124,3 +128,11 @@ class Plot(object):
             self.create()
 
         return False
+
+    def toLocalFile(self, filename, **kw):
+        '''
+        Somehow maps a filename into a local file path.  In the future,
+        this could support fetching remote datasets, but now it assumes
+        that the file is a path relative to the servers data directory.
+        '''
+        os.path.join(DATA_DIRECTORY, filename)
