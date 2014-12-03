@@ -2,8 +2,8 @@ from django.shortcuts import render
 
 
 def vtk_canvas(request):
-    return render(request, 'vtk_view/vtk_canvas.jade', {})
+    return render(request, 'vtk_view/vtk_canvas.html', {})
 
 
-def vtk_cone(request):
-    return render(request, 'vtk_view/cone.jade', {})
+def vtk_test(request, test="cone"):
+    return render(request, 'vtk_view/view_test.html', {"test": test})

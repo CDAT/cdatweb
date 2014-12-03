@@ -35,7 +35,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cdatweb.apps.vtk_view'
+    'cdatweb.apps.vtk_view',
+    'rest_framework'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -53,10 +54,8 @@ ROOT_URLCONF = 'cdatweb.urls'
 WSGI_APPLICATION = 'cdatweb.wsgi.application'
 
 TEMPLATE_LOADERS = (
-    ('pyjade.ext.django.Loader', (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-    )),
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

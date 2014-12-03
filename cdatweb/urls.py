@@ -11,7 +11,8 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.index, name='index'),
     url(r'^vtk/$', vtk_views.vtk_canvas, name='index'),
-    url(r'^vtk/test.html', vtk_views.vtk_cone)
+    url(r'^vtk/(?P<test>[^/]+)/$', vtk_views.vtk_test),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 )
 
 # Development

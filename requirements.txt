@@ -1,1 +1,3 @@
-pyjade
+django
+djangorestframework
+django-rest-swagger
