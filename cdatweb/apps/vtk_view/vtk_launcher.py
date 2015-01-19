@@ -34,9 +34,9 @@ def stop_instance(id):
 
 def status(id):
     resp = requests.get(
-        settings.VISUALIZATION_LAUNCER + '/' + id
+        settings.VISUALIZATION_LAUNCHER + '/' + id
     )
     try:
         return resp.json()
     except Exception:
-        return {}
+        return None
