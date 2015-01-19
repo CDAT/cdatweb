@@ -13,11 +13,7 @@
 
 {% block js %}
 {{ block.super }}
-<script src="{% static "cdatweb/vtk_view/js/autobahn.min.js" %}"></script>
-<script src="{% static "cdatweb/vtk_view/js/gl-matrix-min.js" %}"></script>
-<script src="{% static "cdatweb/vtk_view/js/jquery.hammer.min.js" %}"></script>
-<script src="{% static "cdatweb/vtk_view/js/vgl.js" %}"></script>
-<script src="{% static "cdatweb/vtk_view/js/vtkweb-all.js" %}"></script>
+<script src="{% static "vtkweb/lib/core/vtkweb-loader.js" %}" load="{{ modules|join:", " }}"></script>
 <script src="{% static "cdatweb/vtk_view/js/app-main.js" %}"></script>
 <script type="text/javascript">
   vtkSession = {
@@ -33,7 +29,7 @@
       "sessionURL": vtkSession.sessionURL,
       "secret": vtkSession.secret
     },
-    appMain,
+    {{ main|default:"appMain" }},
     appError
   );
 </script>

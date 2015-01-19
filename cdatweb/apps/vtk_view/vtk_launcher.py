@@ -37,6 +37,8 @@ def status(id):
         settings.VISUALIZATION_LAUNCHER + '/' + id
     )
     try:
-        return resp.json()
+        obj = resp.json()
+        assert obj.get('error', '') == ''
+        return obj
     except Exception:
         return None
