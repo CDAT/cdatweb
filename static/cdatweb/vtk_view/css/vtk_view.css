@@ -8,13 +8,16 @@
   z-index: 0;
 }
 
-.vtk-browser-container {
-  border: 2px solid black;
-  border-radius: 5px;
+.vtk-test-container {
+  width: 100%;
+  height: calc(100% - 50px);
   position: absolute;
   top: 50px;
   left: 0px;
+  padding: 30px;
   z-index: 0;
-  padding: 15px;
-  margin: 25px;
+}
+
+.vtk-file-browser {
+  overflow: scroll;
 }
