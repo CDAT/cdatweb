@@ -18,7 +18,8 @@ PUBLIC_ROOT = os.path.abspath(os.path.join(PROJECT_ROOT, 'public'))
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '62u8^z_p#^z0!!0xx-2e)vd_6b^m@49ecx8qs##e-w7um)&n_$'
+# removed from repository, must set on deployment
+# SECRET_KEY =
 
 # SECURITY WARNING: don't run with debug turned on in production!
 TEMPLATE_DEBUG = DEBUG = False
@@ -46,8 +47,16 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 )
+
+SESSION_ENGINE = (
+    'django.contrib.sessions.backends.signed_cookies',
+)
+
+SESSION_COOKIE_HTTPONLY = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 24 * 60 * 60
 
 ROOT_URLCONF = 'cdatweb.urls'
 
