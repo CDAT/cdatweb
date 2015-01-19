@@ -1,0 +1,23 @@
+{% load staticfiles %}
+<script src="{% static "vtkweb/lib/core/vtkweb-loader.js" %}" load="{{ modules|join:", " }}"></script>
+<script src="{% static "cdatweb/vtk_view/js/main.js" %}"></script>
+<script type="text/javascript">
+    $(function () {
+        vtkSession = {
+            "host": "{{ host }}",
+            "secret": "{{ secret }}",
+            "sessionURL": "{{ sessionURL }}",
+            "id": "{{ id }}",
+            "port": {{ port }}
+        };
+
+        vtkWeb.connect(
+            {
+              "sessionURL": vtkSession.sessionURL,
+              "secret": vtkSession.secret
+            },
+            app.{{ main|default:"main" }},
+            app.{{ error|default:"error" }}
+        );
+    });
+</script>

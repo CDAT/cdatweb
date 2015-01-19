@@ -3,34 +3,20 @@
 
 {% block css_meta %}
 {{ block.super }}
-<link rel="stylesheet" href="{{ STATIC_URL }}cdatweb/vtk_view/css/vtk_view.css">
+<link rel="stylesheet" href="{% static "cdatweb/vtk_view/css/vtk_view.css" %}">
 {% endblock %}
 
 {% block body %}
+<script type="text/javascript">
+  window.app = window.app || {};
+</script>
 {{ block.super }}
+{% block app-body %}
 <div class="vtk-view-container"></div>
+{% endblock %}
 {% endblock %}
 
 {% block js %}
 {{ block.super }}
-<script src="{% static "vtkweb/lib/core/vtkweb-loader.js" %}" load="{{ modules|join:", " }}"></script>
-<script src="{% static "cdatweb/vtk_view/js/app-main.js" %}"></script>
-<script type="text/javascript">
-  vtkSession = {
-    "host": "{{ host }}",
-    "secret": "{{ secret }}",
-    "sessionURL": "{{ sessionURL }}",
-    "id": "{{ id }}",
-    "port": {{ port }}
-  };
-
-  vtkWeb.connect(
-    {
-      "sessionURL": vtkSession.sessionURL,
-      "secret": vtkSession.secret
-    },
-    {{ main|default:"appMain" }},
-    appError
-  );
-</script>
+{% include "vtk_view/fragments/loader.html" %}
 {% endblock %}

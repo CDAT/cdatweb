@@ -36,7 +36,7 @@ def vtk_browser(request):
     '''
     vis = _refresh(request)
     vis['modules'] = ['core', 'filebrowser']
-    vis['main'] = 'appBrowser'
+    vis['main'] = 'browser'
     return render(
         request,
         'vtk_view/vtk_browser.html',

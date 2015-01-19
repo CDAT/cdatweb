@@ -1,24 +1,5 @@
 {% extends "vtk_view/vtk_base.html" %}
 
-{% block js %}
-<script type="text/javascript">
-  function appBrowser(connection) {
-    "use strict";
-
-    connection.session.call('file.server.directory.list', ['.'])
-      .then(function (files) {
-        $("{{ container|default:".vtk-view-container" }}").fileBrowser({
-          data: [files],
-          session: connection.session
-        })
-        .bind('file-click directory-click directory-not-found file-group-click', function (e) {
-          console.log(e.type + " click: " + e.name + " - path: " + e.path);
-          if (e.hasOwnProperty('relativePathList')) {
-            console.log(e.relativePathList);
-          }
-        });
-      });
-  }
-</script>
-{{ block.super }}
+{% block app-body %}
+{% include "vtk_view/fragments/browser.html" %}
 {% endblock %}

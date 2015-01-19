@@ -6,7 +6,6 @@ TMP_PATH = os.path.abspath(os.path.join(PROJECT_ROOT, 'tmp'))
 
 DEBUG = TEMPLATE_DEBUG = True
 SECRET = '42'
-print TMP_PATH
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
