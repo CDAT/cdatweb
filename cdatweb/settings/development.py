@@ -1,5 +1,7 @@
 from cdatweb.settings.production import *
 
+import os
+
 TMP_PATH = os.path.abspath(os.path.join(PROJECT_ROOT, 'tmp'))
 
 DEBUG = TEMPLATE_DEBUG = True
@@ -20,3 +22,9 @@ if 'debug_toolbar' not in INSTALLED_APPS:
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 VISUALIZATION_LAUNCHER = 'http://127.0.0.1:7000/vtk'
+DATA_DIRECTORY = os.path.join(TMP_PATH, 'data')
+
+try:
+    os.makedirs(DATA_DIRECTORY)
+except Exception:
+    pass

@@ -1,8 +1,9 @@
 from django.shortcuts import render
 
-
 def vtk_canvas(request):
-    return render(request, 'vtk_view/vtk_canvas.html', {})
+    return render(request, 'vtk_view/vtk_canvas.html', {
+
+    })
 
 
 def vtk_test(request, test="cone"):

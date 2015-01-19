@@ -15,9 +15,9 @@
   "properties": {},
 
   "apps": {
-    "all": {
+    "default": {
       "cmd": [
-        "python", "run.py", "--port", "${port}", "--upload-directory", "../tmp"
+        "python", "run.py", "--port", "${port}", "--upload-directory", "../tmp/data"
       ],
       "ready_line": "CDATWeb Visualization server initializing"
     }

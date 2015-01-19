@@ -10,7 +10,6 @@ sys.path.append(os.path.dirname(vtk.__file__))
 from vtk.web import server
 from vtk.web import wamp
 
-from util.settings import DATA_DIRECTORY
 import protocols
 
 
@@ -18,6 +17,7 @@ class CDATWebVisualizer(wamp.ServerProtocol):
 
     authKey = 'secret'
     basePath = '.'
+    uploadPath = '.'
 
     def initialize(self):
         # intialize protocols
@@ -25,7 +25,7 @@ class CDATWebVisualizer(wamp.ServerProtocol):
         self.registerVtkWebProtocol(protocols.ViewPort())
         self.registerVtkWebProtocol(protocols.RemoteRender())
         self.registerVtkWebProtocol(
-            protocols.FileBrowser(DATA_DIRECTORY, "Home")
+            protocols.FileBrowser(self.uploadPath, "Home")
         )
 
 
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     CDATWebVisualizer.authKey = args.authKey
-    CDATWebVisualizer.authKey = args.uploadPath
+    CDATWebVisualizer.uploadPath = args.uploadPath
 
     print "CDATWeb Visualization server initializing"
     server.start_webserver(options=args, protocol=CDATWebVisualizer)
