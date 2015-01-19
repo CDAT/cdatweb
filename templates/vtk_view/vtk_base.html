@@ -18,5 +18,23 @@
 <script src="{% static "cdatweb/vtk_view/js/jquery.hammer.min.js" %}"></script>
 <script src="{% static "cdatweb/vtk_view/js/vgl.js" %}"></script>
 <script src="{% static "cdatweb/vtk_view/js/vtkweb-all.js" %}"></script>
-<script src="{% static "cdatweb/vtk_view/js/create_view.js" %}"></script>
+<script src="{% static "cdatweb/vtk_view/js/app-main.js" %}"></script>
+<script type="text/javascript">
+  vtkSession = {
+    "host": "{{ host }}",
+    "secret": "{{ secret }}",
+    "sessionURL": "{{ sessionURL }}",
+    "id": "{{ id }}",
+    "port": {{ port }}
+  };
+
+  vtkWeb.connect(
+    {
+      "sessionURL": vtkSession.sessionURL,
+      "secret": vtkSession.secret
+    },
+    appMain,
+    appError
+  );
+</script>
 {% endblock %}

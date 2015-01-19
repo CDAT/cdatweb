@@ -1,6 +1,6 @@
-/*! vtkWeb/ParaViewWeb - v2.0 - 2014-11-19
+/*! vtkWeb/ParaViewWeb - v2.0 - 2015-01-13
 * http://www.kitware.com/
-* Copyright (c) 2014 Kitware; Licensed BSD */
+* Copyright (c) 2015 Kitware; Licensed BSD */
 /**
  * vtkWeb JavaScript Library.
  *
@@ -446,7 +446,7 @@
      * @class vtkWeb.Session
      * vtkWeb Session object on which RPC method calls can be made.
      *
-     *     session.call("vtk:render", request).then( function (reply) {
+     *     session.call("viewport.image.render", request).then( function (reply) {
      *        // Do something with the reply
      *     });
      */
@@ -519,42 +519,45 @@
      *          }
      *      );
      */
-    function connect(connection, readyCallback, closeCallback) {
-        var wsuri = connection.sessionURL, onReady = readyCallback, onClose = closeCallback;
+    function connect(connectionInfo, readyCallback, closeCallback) {
+        var wsuri = connectionInfo.sessionURL, onReady = readyCallback, onClose = closeCallback;
 
-        if(!connection.hasOwnProperty("secret")) {
-            connection.secret = "vtkweb-secret"; // Default value
+        if(!connectionInfo.hasOwnProperty("secret")) {
+            connectionInfo.secret = "vtkweb-secret"; // Default value
         }
 
-        GLOBAL.ab.connect(wsuri, function (session) {
-            try {
-                session.authreq("vtkweb").then(function (challenge) {
-                    // derive secret if salted WAMP-CRA
-                    var secret = GLOBAL.ab.deriveKey(connection.secret, JSON.parse(challenge).authextra);
-                    var signature = session.authsign(challenge, secret);
 
-                    session.auth(signature).then(function(){
-                        session.prefix("vtk", "http://vtk.org/vtk#");
-                        session.prefix("event", "http://vtk.org/event#");
-                        connection.session = session;
-                        connections[connection.sessionURL] = connection;
-                        if (onReady) {
-                            onReady(connection);
-                        }
-                    }).otherwise(function(error){
-                        alert("Authentication error");
-                        GLOBAL.close();
-                    });
-                });
+        connectionInfo.connection = new autobahn.Connection({
+            url: wsuri,
+            realm: "vtkweb",
+            max_retries: 1,
+            initial_retry_delay: 2
+        });
+
+        connectionInfo.connection.onopen = function(session) {
+            try {
+                connectionInfo.session = session;
+                connections[connectionInfo.sessionURL] = connectionInfo;
+
+                if (onReady) {
+                    onReady(connectionInfo);
+                }
             } catch(e) {
                 console.log(e);
             }
-        }, function (code, reason) {
-            delete connections[connection.sessionURL];
+        }
+
+        connectionInfo.connection.onclose = function(reason, details) {
+            console.log(reason);
+            console.log(details);
+            delete connections[connectionInfo.sessionURL];
             if (onClose) {
-                onClose(code, reason);
+                onClose(reason, details);
             }
-        });
+            return false;
+        }
+
+        connectionInfo.connection.open();
     }
 
     /**
@@ -614,7 +617,7 @@
     // ----------------------------------------------------------------------
     try {
       // Tests for presence of autobahn, then registers this module
-      if (GLOBAL.ab !== undefined) {
+      if (GLOBAL.autobahn !== undefined) {
         module.registerModule('vtkweb-connect');
       } else {
         console.error('Module failed to register, autobahn is missing');
@@ -1226,7 +1229,7 @@
              */
             resetCamera: function(onDone) {
                 onDoneQueue.push(onDone);
-                return session.call("vtk:resetCamera", Number(config.view)).then(function () {
+                return session.call("viewport.camera.reset", [Number(config.view)]).then(function () {
                     rendererContainer.trigger('invalidateScene');
                 });
             },
@@ -1240,7 +1243,7 @@
              * @param {Function} ondone Function to call after rendering is complete.
              */
             updateOrientationAxesVisibility: function (show, onDone) {
-                return session.call("vtk:updateOrientationAxesVisibility", Number(config.view), show).then(function () {
+                return session.call("viewport.axes.orientation.visibility.update", [Number(config.view), show]).then(function () {
                     onDoneQueue.push(onDone);
                     rendererContainer.trigger('invalidateScene');
                 });
@@ -1255,7 +1258,7 @@
              * @param {Function} ondone Function to call after rendering is complete.
              */
             updateCenterAxesVisibility: function (show, onDone) {
-                return session.call("vtk:updateCenterAxesVisibility", Number(config.view), show).then(function () {
+                return session.call("viewport.axes.center.visibility.update", [Number(config.view), show]).then(function () {
                     onDoneQueue.push(onDone);
                     rendererContainer.trigger('invalidateScene');
                 });
@@ -1606,7 +1609,7 @@
                     stat_value: 0 // start
                 });
 
-                session.call("vtk:stillRender", renderCfg).then(function (res) {
+                session.call("viewport.image.render", [renderCfg]).then(function (res) {
                     options.view = Number(res.global_id);
                     lastMTime = res.mtime;
                     if(res.hasOwnProperty("image") && res.image !== null) {
@@ -1760,11 +1763,14 @@
                 }
 
                 action_pending = true;
-                session.call("vtk:mouseInteraction", vtkWeb_event).then(function (res) {
+                session.call("viewport.mouse.interaction", [vtkWeb_event]).then(function (res) {
                     if (res) {
                         action_pending = false;
                         render();
                     }
+                }, function(error) {
+                    console.log("Call to viewport.mouse.interaction failed");
+                    console.log(error);
                 });
             }
         }).append(renderer);
@@ -1942,7 +1948,7 @@
         stat_id: 'webgl-fetch-scene',
         stat_value: 0
       });
-      m_session.call("vtk:getSceneMetaData", Number(m_options.view)).then(function(data) {
+      m_session.call("viewport.webgl.metadata", [Number(m_options.view)]).then(function(data) {
         m_sceneJSON = JSON.parse(data);
         m_vglVtkReader.setVtkScene(m_sceneJSON);
         m_container.trigger({
@@ -1966,7 +1972,7 @@
           stat_id: 'webgl-fetch-object',
           stat_value: 0
         });
-        m_session.call("vtk:getWebGLData", viewId, sceneObject.id, part).then(function(data) {
+        m_session.call("viewport.webgl.data", [viewId, sceneObject.id, part]).then(function(data) {
           try {
             m_container.trigger({
               type: 'stats',
@@ -2001,18 +2007,21 @@
     // ------------------------------------------------------------------
 
     function drawScene() {
-      var layer;
+      var layer, viewer;
 
       try {
         if (m_sceneJSON === null || typeof m_sceneJSON === 'undefined') {
           return;
         }
 
-        m_viewer = m_vglVtkReader.updateViewer(m_canvas3D);
+        viewer = m_vglVtkReader.updateViewer(m_canvas3D);
 
-        if (m_viewer === null) {
+        if (viewer === null) {
           return;
         }
+
+        m_viewer = viewer;
+
         var width = m_rendererAttrs.width(),
         height = m_rendererAttrs.height(),
         nbObjects;
@@ -2032,10 +2041,19 @@
         HTMLCanvasElement.prototype.relMouseCoords =
           m_viewer.relMouseCoords;
 
-        document.onmousedown = m_viewer.handleMouseDown;
-        document.onmouseup = m_viewer.handleMouseUp;
-        document.onmousemove = m_viewer.handleMouseMove;
-        document.oncontextmenu = m_viewer.handleContextMenu;
+        m_container.on('mouse', function(event) {
+          if (m_viewer) {
+            if (event.action === 'move') {
+              m_viewer.handleMouseMove(event.originalEvent);
+            }
+            else if (event.action === 'up') {
+              m_viewer.handleMouseUp(event.originalEvent);
+            }
+            else if (event.action === 'down') {
+              m_viewer.handleMouseDown(event.originalEvent);
+            }
+          }
+        });
 
         m_interactorStyle = m_viewer.interactorStyle();
         $(m_interactorStyle).on(ogs.vgl.command.leftButtonPressEvent, m_viewer.render);
@@ -2066,13 +2084,13 @@
     function pushCameraState() {
       if(m_viewer !== null) {
         var cam =  m_viewer.renderWindow().activeRenderer().camera(),
-            fp_ = cam.getFocalPoint(),
-            up_ = cam.getViewUp(),
-            pos_ = cam.getPosition(),
+            fp_ = cam.focalPoint(),
+            up_ = cam.viewUpDirection(),
+            pos_ = cam.position(),
             fp = [fp_[0], fp_[1], fp_[2]],
             up = [up_[0], up_[1], up_[2]],
             pos = [pos_[0], pos_[1], pos_[2]];
-        session.call("vtk:updateCamera", Number(m_options.view), fp, up, pos);
+        session.call("viewport.camera.update", [Number(m_options.view), fp, up, pos]);
       }
     }
 
@@ -2618,8 +2636,9 @@
             gl.useProgram(renderingContext.shaderProgram);
             gl.uniform1i(renderingContext.shaderProgram.uIsLine, false);
 
-            var projMatrix = mat4.clone(camera.getCameraMatrices()[0]);
-            var mvMatrix = mat4.clone(camera.getCameraMatrices()[1]);
+            var projMatrix = mat4.create();
+            var mvMatrix = mat4.create();
+            var normalMatrix = mat4.create();
 
             // @note Not sure if this is required
             mat4.translate(mvMatrix, mvMatrix, [0.0, 0.0, -1.0]);
@@ -2631,11 +2650,6 @@
             gl.bindBuffer(gl.ARRAY_BUFFER, background.cbuff);
             gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, background.cbuff.itemSize, gl.FLOAT, false, 0, 0);
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, background.ibuff);
-
-            var mvMatrixInv = mat4.create(),
-            normalMatrix = mat4.create();
-            mat4.invert(mvMatrixInv, mvMatrix);
-            mat4.transpose(normalMatrix, mvMatrixInv);
 
             renderingContext.gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, projMatrix);
             renderingContext.gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
@@ -3183,7 +3197,7 @@
                 stat_id: 'webgl-fetch-scene',
                 stat_value: 0
             });
-            session.call("vtk:getSceneMetaData", Number(options.view)).then(function(data) {
+            session.call("viewport.webgl.metadata", [Number(options.view)]).then(function(data) {
                 sceneJSON = JSON.parse(data);
                 container.trigger({
                     type: 'stats',
@@ -3206,7 +3220,7 @@
                     stat_id: 'webgl-fetch-object',
                     stat_value: 0
                 });
-                session.call("vtk:getWebGLData", viewId, sceneObject.id, part).then(function(data) {
+                session.call("viewport.webgl.data", [viewId, sceneObject.id, part]).then(function(data) {
                     try {
                         // decode base64
                         data = atob(data);
@@ -3350,7 +3364,7 @@
                 fp = [fp_[0], fp_[1], fp_[2]],
                 up = [up_[0], up_[1], up_[2]],
                 pos = [pos_[0], pos_[1], pos_[2]];
-                session.call("vtk:updateCamera", Number(options.view), fp, up, pos);
+                session.call("viewport.camera.update", [Number(options.view), fp, up, pos]);
             }
         }
 
