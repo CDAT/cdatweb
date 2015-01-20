@@ -1,0 +1,14 @@
+{% extends "vtk_view/vtk_base.html" %}
+
+{% block app-body %}
+<div class="vtk-test-container container-fluid">
+  <div class="row">
+    <div class="col-md-4">
+      {% include "vtk_view/fragments/browser.html" %}
+    </div>
+    <div class="col-md-4">
+      {% include "vtk_view/fragments/variables.html" %}
+    </div>
+  </div>
+</div>
+{% endblock %}

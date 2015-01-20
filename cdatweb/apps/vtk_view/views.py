@@ -1,8 +1,47 @@
 from django.shortcuts import render
 
+import vtk_launcher
+
+
+def _refresh(request):
+    '''
+    Refresh the visualization session information.
+    '''
+    # check the session for a vtkweb instance
+    vis = request.session.get('vtkweb')
+
+    if vis is None or vtk_launcher.status(vis.get('id', '')) is None:
+        # open a visualization instance
+        vis = vtk_launcher.new_instance()
+        request.session['vtkweb'] = vis
+
+    return dict(vis)
+
 
 def vtk_canvas(request):
-    return render(request, 'vtk_view/vtk_canvas.html', {})
+    '''
+    Return a page with a canvas controlled by vtkweb
+    '''
+    vis = _refresh(request)
+    vis['modules'] = ['core']
+    return render(
+        request,
+        'vtk_view/vtk_canvas.html',
+        vis
+    )
+
+def vtk_browser(request):
+    '''
+    Return a vtk filebrowser widget to choose a file to open.
+    '''
+    vis = _refresh(request)
+    vis['modules'] = ['core', 'filebrowser']
+    vis['main'] = 'browser'
+    return render(
+        request,
+        'vtk_view/vtk_browser.html',
+        vis
+    )
 
 
 def vtk_test(request, test="cone"):

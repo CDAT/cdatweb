@@ -7,3 +7,17 @@
   left: 0px;
   z-index: 0;
 }
+
+.vtk-test-container {
+  width: 100%;
+  height: calc(100% - 50px);
+  position: absolute;
+  top: 50px;
+  left: 0px;
+  padding: 30px;
+  z-index: 0;
+}
+
+.vtk-file-browser {
+  overflow: scroll;
+}

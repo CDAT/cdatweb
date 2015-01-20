@@ -3,20 +3,20 @@
 
 {% block css_meta %}
 {{ block.super }}
-<link rel="stylesheet" href="{{ STATIC_URL }}cdatweb/vtk_view/css/vtk_view.css">
+<link rel="stylesheet" href="{% static "cdatweb/vtk_view/css/vtk_view.css" %}">
 {% endblock %}
 
 {% block body %}
+<script type="text/javascript">
+  window.app = window.app || {};
+</script>
 {{ block.super }}
+{% block app-body %}
 <div class="vtk-view-container"></div>
+{% endblock %}
 {% endblock %}
 
 {% block js %}
 {{ block.super }}
-<script src="{% static "cdatweb/vtk_view/js/autobahn.min.js" %}"></script>
-<script src="{% static "cdatweb/vtk_view/js/gl-matrix-min.js" %}"></script>
-<script src="{% static "cdatweb/vtk_view/js/jquery.hammer.min.js" %}"></script>
-<script src="{% static "cdatweb/vtk_view/js/vgl.js" %}"></script>
-<script src="{% static "cdatweb/vtk_view/js/vtkweb-all.js" %}"></script>
-<script src="{% static "cdatweb/vtk_view/js/create_view.js" %}"></script>
+{% include "vtk_view/fragments/loader.html" %}
 {% endblock %}
