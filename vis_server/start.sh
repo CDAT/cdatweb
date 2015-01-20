@@ -1,10 +1,11 @@
 
 err=''
-rst="$(tput sgr0)"
-wrn="$(tput setaf 3)"
+wrn=''
+rst=''
 if [ -t 2 ] ; then
     err="$(tput setaf 1)"
-    w
+    rst="$(tput sgr0)"
+    wrn="$(tput setaf 3)"
 fi
 
 if [ -z "${UVCDAT_SETUP_PATH}" ] ; then

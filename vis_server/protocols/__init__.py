@@ -20,11 +20,14 @@ from vtk.web.protocols import vtkWebViewPortGeometryDelivery as ClientRender
 # a basic server side file browser
 from vtk.web.protocols import vtkWebFileBrowser as FileBrowser
 
+from .FileLoader import FileLoader
+
 __all__ = [
     BaseProtocol,
     MouseHandler,
     ViewPort,
     RemoteRender,
     ClientRender,
-    FileBrowser
+    FileBrowser,
+    FileLoader
 ]
