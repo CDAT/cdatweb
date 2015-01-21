@@ -10,9 +10,9 @@
         var vl = $('.vtk-variable-info').empty();
 
         var vlist = $('<ul/>');
-        variables.forEach(function (v) {
+        _.each(variables, function (info, vname) {
             var li = $('<li/>');
-
+            li.text(vname);
             vlist.append(li);
         });
 
@@ -27,11 +27,11 @@
         .bind('file-click',/* directory-click directory-not-found file-group-click'*/ function (e) {
             // e.type, e.name, e.path, e.relativePathList
 
-            if (e.relativePathList.length) {
-                connection.sessions
-                    .call('file.server.info', e.relativePathList[0])
-                    .then(function (variables) {
-                        renderVariables(connection, variables);
+            if (e.relativePathList) {
+                connection.session
+                    .call('file.server.info', e.relativePathList)
+                    .then(function (info) {
+                        renderVariables(connection, info.variables);
                     });
             }
 
