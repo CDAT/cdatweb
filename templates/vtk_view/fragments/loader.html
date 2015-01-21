@@ -16,8 +16,8 @@
               "sessionURL": vtkSession.sessionURL,
               "secret": vtkSession.secret
             },
-            app.{{ main|default:"main" }},
-            app.{{ error|default:"error" }}
+            cdat.{{ main|default:"main" }},
+            cdat.{{ error|default:"error" }}
         );
     });
 </script>

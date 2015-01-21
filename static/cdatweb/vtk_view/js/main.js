@@ -3,6 +3,20 @@
     var app = window.cdat;
 
     function renderVariables(connection, variables) {
+        // element containing the list of variables
+        var el = $('.vtk-variable-browser').empty();
+
+        // element containing info about the selected variable
+        var vl = $('.vtk-variable-info').empty();
+
+        var vlist = $('<ul/>');
+        variables.forEach(function (v) {
+            var li = $('<li/>');
+
+            vlist.append(li);
+        });
+
+        el.append(vlist);
     }
 
     function renderBrowser(connection, files) {

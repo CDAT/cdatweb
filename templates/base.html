@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load compress %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -14,9 +15,13 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
     {% endblock css_bootstrap %}
 
+    {% compress css %}
     {% block css_cdatweb %}
     <link rel="stylesheet" href="{% static "cdatweb/css/cdatweb.css" %}">
     {% endblock css_cdatweb %}
+
+    {% block css_inline %}{% endblock %}
+    {% endcompress %}
 
     {% endblock css_meta %}
   </head>
@@ -34,7 +39,13 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     {% endblock js_bootstrap %}
 
+    {% compress js %}
+    {% block js_lodash %}
+    <script src="{% static "cdatweb/js/lodash.js" %}"></script>
+    {% endblock %}
+
     {% block js_inline %}{% endblock js_inline %}
+    {% endcompress %}
 
     {% endblock js %}
   </body>
