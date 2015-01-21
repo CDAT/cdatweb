@@ -25,7 +25,10 @@ class CDATWebVisualizer(wamp.ServerProtocol):
         self.registerVtkWebProtocol(protocols.ViewPort())
         self.registerVtkWebProtocol(protocols.RemoteRender())
         self.registerVtkWebProtocol(
-            protocols.FileBrowser(self.uploadPath, "Home")
+            protocols.FileBrowser(
+                self.uploadPath,
+                "Home"
+            )
         )
         self.registerVtkWebProtocol(protocols.FileLoader(self.uploadPath))
 
