@@ -1,4 +1,3 @@
-import traceback
 import cdms2
 from .base import BaseFileReader
 
@@ -30,7 +29,6 @@ class Cdms_reader(BaseFileReader):
         try:
             cdms2.open(file_name)
         except Exception as e:
-            traceback.print_exc()
             return False
         return True
 

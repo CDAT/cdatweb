@@ -27,12 +27,13 @@
         el.append(vlist);
     }
 
+/*
     function renderBrowser(connection, files) {
         $('.vtk-file-browser').fileBrowser({
             data: [files],
             session: connection.session
         })
-        .bind('file-click',/* directory-click directory-not-found file-group-click'*/ function (e) {
+        .bind('file-click', function (e) {
             // e.type, e.name, e.path, e.relativePathList
 
             if (e.relativePathList) {
@@ -46,6 +47,29 @@
             }
 
         });
+    }
+*/
+    function renderBrowser(connection, files) {
+        el = $('.vtk-file-browser');
+
+
+        el.treeview({data: files});
+        /*
+        .bind('file-click',/* directory-click directory-not-found file-group-click'* / function (e) {
+            // e.type, e.name, e.path, e.relativePathList
+
+            if (e.relativePathList) {
+                connection.session
+                    .call('file.server.info', e.relativePathList)
+                    .then(function (info) {
+                        var filename = e.relativePathList[0].split('/').slice(1).join('/');
+                        info = info || {variables: null};
+                        renderVariables(connection, filename, info.variables);
+                    });
+            }
+
+        });
+        */
     }
 
     app.main = function (connection) {
@@ -65,7 +89,7 @@
     app.browser = function (connection) {
         // connect the vtkweb file browser widget
         connection.session
-            .call('file.server.directory.list', ['.'])
+            .call('file.server.list')
             .then(function (files) {
                 renderBrowser(connection, files);
             });

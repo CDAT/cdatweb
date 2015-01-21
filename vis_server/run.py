@@ -31,6 +31,7 @@ class CDATWebVisualizer(wamp.ServerProtocol):
             )
         )
         self.registerVtkWebProtocol(protocols.FileLoader(self.uploadPath))
+        self.registerVtkWebProtocol(protocols.FileFinder(self.uploadPath))
 
 
 if __name__ == '__main__':
