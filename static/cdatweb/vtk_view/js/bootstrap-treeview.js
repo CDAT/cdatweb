@@ -113,7 +113,9 @@
             c += 1;
             var e = this;
             a.each(b, function f(a, b) {
-                if (c >= e.options.levels) {
+                if (e.options.levels !== null && c >= e.options.levels) {
+                    e._toggleNodes(b);
+                } else if (b.collapsed) {
                     e._toggleNodes(b);
                 }
                 var f = b.nodes ? b.nodes : b._nodes ? b._nodes : d;
@@ -158,7 +160,7 @@
             a.each(b, function e(b, f) {
                 f.nodeId = d.nodes.length;
                 d.nodes.push(f);
-                var g = a(d._template.item).addClass("node-" + d._elementId).addClass(f === d.selectedNode ? "node-selected" : "").attr("data-nodeid", f.nodeId).attr("style", d._buildStyleOverride(f));
+                var g = a(d._template.item).addClass("node-" + d._elementId).addClass(f === d.selectedNode ? "node-selected" : "").attr("data-nodeid", f.nodeId).attr("style", d._buildStyleOverride(f)).data("node", f);
                 for (var h = 0; h < c - 1; h++) {
                     g.append(d._template.indent);
                 }
@@ -181,6 +183,9 @@
                     });
                 }
                 d.$wrapper.append(g);
+                if (d.options.oncreate) {
+                    d.options.oncreate.call(g.get(0), f);
+                }
                 if (f.nodes) {
                     return d._buildTree(f.nodes, c);
                 }

@@ -52,8 +52,25 @@
     function renderBrowser(connection, files) {
         el = $('.vtk-file-browser');
 
+        function makeDraggable(node) {
+            if (node.type === 'variable') {
+                $(this)
+                .draggable({
+                    helper: 'clone',
+                    appendTo: 'body',
+                    scope: 'variable',
+                    zIndex: 1000
+                });
+            }
+        }
 
-        el.treeview({data: files});
+        el.treeview({data: files, showTags: true, oncreate: makeDraggable})
+            .find('li.list-group-item')
+            .filter(function () {
+                return $(this).data('node').type === 'variable';
+            })
+            .draggable();
+
         /*
         .bind('file-click',/* directory-click directory-not-found file-group-click'* / function (e) {
             // e.type, e.name, e.path, e.relativePathList

@@ -35,7 +35,7 @@ def vtk_browser(request):
     Return a vtk filebrowser widget to choose a file to open.
     '''
     vis = _refresh(request)
-    vis['modules'] = ['core', 'filebrowser']
+    vis['modules'] = ['filebrowser']
     vis['main'] = 'browser'
     return render(
         request,

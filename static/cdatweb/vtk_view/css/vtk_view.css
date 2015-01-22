@@ -21,3 +21,16 @@
 .vtk-file-browser {
   overflow: scroll;
 }
+
+.cdat-icon-alert {
+  color: #a94442;
+}
+
+.cdat-icon-normal {
+  color: #337ab7;
+}
+
+.list-group-item.ui-draggable-dragging {
+  border: none !important;
+  background: none;
+}

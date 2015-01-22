@@ -31,14 +31,8 @@ class FileLoader(BaseProtocol):
 
     @exportRpc('file.server.info')
     def fileInfo(self, file_name):
-        print 'fileInfo'
-        try:
-            reader = self.get_reader(file_name)
-        except Exception as e:
-            traceback.print_exc()
-            raise e
+        reader = self.get_reader(file_name)
         if reader is None:
-            print 'No reader for ' + file_name
             return None
 
         return reader.getInfo()
