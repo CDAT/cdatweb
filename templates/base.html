@@ -17,6 +17,7 @@
 
     {% compress css %}
     {% block css_cdatweb %}
+    <link rel="stylesheet" href="{% static "cdatweb/css/jquery-ui.css" %}">
     <link rel="stylesheet" href="{% static "cdatweb/css/cdatweb.css" %}">
     {% endblock css_cdatweb %}
 
@@ -42,6 +43,7 @@
     {% compress js %}
     {% block js_lodash %}
     <script src="{% static "cdatweb/js/lodash.js" %}"></script>
+    <script src="{% static "cdatweb/js/jquery-ui.js" %}"></script>
     {% endblock %}
 
     {% block js_inline %}{% endblock js_inline %}
