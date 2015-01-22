@@ -27,28 +27,6 @@
         el.append(vlist);
     }
 
-/*
-    function renderBrowser(connection, files) {
-        $('.vtk-file-browser').fileBrowser({
-            data: [files],
-            session: connection.session
-        })
-        .bind('file-click', function (e) {
-            // e.type, e.name, e.path, e.relativePathList
-
-            if (e.relativePathList) {
-                connection.session
-                    .call('file.server.info', e.relativePathList)
-                    .then(function (info) {
-                        var filename = e.relativePathList[0].split('/').slice(1).join('/');
-                        info = info || {variables: null};
-                        renderVariables(connection, filename, info.variables);
-                    });
-            }
-
-        });
-    }
-*/
     function renderBrowser(connection, files) {
         el = $('.vtk-file-browser');
 
@@ -73,12 +51,28 @@
                 });
 
                 v.find('.node-label').addClass('btn btn-primary');
-            } else if (node.type === 'file' && !node.readable) {
-                $(this).addClass('invalid-file');
+            } else {
+                $(this).tooltip({
+                    placement: 'right',
+                    delay: {
+                        show: 100,
+                        hide: 0
+                    },
+                    title: node.text,
+                    container: 'body'
+                });
             }
         }
 
-        el.treeview({data: files, showTags: true, oncreate: makeDraggable})
+        function cleanup(node) {
+            if (node.type === 'variable') {
+                $(this).draggable('destroy');
+            } else {
+                $(this).tooltip('destroy');
+            }
+        }
+
+        el.treeview({data: files, showTags: true, oncreate: makeDraggable, ondestroy: cleanup})
             .find('li.list-group-item')
             .filter(function () {
                 return $(this).data('node').type === 'variable';

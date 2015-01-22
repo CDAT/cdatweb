@@ -49,7 +49,16 @@
   padding-bottom: 5px;
 }
 
+.node-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  max-width: calc(100% - 35px);
+}
+
 .node-label.btn {
+  font-size: 80%;
   padding-left: 4px;
   padding-right: 7px;
   padding-top: 1px;

@@ -75,6 +75,11 @@ class FileFinder(BaseProtocol):
                     tags = [str(len(info['variables']))]
                     readable = True
 
+                else:
+                    # this will remove the files from the list entirely
+                    # remove to keep them
+                    continue
+
                 newobj = {
                     'readable': readable,
                     'text': f,

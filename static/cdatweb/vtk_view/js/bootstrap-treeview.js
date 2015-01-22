@@ -37,7 +37,13 @@
             a("#" + this._styleId).remove();
         },
         _destroy: function() {
+            var b = this;
             if (this.initialized) {
+                if (this.options.ondestroy) {
+                    this.$wrapper.find("li.list-group-item").each(function() {
+                        b.options.ondestroy.call(this, a(this).data("node"));
+                    });
+                }
                 this.$wrapper.remove();
                 this.$wrapper = null;
                 this._unsubscribeEvents();
@@ -146,6 +152,11 @@
                 b.$wrapper = a(b._template.list);
                 b._injectStyle();
                 b.initialized = true;
+            }
+            if (this.options.ondestroy) {
+                this.$wrapper.find("li.list-group-item").each(function() {
+                    b.options.ondestroy.call(this, a(this).data("node"));
+                });
             }
             b.$element.empty().append(b.$wrapper.empty());
             b.nodes = [];
