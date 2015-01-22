@@ -76,8 +76,14 @@
         // default!?
     };
 
-    app.error = function (msg) {
-        // TODO: create error page
+    app.error = function (err) {
+        // TODO: create general error page
+        var msg;
+        try {
+            msg = JSON.stringify(err, null, 2);
+        } catch (e) {
+            msg = err;
+        }
         console.error(msg);
     };
 
@@ -92,6 +98,6 @@
             .call('file.server.list')
             .then(function (files) {
                 renderBrowser(connection, files);
-            });
+            }, app.error);
     };
 })();

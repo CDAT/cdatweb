@@ -27,10 +27,7 @@ class FileFinder(BaseProtocol):
     @exportRpc('file.server.list')
     def list(self):
         if self._file_tree is None:
-            try:
-                self._generate()
-            except Exception:
-                traceback.print_exc()
+            self._generate()
 
         return self._file_tree
 
