@@ -69,11 +69,14 @@ class FileFinder(BaseProtocol):
                 info = self._loader.fileInfo(full)
                 tags = []
                 icon = 'glyphicon glyphicon-exclamation-sign cdat-icon-alert'
+                readable = False
                 if info is not None:
                     icon = 'glyphicon glyphicon-file cdat-icon-normal'
                     tags = [str(len(info['variables']))]
+                    readable = True
 
                 newobj = {
+                    'readable': readable,
                     'text': f,
                     'info': info,
                     'full': full,
@@ -92,8 +95,8 @@ class FileFinder(BaseProtocol):
                                 'type': 'variable',
                                 'info': vlist[v],
                                 'file': full,
-                                'icon': 'glyphicon glyphicon-move',
-                                'selectable': True
+                                'icon': 'glyphicon glyphicon-link',
+                                'selectable': False
                             },
                             vlist
                         )

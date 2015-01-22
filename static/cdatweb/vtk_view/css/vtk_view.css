@@ -20,6 +20,8 @@
 
 .vtk-file-browser {
   overflow: scroll;
+  border: 1px solid #ddd;
+  height: 100%;
 }
 
 .cdat-icon-alert {
@@ -33,4 +35,35 @@
 .list-group-item.ui-draggable-dragging {
   border: none !important;
   background: none;
+  cursor: -webkit-grabbing;
+  cursor: -moz-grabbing;
+  cursor: grabbing;
+}
+
+.list-group-item.ui-draggable-dragging.cdat-over-target {
+  cursor: pointer;
+}
+
+.list-group-item {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.node-label.btn {
+  padding-left: 4px;
+  padding-right: 7px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  border-radius: 12px;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  cursor: grab;
+}
+
+.node-label.btn i.icon {
+  margin-left: 0px;
+}
+
+.list-group-item.invalid-file {
+  cursor: not-allowed;
 }

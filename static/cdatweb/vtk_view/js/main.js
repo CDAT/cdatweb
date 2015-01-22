@@ -52,15 +52,29 @@
     function renderBrowser(connection, files) {
         el = $('.vtk-file-browser');
 
+        function setMaxHeight() {
+            var h = $(window).height();
+            el.css({
+                'max-height': (h - el.offset().top - 50)
+            });
+
+        }
+        $(window).resize(setMaxHeight);
+        setMaxHeight();
+
         function makeDraggable(node) {
             if (node.type === 'variable') {
-                $(this)
-                .draggable({
+                var v = $(this);
+                v.draggable({
                     helper: 'clone',
                     appendTo: 'body',
                     scope: 'variable',
                     zIndex: 1000
                 });
+
+                v.find('.node-label').addClass('btn btn-primary');
+            } else if (node.type === 'file' && !node.readable) {
+                $(this).addClass('invalid-file');
             }
         }
 

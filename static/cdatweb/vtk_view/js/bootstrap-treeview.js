@@ -171,14 +171,16 @@
                 } else {
                     g.append(a(d._template.expandCollapseIcon).addClass(d.options.emptyIcon));
                 }
-                g.append(a(d._template.icon).addClass(f.icon ? f.icon : d.options.nodeIcon));
+                var i = a(d._template.label);
+                g.append(i);
+                i.append(a(d._template.icon).addClass(f.icon ? f.icon : d.options.nodeIcon));
                 if (d.options.enableLinks) {
-                    g.append(a(d._template.link).attr("href", f.href).append(f.text));
+                    i.append(a(d._template.link).attr("href", f.href).append(f.text));
                 } else {
-                    g.append(f.text);
+                    i.append(f.text);
                 }
                 if (d.options.showTags && f.tags) {
-                    a.each(f.tags, function i(b, c) {
+                    a.each(f.tags, function j(b, c) {
                         g.append(a(d._template.badge).append(c));
                     });
                 }
@@ -234,9 +236,10 @@
             item: '<li class="list-group-item"></li>',
             indent: '<span class="indent"></span>',
             expandCollapseIcon: '<span class="expand-collapse"></span>',
-            icon: '<span class="icon"></span>',
+            icon: '<i class="icon"></i>',
             link: '<a href="#" style="color:inherit;"></a>',
-            badge: '<span class="badge"></span>'
+            badge: '<span class="badge"></span>',
+            label: '<span class="node-label"></span>'
         },
         _css: ".list-group-item{cursor:pointer;}span.indent{margin-left:10px;margin-right:10px}span.expand-collapse{width:1rem;height:1rem}span.icon{margin-left:10px;margin-right:5px}"
     };
