@@ -58,7 +58,7 @@ class FileFinder(BaseProtocol):
                     'nodes': [],
                     'full': full,
                     'type': 'directory',
-                    'icon': 'glyphicon glyphicon-folder-open',
+                    'icon': 'glyphicon glyphicon-folder-open cdat-icon-folder',
                     'selectable': False
                 }
                 obj['nodes'].append(newobj)

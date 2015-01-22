@@ -58,7 +58,7 @@
                         show: 100,
                         hide: 0
                     },
-                    title: node.text,
+                    title: node.full.replace(/^\./, ''),
                     container: 'body'
                 });
             }

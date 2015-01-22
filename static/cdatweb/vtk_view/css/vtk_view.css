@@ -29,7 +29,11 @@
 }
 
 .cdat-icon-normal {
-  color: #337ab7;
+  color: #666;
+}
+
+.cdat-icon-folder {
+  color: #666;
 }
 
 .list-group-item.ui-draggable-dragging {
@@ -75,4 +79,8 @@
 
 .list-group-item.invalid-file {
   cursor: not-allowed;
+}
+
+.tooltip {
+  white-space: nowrap;
 }
