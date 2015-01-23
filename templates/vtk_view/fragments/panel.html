@@ -1,0 +1,21 @@
+<div class="{{ container }}">
+  <div class="panel panel-default cdat-compact cdat-panel-collapsed">
+    <div class="panel-heading cdat-clickable">
+      <h3 class="panel-title">
+        <i class="glyphicon {{ icon }}"></i>
+        {{ title }}
+      </h3>
+      <span class="pull-right cdat-collapse-icon">
+        <i class="glyphicon glyphicon-chevron-down"></i>
+      </span>
+    </div>
+    <div class="panel-body collapse">
+      <div class="{{ class }}"></div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  $(function () {
+    cdat.make_panel($(".{{ container }}"), "{{ help }}");
+  });
+</script>

@@ -92,4 +92,44 @@
                 renderBrowser(connection, files);
             }, app.error);
     };
+
+    app.make_panel = function (container, help) {
+        // construct a general collapseable panel
+
+        var panel = container.find('.panel');
+        var panelBody = panel.find('.panel-body');
+        var icon = panel.find('i.glyphicon');
+
+        function toggle() {
+            panel.toggleClass('cdat-panel-collapsed');
+            if (panel.hasClass('cdat-panel-collapsed')) {
+                panelBody.slideUp();
+                icon.addClass('glyphicon-chevron-down')
+                    .removeClass('glyphicon-chevron-up');
+                container.trigger('cdat-collapse');
+            } else {
+                panelBody.slideDown();
+                icon.removeClass('glyphicon-chevron-down')
+                    .addClass('glyphicon-chevron-up');
+                container.trigger('cdat-expand');
+            }
+        }
+
+        panel.find('.panel-heading').on('click', function () {
+            toggle();
+        }).tooltip({
+            container: 'body',
+            delay: {
+                show: 500,
+                hide: 100
+            },
+            placement: 'top',
+            title: function () {
+                if (panel.hasClass('cdat-panel-collapsed')) {
+                    return help;
+                }
+            }
+        });
+    };
+
 })();

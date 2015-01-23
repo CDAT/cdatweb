@@ -10,8 +10,6 @@ urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.index, name='index'),
-    url(r'^vtk/$', vtk_views.vtk_canvas, name='index'),
-    url(r'^vtk/open.html', vtk_views.vtk_browser),
     url(r'^vtk/viewer.html', vtk_views.vtk_viewer),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 )
