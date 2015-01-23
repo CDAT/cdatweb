@@ -18,7 +18,8 @@
 </div>
 <script type="text/javascript">
   $(function () {
-    var panel = $('.vtk-browser-container > .panel');
+    var browser = $('.vtk-browser-container');
+    var panel = browser.find('.panel');
     var panelBody = panel.find('.panel-body');
     var icon = panel.find('i.glyphicon');
 
@@ -28,10 +29,12 @@
         panelBody.slideUp();
         icon.addClass('glyphicon-chevron-down')
           .removeClass('glyphicon-chevron-up');
+        browser.trigger('cdat-collapse');
       } else {
         panelBody.slideDown();
         icon.removeClass('glyphicon-chevron-down')
           .addClass('glyphicon-chevron-up');
+        browser.trigger('cdat-expand');
       }
     }
 
