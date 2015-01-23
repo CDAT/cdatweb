@@ -40,6 +40,11 @@
         $(window).resize(setMaxHeight);
         setMaxHeight();
 
+        var template = [
+            '<div class="tooltip cdat-nowrap" role="tooltip">',
+            '<div class="tooltip-arrow"></div>',
+            '<div class="tooltip-inner"></div></div>'
+        ].join('');
         function makeDraggable(node) {
             if (node.type === 'variable') {
                 var v = $(this);
@@ -59,7 +64,8 @@
                         hide: 0
                     },
                     title: node.full.replace(/^\./, ''),
-                    container: 'body'
+                    container: 'body',
+                    template: template
                 });
             }
         }
@@ -79,22 +85,6 @@
             })
             .draggable();
 
-        /*
-        .bind('file-click',/* directory-click directory-not-found file-group-click'* / function (e) {
-            // e.type, e.name, e.path, e.relativePathList
-
-            if (e.relativePathList) {
-                connection.session
-                    .call('file.server.info', e.relativePathList)
-                    .then(function (info) {
-                        var filename = e.relativePathList[0].split('/').slice(1).join('/');
-                        info = info || {variables: null};
-                        renderVariables(connection, filename, info.variables);
-                    });
-            }
-
-        });
-        */
     }
 
     app.main = function (connection) {

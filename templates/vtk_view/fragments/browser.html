@@ -1,13 +1,58 @@
 <div class="vtk-browser-container">
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <div class="text-center">
-        <button type="button" class="btn btn-primary text-center" data-toggle="collapse"
-          data-target=".vtk-file-browser">
-          Select a file to open
-        </button>
+  <div class="panel panel-default cdat-compact cdat-panel-collapsed">
+    <div class="panel-heading cdat-clickable">
+      <h3 class="panel-title">
+        <i class="glyphicon glyphicon-hdd"></i>
+        Data
+      </h3>
+      <span class="pull-right cdat-collapse-icon">
+        <i class="glyphicon glyphicon-chevron-down"></i>
+      </span>
+    </div>
+    <div class="panel-body collapse">
+      <div class="cdat-data-browser">
+        <div class="vtk-file-browser"></div>
       </div>
-      <div class="vtk-file-browser collapse in"></div>
     </div>
   </div>
 </div>
+<script type="text/javascript">
+  $(function () {
+    var panel = $('.vtk-browser-container > .panel');
+    var panelBody = panel.find('.panel-body');
+    var icon = panel.find('i.glyphicon');
+
+    function toggle() {
+      panel.toggleClass('cdat-panel-collapsed');
+      if (panel.hasClass('cdat-panel-collapsed')) {
+        panelBody.slideUp();
+        icon.addClass('glyphicon-chevron-down')
+          .removeClass('glyphicon-chevron-up');
+      } else {
+        panelBody.slideDown();
+        icon.removeClass('glyphicon-chevron-down')
+          .addClass('glyphicon-chevron-up');
+      }
+    }
+
+    function helpMessage() {
+      if (panel.hasClass('cdat-panel-collapsed')) {
+        return 'Choose a variable from the list of files '
+          + 'available on the server and drag it to the canvas.';
+      }
+      return null;
+    }
+
+    panel.find('.panel-heading').on('click', function () {
+      toggle();
+    }).tooltip({
+      container: 'body',
+      delay: {
+        show: 500,
+        hide: 100
+      },
+      placement: 'top',
+      title: helpMessage
+    });
+  });
+</script>

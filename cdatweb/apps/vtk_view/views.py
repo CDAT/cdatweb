@@ -44,5 +44,18 @@ def vtk_browser(request):
     )
 
 
+def vtk_viewer(request):
+    '''
+    Open the main visualizer view.
+    '''
+    data_browser = _refresh(request)
+    data_browser['main'] = 'browser'
+    return  render(
+        request,
+        'vtk_view/cdat_viewer.html',
+        data_browser
+    )
+
+
 def vtk_test(request, test="cone"):
     return render(request, 'vtk_view/view_test.html', {"test": test})

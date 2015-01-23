@@ -20,7 +20,6 @@
 
 .vtk-file-browser {
   overflow: scroll;
-  border: 1px solid #ddd;
   height: 100%;
 }
 
@@ -53,6 +52,15 @@
   padding-bottom: 5px;
 }
 
+.list-group-item > .badge {
+  background-color: #428bca;
+  color: #fff;
+  background-image: -webkit-linear-gradient(top,#428bca 0,#2d6ca2 100%);
+  background-image: -moz-linear-gradient(top,#428bca 0,#2d6ca2 100%);
+  background-image: -o-linear-gradient(top,#428bca 0,#2d6ca2 100%);
+  background-image: linear-gradient(top,#428bca 0,#2d6ca2 100%);
+}
+
 .node-label {
   white-space: nowrap;
   overflow: hidden;
@@ -63,13 +71,14 @@
 
 .node-label.btn {
   font-size: 80%;
-  padding-left: 4px;
-  padding-right: 7px;
+  padding-left: 6px;
+  padding-right: 9px;
   padding-top: 1px;
   padding-bottom: 1px;
   border-radius: 12px;
   cursor: -webkit-grab;
   cursor: -moz-grab;
+  cursor: -o-grab;
   cursor: grab;
 }
 
@@ -81,6 +90,23 @@
   cursor: not-allowed;
 }
 
-.tooltip {
+.cdat-nowrap {
   white-space: nowrap;
+}
+
+.panel.cdat-compact {
+  border: none;
+}
+
+.panel.cdat-compact > .panel-body {
+  padding: 0;
+}
+
+.cdat-collapse-icon {
+  margin-top: -20px;
+  font-size: 15px;
+}
+
+.cdat-clickable {
+  cursor: pointer;
 }

@@ -25,12 +25,6 @@
     {% endcompress %}
 
     {% endblock css_meta %}
-  </head>
-
-  <body>
-    {% block body %}{% endblock body %}
-
-    {% block js %}
 
     {% block js_jquery %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -39,6 +33,12 @@
     {% block js_bootstrap %}
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     {% endblock js_bootstrap %}
+  </head>
+
+  <body>
+    {% block body %}{% endblock body %}
+
+    {% block js %}
 
     {% compress js %}
     {% block js_lodash %}
