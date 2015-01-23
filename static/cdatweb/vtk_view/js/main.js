@@ -2,18 +2,11 @@
     window.cdat = window.cdat || {};
     var app = window.cdat;
 
+    // set bootstrap theme for jsPanel
+    $.jsPanel.defaults.controls.iconfont = 'bootstrap';
+
     function renderBrowser(connection, files) {
         el = $('.vtk-file-browser');
-
-        function setMaxHeight() {
-            var h = $(window).height();
-            el.css({
-                'max-height': (h - el.offset().top - 50)
-            });
-
-        }
-        $(window).resize(setMaxHeight);
-        setMaxHeight();
 
         var template = [
             '<div class="tooltip cdat-nowrap" role="tooltip">',
@@ -59,8 +52,7 @@
                 return $(this).data('node').type === 'variable';
             })
             .draggable();
-        $('.vtk-browser-container')
-            .on('cdat-expand', setMaxHeight);
+        $('.vtk-browser-container').trigger('cdat-render');
 
     }
 
@@ -93,9 +85,20 @@
             }, app.error);
     };
 
-    app.make_panel = function (container, help) {
+    app.make_panel = function (container, help, opts) {
+        $.jsPanel({
+            selector: 'body',
+            title: 'title',
+            position: 'top left',
+            theme: 'light',
+            content: container
+        });
+    };
+
+    app.make_panel0 = function (container, help, opts) {
         // construct a general collapseable panel
 
+        opts = opts || {};
         var panel = container.find('.panel');
         var panelBody = panel.find('.panel-body');
         var icon = panel.find('i.glyphicon');
@@ -130,6 +133,17 @@
                 }
             }
         });
+        /*
+        if (opts.resizable) {
+            container.resizable({
+                autoHide: true,
+                containment: 'document',
+                distance: 5,
+                ghost: true,
+                helper: 'cdat-resize-ghost'
+            });
+        }
+        */
     };
 
 })();

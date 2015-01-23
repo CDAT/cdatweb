@@ -5,6 +5,7 @@
 {{ block.super }}
 <link rel="stylesheet" href="{% static "cdatweb/vtk_view/css/bootstrap-treeview.css" %}">
 <link rel="stylesheet" href="{% static "cdatweb/vtk_view/css/vtk_view.css" %}">
+<link rel="stylesheet" href="{% static "cdatweb/vtk_view/css/jquery.jspanel.css" %}">
 {% endblock %}
 
 {% block body %}
@@ -21,5 +22,6 @@
 {{ block.super }}
 {% include "vtk_view/fragments/loader.html" %}
 <script src="{% static "cdatweb/vtk_view/js/bootstrap-treeview.js" %}"></script>
+<script src="{% static "cdatweb/vtk_view/js/jquery.jspanel.js" %}"></script>
 <script src="{% static "cdatweb/vtk_view/js/main.js" %}"></script>
 {% endblock %}

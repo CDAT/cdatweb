@@ -1,4 +1,6 @@
+import json
 from django.shortcuts import render
+from django.utils.safestring import mark_safe
 
 import vtk_launcher
 
@@ -32,6 +34,10 @@ def vtk_viewer(request):
     data['browser'] = {
         'help': _browser_help
     }
+    options = {
+        'resizable': True
+    }
+    data['options'] = mark_safe(json.dumps(options))
     return  render(
         request,
         'vtk_view/cdat_viewer.html',

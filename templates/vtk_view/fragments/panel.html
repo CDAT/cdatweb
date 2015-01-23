@@ -1,21 +1,34 @@
 <div class="{{ container }}">
-  <div class="panel panel-default cdat-compact cdat-panel-collapsed">
-    <div class="panel-heading cdat-clickable">
-      <h3 class="panel-title">
-        <i class="glyphicon {{ icon }}"></i>
-        {{ title }}
-      </h3>
-      <span class="pull-right cdat-collapse-icon">
-        <i class="glyphicon glyphicon-chevron-down"></i>
-      </span>
-    </div>
-    <div class="panel-body collapse">
-      <div class="{{ class }}"></div>
-    </div>
-  </div>
+  <div class="{{ class }}"></div>
 </div>
 <script type="text/javascript">
   $(function () {
-    cdat.make_panel($(".{{ container }}"), "{{ help }}");
+    var el = $(".{{ container }}");
+    function getSize() {
+      var w = Math.max(100, el.width());
+      var h = Math.max(100, el.height());
+      return {
+        width: w,
+        height: h
+      };
+    }
+    var title = [
+      '<span>',
+      '<i class="glyphicon {{ icon }}"></i>',
+      '{{ title }}',
+      '</span>'
+    ].join('');
+    var panel = $.jsPanel({
+      selector: '.vtk-view-container',
+      content: $(".{{ container }}").get(0),
+      title: title,
+      theme: 'light',
+      position: {top: 20, left: 20 },
+      size: getSize(),
+      overflow: 'scroll'
+    }).off('cdat-render').on('cdat-render', function () {
+      var size = getSize();
+      panel.resize(size.width, size.height);
+    });
   });
 </script>
