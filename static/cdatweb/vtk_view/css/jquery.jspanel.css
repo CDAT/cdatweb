@@ -21,10 +21,6 @@
 .jsglyph-circle2-exclamationmark:before{ content:"\e02c"; color:red; font-size:14px; }
 
 .jsPanel, .jsPanel-hdr-r, .jsPanel-hdr-l, .jsPanel-hdr-r span img, .jsPanel-content{
-    padding-top: 4px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    padding-right: 0px;
     margin: 0; border: 0; font-size: 100%; line-height: 1.5em; vertical-align: baseline;
 }
 .jsPanel{
@@ -42,7 +38,7 @@
 }
 .jsPanel-hdr-r{
     position: absolute;
-    top: 0;
+    top: 2;
     right: 0;
 }
 h3.jsPanel-title{
@@ -134,6 +130,18 @@ h3.jsPanel-title{
     height:28px;
     background:transparent;
     z-index:1000;
+}
+
+#jsPanel-min-container .ui-resizable-handle {
+    display: none;
+}
+
+#jsPanel-min-container .jsPanel-hdr {
+    cursor: default;
+}
+
+#jsPanel-min-container .jsPanel-hdr .jsPanel-title {
+    cursor: default;
 }
 
 /* css for the modal backdrop --------------------------- */

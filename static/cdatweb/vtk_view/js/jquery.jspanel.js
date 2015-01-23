@@ -48,6 +48,21 @@ var jsPanel;
     "use strict";
     jsPanel = {
         version: '2.3.0 2015-01-12 09:10',
+        device: (function(){
+            try {
+                // requires "mobile-detect.js" to be loaded
+                var md = new MobileDetect(window.navigator.userAgent),
+                    mobile = md.mobile(),
+                    phone = md.phone(),
+                    tablet = md.tablet(),
+                    os = md.os(),
+                    userAgent = md.userAgent();
+                return {mobile: mobile, tablet: tablet, phone: phone, os: os, userAgent: userAgent};
+            } catch (e) {
+                console.log(e + "; Seems like mobile-detect.js is not loaded");
+                return false;
+            }
+        })(),
         ID: 0,                  // kind of a counter to add to automatically generated id attribute
         widthForMinimized: 150, // default width of minimized panels
         hintsTc: [],            // arrays that log hints for option.position 'top center', 'top left' and 'top right'
@@ -1622,6 +1637,9 @@ var jsPanel;
                 panel.panelheaderheight = panel.header.outerHeight() - 2;
                 panel.panelfooterheight = panel.footer.outerHeight();
                 panel.panelcontentheight = panel.content.outerHeight();
+
+                panel.data('jspanel-resizable-disabled', panel.resizable('option', 'disabled'));
+                panel.resizable('disable');
                 panel.animate({
 
                         height: panel.panelheaderheight + 'px'
@@ -1658,6 +1676,7 @@ var jsPanel;
                     {
                         done: function () {
 
+                            panel.resizable('option', 'disabled', panel.data('jspanel-resizable-disabled'));
                             if (panel.status === 'smallified') {
 
                                 jsPanel.hideControls(".jsPanel-btn-norm, .jsPanel-btn-smallrev", panel);
@@ -2266,7 +2285,6 @@ var jsPanel;
 
         /* option.resizable ----------------------------------------------------------------------------------------- */
         if ($.isPlainObject(option.resizable)) {
-
             option.customresizable = $.extend(true, {}, $.jsPanel.defaults.resizable, option.resizable);
             jsP.resizable(option.customresizable);
 
