@@ -2,14 +2,10 @@
 
 {% block app-body %}
 
-<div class="vtk-view-container container-fluid">
+<div class="container-fluid">
   <div class="row">
-    <div class="col-md-3">
-      {% include "vtk_view/fragments/panel.html" with container="vtk-browser-container" help=browser.help icon="glyphicon-hdd" class="vtk-file-browser" title="Data" %}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-3">
+    <div class="md-col-12 vtk-view-container">
+      {% include "vtk_view/fragments/panel.html" with container="vtk-browser-container" help=browser.help icon="glyphicon-hdd" class="vtk-file-browser" title="Data" overflow="scroll" %}
     </div>
   </div>
 </div>

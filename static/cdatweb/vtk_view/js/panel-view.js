@@ -68,7 +68,14 @@
             controls: this.options.controls,
             size: this.options.size,
             content: this.options.content || $('<div/>'),
-            callback: this.options.callback
+            callback: this.options.callback,
+            draggable: {
+                containment: this.options.container
+            },
+            resizable: {
+                containment: this.options.container
+            },
+            overflow: this.options.overflow
         });
 
         /**
@@ -76,11 +83,6 @@
          */
         this.el = this.$el.get(0);
 
-        $(this.options.container).append(this.el);
-
-        this.$el.addClass('cdat-panel');
-
-        cdat.Panel.add(this);
         return this;
     };
 
@@ -89,7 +91,7 @@
      * @type cdat.Panel.options
      */
     cdat.Panel.defaults = {
-        container: 'body',
+        container: '.vtk-view-container',
         content: null,
         type: 'cdat-panel',
         selector: 'body',

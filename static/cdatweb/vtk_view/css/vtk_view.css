@@ -4,17 +4,23 @@
   margin-left: 5px;
   margin-right: 5px;
   margin-bottom: 5px;
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 10px);
+  height: calc(100% - 60px);
   position: absolute;
   top: 0px;
   left: 0px;
   z-index: 0;
 }
 
+.vtk-browser-container {
+  width: 400px;
+  height: auto;
+}
+
 .vtk-file-browser {
   overflow: scroll;
-  height: 100%;
+  height: auto;
+  width: 100%;
   line-height: normal;
 }
 

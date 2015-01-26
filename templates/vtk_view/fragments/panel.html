@@ -4,11 +4,12 @@
 <script type="text/javascript">
   $(function () {
     var el = $(".{{ container }}");
+    var sc = $(".vtk-view-container");
     function getSize() {
-      var w = Math.max(100, el.width());
-      var h = Math.max(100, el.height());
+      var w = Math.min(sc.width(), el.width());
+      var h = Math.min(sc.height(), el.height());
       return {
-        width: w,
+        width: 'auto',
         height: h
       };
     }
@@ -18,15 +19,16 @@
       '{{ title }}',
       '</span>'
     ].join('');
-    var panel = $.jsPanel({
-      selector: '.vtk-view-container',
-      content: $(".{{ container }}").get(0),
-      title: title,
-      theme: 'light',
-      position: {top: 20, left: 20 },
-      size: getSize(),
-      overflow: 'scroll'
-    }).off('cdat-render').on('cdat-render', function () {
+    var panel = cdat.make_panel(
+      $(".{{ container }}").get(0),
+      '',
+      {
+        selector: '.vtk-view-container',
+        title: title,
+        size: getSize(),
+        overflow: '{{ overflow|default:'scroll' }}'
+      }
+    ).off('cdat-render').on('cdat-render', function () {
       var size = getSize();
       panel.resize(size.width, size.height);
     });

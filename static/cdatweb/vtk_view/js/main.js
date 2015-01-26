@@ -87,12 +87,7 @@
     };
 
     app.make_panel = function (container, help, opts) {
-        $.jsPanel({
-            selector: 'body',
-            title: 'title',
-            position: 'top left',
-            theme: 'light',
-            content: container
-        });
+        opts = $.extend(true, {content: container}, opts);
+        return cdat.Panel(opts).$el;
     };
 })();
