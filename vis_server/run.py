@@ -11,6 +11,7 @@ from vtk.web import server
 from vtk.web import wamp
 
 import protocols
+from external import exportRpc
 
 
 class CDATWebVisualizer(wamp.ServerProtocol):
@@ -25,9 +26,43 @@ class CDATWebVisualizer(wamp.ServerProtocol):
         self.registerVtkWebProtocol(protocols.ViewPort())
         self.registerVtkWebProtocol(protocols.RemoteRender())
         self.registerVtkWebProtocol(
-            protocols.FileBrowser(self.uploadPath, "Home")
+            protocols.FileBrowser(
+                self.uploadPath,
+                "Home"
+            )
         )
-        self.registerVtkWebProtocol(protocols.FileLoader())
+        self.registerVtkWebProtocol(protocols.FileLoader(self.uploadPath))
+        self.registerVtkWebProtocol(protocols.FileFinder(self.uploadPath))
+        self.registerVtkWebProtocol(TestProtocol())
+
+class TestProtocol(protocols.BaseProtocol):
+
+    @exportRpc('cdat.view.create')
+    def create_view(self):
+        # just for testing:
+        # VTK specific code
+        renderer = vtk.vtkRenderer()
+        renderWindow = vtk.vtkRenderWindow()
+        renderWindow.AddRenderer(renderer)
+
+        renderWindowInteractor = vtk.vtkRenderWindowInteractor()
+        renderWindowInteractor.SetRenderWindow(renderWindow)
+        renderWindowInteractor.GetInteractorStyle().SetCurrentStyleToTrackballCamera()
+
+        cone = vtk.vtkConeSource()
+        mapper = vtk.vtkPolyDataMapper()
+        actor = vtk.vtkActor()
+
+        mapper.SetInputConnection(cone.GetOutputPort())
+        actor.SetMapper(mapper)
+
+        renderer.AddActor(actor)
+        renderer.ResetCamera()
+        renderWindow.Render()
+
+        self.Application.GetObjectIdMap().SetActiveObject("VIEW", renderWindow)
+        return self.getGlobalId(renderWindow)
+
 
 
 if __name__ == '__main__':

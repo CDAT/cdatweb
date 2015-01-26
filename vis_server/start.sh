@@ -30,6 +30,8 @@ fi
 # update client side scripts
 rm -fr "${staticpath}/vtkweb"
 ln -sf "${clientpath}" "${staticpath}/vtkweb"
+rm -f ../tmp/logs/* &> /dev/null
+mkdir -p ../tmp/logs &> /dev/null
 
 # start up the server
 "${UVCDAT_SETUP_PATH}/Externals/lib/python2.7/site-packages/vtk/web/launcher.py" config.json

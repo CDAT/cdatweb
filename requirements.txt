@@ -2,3 +2,4 @@ requests
 django
 djangorestframework
 django-rest-swagger
+django_compressor

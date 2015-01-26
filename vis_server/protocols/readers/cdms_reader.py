@@ -1,4 +1,3 @@
-
 import cdms2
 from .base import BaseFileReader
 
@@ -29,7 +28,7 @@ class Cdms_reader(BaseFileReader):
     def canOpen(self, file_name):
         try:
             cdms2.open(file_name)
-        except Exception:
+        except Exception as e:
             return False
         return True
 
@@ -39,25 +38,23 @@ class Cdms_reader(BaseFileReader):
             variables[var] = {
                 'dims': info.getAxisIds(),
                 'shape': info.getShape(),
-                'attributes': dict(info.attributes),
-                'description': info.title,
+                'description': getattr(info, 'title', ''),
                 'dtype': info.typecode(),
-                'units': info.units
+                'units': getattr(info, 'units', None)
             }
         dimensions = {}
         for dim, info in self._f.axes.iteritems():
             dimensions[dim] = {
-                'units': info.units,
+                'units': getattr(info, 'units', None),
                 'dtype': info.typecode(),
                 'type': _dim_type(info),
-                'data': info.getData(),
+                'data': info.getData().tolist(),
                 'size': len(info)
             }
         attributes = dict(self._f.attributes)
         return {
-            variables: variables,
-            dimensions: dimensions,
-            attributes: attributes
+            'variables': variables,
+            'dimensions': dimensions
         }
 
     def getInfo(self):

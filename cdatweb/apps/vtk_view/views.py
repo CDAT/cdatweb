@@ -1,6 +1,13 @@
+import json
 from django.shortcuts import render
+from django.utils.safestring import mark_safe
 
 import vtk_launcher
+
+
+_browser_help = '''
+Choose a variable from the list of files available on the server and drag it to the canvas.
+'''.strip()
 
 
 def _refresh(request):
@@ -18,29 +25,23 @@ def _refresh(request):
     return dict(vis)
 
 
-def vtk_canvas(request):
+def vtk_viewer(request):
     '''
-    Return a page with a canvas controlled by vtkweb
+    Open the main visualizer view.
     '''
-    vis = _refresh(request)
-    vis['modules'] = ['core']
-    return render(
+    data = _refresh(request)
+    data['main'] = 'browser'
+    data['browser'] = {
+        'help': _browser_help
+    }
+    options = {
+        'resizable': True
+    }
+    data['options'] = mark_safe(json.dumps(options))
+    return  render(
         request,
-        'vtk_view/vtk_canvas.html',
-        vis
-    )
-
-def vtk_browser(request):
-    '''
-    Return a vtk filebrowser widget to choose a file to open.
-    '''
-    vis = _refresh(request)
-    vis['modules'] = ['core', 'filebrowser']
-    vis['main'] = 'browser'
-    return render(
-        request,
-        'vtk_view/vtk_browser.html',
-        vis
+        'vtk_view/cdat_viewer.html',
+        data
     )
 
 

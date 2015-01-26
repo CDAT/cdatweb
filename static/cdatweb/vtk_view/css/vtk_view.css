@@ -1,23 +1,114 @@
 
 .vtk-view-container {
-  width: 100%;
-  height: calc(100% - 50px);
+  margin-top: 55px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  width: calc(100% - 10px);
+  height: calc(100% - 60px);
   position: absolute;
-  top: 50px;
+  top: 0px;
   left: 0px;
   z-index: 0;
 }
 
-.vtk-test-container {
-  width: 100%;
-  height: calc(100% - 50px);
-  position: absolute;
-  top: 50px;
-  left: 0px;
-  padding: 30px;
-  z-index: 0;
+.vtk-browser-container {
+  width: 400px;
+  height: auto;
 }
 
 .vtk-file-browser {
   overflow: scroll;
+  height: auto;
+  width: 100%;
+  line-height: normal;
+}
+
+.cdat-icon-alert {
+  color: #a94442;
+}
+
+.cdat-icon-normal {
+  color: #666;
+}
+
+.cdat-icon-folder {
+  color: #666;
+}
+
+.list-group-item.ui-draggable-dragging {
+  border: none !important;
+  background: none;
+  cursor: -webkit-grabbing;
+  cursor: -moz-grabbing;
+  cursor: grabbing;
+}
+
+.list-group-item.ui-draggable-dragging.cdat-over-target {
+  cursor: pointer;
+}
+
+.list-group-item {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.list-group-item > .badge {
+  background-color: #428bca;
+  color: #fff;
+  background-image: -webkit-linear-gradient(top,#428bca 0,#2d6ca2 100%);
+  background-image: -moz-linear-gradient(top,#428bca 0,#2d6ca2 100%);
+  background-image: -o-linear-gradient(top,#428bca 0,#2d6ca2 100%);
+  background-image: linear-gradient(top,#428bca 0,#2d6ca2 100%);
+}
+
+.node-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  max-width: calc(100% - 35px);
+}
+
+.node-label.btn {
+  font-size: 80%;
+  padding-left: 6px;
+  padding-right: 9px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  border-radius: 12px;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  cursor: -o-grab;
+  cursor: grab;
+}
+
+.node-label.btn i.icon {
+  margin-left: 0px;
+}
+
+.list-group-item.invalid-file {
+  cursor: not-allowed;
+}
+
+.cdat-nowrap {
+  white-space: nowrap;
+}
+
+.cdat-collapse-icon {
+  margin-top: -20px;
+  font-size: 15px;
+}
+
+.cdat-clickable {
+  cursor: pointer;
+}
+
+body {
+  overflow: hidden;
+}
+
+.jsPanel-title i.glyphicon {
+  margin-right: 0.1em;
+  padding-top: 2px;
 }

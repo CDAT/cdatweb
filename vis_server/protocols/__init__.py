@@ -21,6 +21,7 @@ from vtk.web.protocols import vtkWebViewPortGeometryDelivery as ClientRender
 from vtk.web.protocols import vtkWebFileBrowser as FileBrowser
 
 from .FileLoader import FileLoader
+from .FileFinder import FileFinder
 
 __all__ = [
     BaseProtocol,
@@ -29,5 +30,6 @@ __all__ = [
     RemoteRender,
     ClientRender,
     FileBrowser,
-    FileLoader
+    FileLoader,
+    FileFinder
 ]

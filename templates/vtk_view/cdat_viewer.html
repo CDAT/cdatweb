@@ -1,0 +1,19 @@
+{% extends "vtk_view/vtk_base.html" %}
+
+{% block app-body %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="md-col-12 vtk-view-container">
+      <div class="vtk-browser-container">
+        <div class="vtk-file-browser"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+{% include "vtk_view/fragments/panel.html" with container=".vtk-browser-container" help=browser.help icon="glyphicon-hdd" title="Data" overflow="scroll" %}
+{% endblock %}
