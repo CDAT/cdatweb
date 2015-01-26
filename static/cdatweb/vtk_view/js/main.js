@@ -1,3 +1,4 @@
+/** @namespace cdat */
 (function () {
     window.cdat = window.cdat || {};
     var app = window.cdat;
