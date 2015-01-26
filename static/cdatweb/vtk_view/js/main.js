@@ -120,8 +120,8 @@
         if (!options.session) {
             throw new Error('A session must be provided.');
         }
+
         options = $.extend({}, {
-            view: -1,
             enableInteractions: true,
             renderer: 'image',
             interactiveQuality: 30,
@@ -129,15 +129,21 @@
             keepServerInSync: false
         }, options);
         return function (panel) {
-            var viewport = new vtkWeb.createViewport(options);
-            function render() {
-                viewport.render();
-            }
-            viewport.bind(panel.content.get(0));
-            panel.on('resize jspanelloaded jspanelmaximized jspanelnormalized', render)
-                .on('jspanelclosed', function () {
-                    view.unbind(panel.content.get(0));
-                });
+
+            options.session.call('cdat.view.create', [])
+                .then(function (view) {
+                    console.log('Created view with id: ' + view);
+                    options.view = view;
+                    var viewport = new vtkWeb.createViewport(options);
+                    function render() {
+                        viewport.render();
+                    }
+                    viewport.bind(panel.content.get(0));
+                    panel.on('resize jspanelloaded jspanelmaximized jspanelnormalized', render)
+                        .on('jspanelclosed', function () {
+                            view.unbind(panel.content.get(0));
+                        });
+                }, app.error);
         };
     };
 
