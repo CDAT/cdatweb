@@ -66,13 +66,15 @@
             out: function (evt, ui) {
                 ui.draggable.removeClass('cdat-over-target');
             }
-        }).on('drop', function () {
+        }).on('drop', function (evt, ui) {
+            var node = ui.draggable.data('node');
+            var varinfo = '    ' + node.file + ': ' + node.text;
             cdat.make_panel(
                 $('<div/>').get(0),
                 null,
                 {
                   selector: '.vtk-view-container',
-                  title: 'testing',
+                  title: '<span><i class="glyphicon glyphicon-eye-open"></i>' + varinfo + '</span>',
                   size: {width: 500, height: 500},
                   overflow: 'hidden',
                   callback: app.vtkViewCreator({session: connection.session})
