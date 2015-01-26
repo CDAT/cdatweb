@@ -1,15 +1,12 @@
-<div class="{{ container }}">
-  <div class="{{ class }}"></div>
-</div>
 <script type="text/javascript">
   $(function () {
-    var el = $(".{{ container }}");
+    var el = $("{{ container }}");
     var sc = $(".vtk-view-container");
     function getSize() {
-      var w = Math.min(sc.width(), el.width());
-      var h = Math.min(sc.height(), el.height());
+      var w = sc.width() >= el.width() + 32 ? 'auto' : el.width() + 32;
+      var h = sc.height() >= el.height() + 32 ? 'auto' : el.height + 32;
       return {
-        width: 'auto',
+        width: w,
         height: h
       };
     }
@@ -20,17 +17,19 @@
       '</span>'
     ].join('');
     var panel = cdat.make_panel(
-      $(".{{ container }}").get(0),
+      $("{{ container }}").get(0),
       '',
       {
         selector: '.vtk-view-container',
         title: title,
-        size: getSize(),
-        overflow: '{{ overflow|default:'scroll' }}'
+        size: 'auto',
+        overflow: '{{ overflow|default:"scroll" }}'
       }
-    ).off('cdat-render').on('cdat-render', function () {
+    );
+    // If restricting to container doesn't work:
+    /*.off('cdat-render').on('cdat-render', function () {
       var size = getSize();
       panel.resize(size.width, size.height);
-    });
+    });*/
   });
 </script>

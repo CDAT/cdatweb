@@ -21,7 +21,8 @@
                     helper: 'clone',
                     appendTo: 'body',
                     scope: 'variable',
-                    zIndex: 1000
+                    zIndex: 1000,
+                    refreshPositions: true
                 });
 
                 v.find('.node-label').addClass('btn btn-primary');
@@ -55,6 +56,30 @@
             .draggable();
         $('.vtk-browser-container').trigger('cdat-render');
 
+        // make the backdrop droppable to open a new vis window
+        $('.vtk-view-container').droppable({
+            scope: 'variable',
+            tolerance: 'pointer',
+            over: function (evt, ui) {
+                ui.draggable.addClass('cdat-over-target');
+            },
+            out: function (evt, ui) {
+                ui.draggable.removeClass('cdat-over-target');
+            }
+        }).on('drop', function () {
+            cdat.make_panel(
+                $('<div/>').get(0),
+                null,
+                {
+                  selector: '.vtk-view-container',
+                  title: 'testing',
+                  size: {width: 500, height: 500},
+                  overflow: 'hidden',
+                  callback: app.vtkViewCreator({session: connection.session})
+                }
+            );
+        });
+
     }
 
     app.main = function (connection) {
@@ -84,6 +109,34 @@
             .then(function (files) {
                 renderBrowser(connection, files);
             }, app.error);
+    };
+
+    app.vtkViewCreator = function (options) {
+        // return a function that generates a view inside
+        // a given element
+
+        if (!options.session) {
+            throw new Error('A session must be provided.');
+        }
+        options = $.extend({}, {
+            view: -1,
+            enableInteractions: true,
+            renderer: 'image',
+            interactiveQuality: 30,
+            stillQuality: 100,
+            keepServerInSync: false
+        }, options);
+        return function (panel) {
+            var viewport = new vtkWeb.createViewport(options);
+            function render() {
+                viewport.render();
+            }
+            viewport.bind(panel.content.get(0));
+            panel.on('resize jspanelloaded jspanelmaximized jspanelnormalized', render)
+                .on('jspanelclosed', function () {
+                    view.unbind(panel.content.get(0));
+                });
+        };
     };
 
     app.make_panel = function (container, help, opts) {
