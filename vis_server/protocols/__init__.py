@@ -23,6 +23,31 @@ from vtk.web.protocols import vtkWebFileBrowser as FileBrowser
 from .FileLoader import FileLoader
 from .FileFinder import FileFinder
 
+from external import exportRpc
+
+class ViewportDeleter(BaseProtocol):
+    '''
+    Provides a method for deleting a viewport window once the client is done.
+    '''
+
+    @exportRpc('cdat.view.destroy')
+    def destroy(self, viewId):
+        '''
+        Delete the viewport corresponding to the given object ID.
+        '''
+        r = None
+        try:
+            view = self.getView(viewId)
+            view.RemoveAllObservers()
+            view.Finalize()
+            del view
+            print 'Removed view #' + str(viewId)
+        except Exception as e:
+            r = e
+            print e
+            print 'Failed to remove view'
+        return r
+
 __all__ = [
     BaseProtocol,
     MouseHandler,
@@ -31,5 +56,6 @@ __all__ = [
     ClientRender,
     FileBrowser,
     FileLoader,
-    FileFinder
+    FileFinder,
+    ViewportDeleter
 ]

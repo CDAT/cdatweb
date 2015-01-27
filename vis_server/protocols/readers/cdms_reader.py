@@ -20,6 +20,7 @@ class Cdms_reader(BaseFileReader):
     A reader based on the cdms2 python library.
     '''
 
+    name = 'cdms2'
     def _open(self, file_name):
         self._f = cdms2.open(file_name)
         self._info = None

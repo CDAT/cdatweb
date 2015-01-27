@@ -33,6 +33,7 @@ class CDATWebVisualizer(wamp.ServerProtocol):
         )
         self.registerVtkWebProtocol(protocols.FileLoader(self.uploadPath))
         self.registerVtkWebProtocol(protocols.FileFinder(self.uploadPath))
+        self.registerVtkWebProtocol(protocols.ViewportDeleter())
         self.registerVtkWebProtocol(TestProtocol())
 
 class TestProtocol(protocols.BaseProtocol):
@@ -60,7 +61,7 @@ class TestProtocol(protocols.BaseProtocol):
         renderer.ResetCamera()
         renderWindow.Render()
 
-        self.Application.GetObjectIdMap().SetActiveObject("VIEW", renderWindow)
+        # self.Application.GetObjectIdMap().SetActiveObject("VIEW", renderWindow)
         return self.getGlobalId(renderWindow)
 
 
