@@ -13,15 +13,19 @@
 }
 
 .vtk-browser-container {
-  width: 400px;
-  height: auto;
+  width: 100%;
+  height: 100%;
 }
 
 .vtk-file-browser {
   overflow: scroll;
-  height: auto;
+  height: 100%;
   width: 100%;
   line-height: normal;
+}
+
+.jsPanel > .jsPanel-hdr > .jsPanel-title {
+  min-width: calc(100% - 80px);
 }
 
 .cdat-icon-alert {
@@ -67,6 +71,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: inline-block;
+
+  /*
+   * This works for 1st level but need something more general.
+   * */
   max-width: calc(100% - 35px);
 }
 
@@ -111,4 +119,9 @@ body {
 .jsPanel-title i.glyphicon {
   margin-right: 0.1em;
   padding-top: 2px;
+}
+
+.list-group-item > .badge {
+  position: absolute;
+  right: 8px;
 }
