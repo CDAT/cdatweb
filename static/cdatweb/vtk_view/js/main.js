@@ -4,7 +4,7 @@
     var app = window.cdat;
 
     // set bootstrap theme for jsPanel
-    $.jsPanel.defaults.controls.iconfont = 'bootstrap';
+    $.jsPanel.defaults.controls.iconfont = 'font-awesome';
 
     function setBrowserHeight() {
         var el = $('.vtk-file-browser');
