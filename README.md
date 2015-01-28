@@ -1,4 +1,5 @@
 
+=================
 CDATWeb 2.0 alpha
 =================
 
@@ -20,10 +21,9 @@ starting two web servers:
      ```
      
      If that gives you an import error, then you need to rebuild VTK
-     or enable the ParaView option for UV-CDAT.
-
-The visualization server will soon become unnecessary as we include
-an automated vtkWeb launcher API to the application.
+     or enable the ParaView option for UV-CDAT.  It is also possible
+     to compile without ParaView but to enable vtkWeb support.  For
+     now this requires patching the UV-CDAT source.
 
 Django installation
 -------------------
@@ -58,26 +58,36 @@ The front end is now browseable at [http://localhost:8000/](http://localhost:800
 Visualization installation
 --------------------------
 
-As noted above, you may be able use a prebuilt UV-CDAT, but if you run
-into troubles, try to rebuild the latest version with the following
-option: `cmake -D CDAT_BUILD_PARAVIEW=ON /path/to/uvcdat`.  Make sure
-you are not in your django virtual environment and source your
-UV-CDAT setup script.
+Refer to one of the items below for starting up the visualization server.
+Once the server is running, browse to
+[http://localhost:8000/vtk/viewer.html](http://localhost:8000/vtk/viewer.html).
+In case of trouble, see the server logs in `tmp/logs`.
 
-There are two different sample visualizations that you can run.  Until
-the visualization server exposes a method to choose this from the
-client, you must choose which one to start from the command line.
+1. Running a test server
 
-  1. A simple VTK pipeline:
-     ```bash
-     python vis_server/single.py --port 8001 cone
-     ```
-  
-  2. A `vcs` based visualization generated from a test file.
-     ```bash
-     python vis_server/single.py --port 8001 dv3d
-     ```
+  There is a testing only version of the visualization server that you can
+  run without installing UV-CDAT.  This server generates data on the fly to
+  mock the behavior of the full fledged server for testing purposes.  It
+  can also be used as a quick demo of the cdatweb front end in lieu building
+  the entire UV-CDAT backend.
 
-After starting one of the visualization servers, try browsing to
-[http://localhost:8000/vtk/test.html](http://localhost:8000/vtk/test.html),
-where you should see an interactive 3D visualization.
+2. Running a local vtkWeb instance
+
+  As noted above, you may be able use a prebuilt UV-CDAT, but if you run
+  into troubles, try to rebuild the latest version with the following
+  option: `cmake -D CDAT_BUILD_PARAVIEW=ON /path/to/uvcdat`.  Make sure
+  you are not in your django virtual environment and source your
+  UV-CDAT setup script.  If everything is setup correctly, you should be
+  able to run the following:
+  ```bash
+  ./vis_server/start.sh
+  ```
+
+3. Running vtkWeb on a remote machine
+
+  The procedure for serving vtkWeb from a remote machine (or a cluster) is
+  similar to running locally; however, you must edit the file
+  `vis_server/config.json`.  The details of making this work are beyond
+  the scope of this document.  See [ParaViewWeb documentation](http://pvw.kitware.com/#!/guide/python_launcher)
+  for more details.
+
