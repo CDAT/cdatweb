@@ -20,6 +20,7 @@ from vtk.web.protocols import vtkWebViewPortGeometryDelivery as ClientRender
 # a basic server side file browser
 from vtk.web.protocols import vtkWebFileBrowser as FileBrowser
 
+# uvcdat file handlers
 from .FileLoader import FileLoader
 from .FileFinder import FileFinder
 

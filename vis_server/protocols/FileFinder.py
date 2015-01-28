@@ -12,7 +12,6 @@ from external import exportRpc
 
 from FileLoader import FileLoader
 
-
 class FileFinder(BaseProtocol):
     '''
     This class is resposible for generating (and caching) available files

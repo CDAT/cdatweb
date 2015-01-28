@@ -1,0 +1,25 @@
+{
+  "configuration": {
+    "host": "localhost",
+    "port": 7000,
+    "endpoint": "vtk",
+    "sessionURL": "ws://${host}:${port}/ws",
+    "timeout": 5,
+    "fields": ["file", "host", "port", "secret"],
+    "proxy_file": "../tmp/proxy.txt",
+    "log_dir": "../tmp/logs"
+  },
+
+  "resources": [ {"host": "localhost", "port_range": [7001, 7025]} ],
+
+  "properties": {},
+
+  "apps": {
+    "default": {
+      "cmd": [
+        "python", "run.py", "--testing", "--port", "${port}", "--upload-directory", "../tmp/data"
+      ],
+      "ready_line": "CDATWeb Visualization server initializing"
+    }
+  }
+}
