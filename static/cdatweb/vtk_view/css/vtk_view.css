@@ -24,6 +24,10 @@
   line-height: normal;
 }
 
+.jsPanel > .jsPanel-hdr > .jsPanel-title {
+  min-width: calc(100% - 80px);
+}
+
 .cdat-icon-alert {
   color: #a94442;
 }
