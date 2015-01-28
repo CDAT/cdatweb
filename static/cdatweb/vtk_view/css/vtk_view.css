@@ -13,7 +13,7 @@
 }
 
 .vtk-browser-container {
-  width: 400px;
+  width: auto;
   height: auto;
 }
 
@@ -111,4 +111,9 @@ body {
 .jsPanel-title i.glyphicon {
   margin-right: 0.1em;
   padding-top: 2px;
+}
+
+.list-group-item > .badge {
+  position: absolute;
+  right: 8px;
 }
