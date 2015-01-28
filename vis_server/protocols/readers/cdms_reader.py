@@ -20,6 +20,7 @@ class Cdms_reader(BaseFileReader):
     A reader based on the cdms2 python library.
     '''
 
+    name = 'cdms2'
     def _open(self, file_name):
         self._f = cdms2.open(file_name)
         self._info = None
@@ -36,7 +37,7 @@ class Cdms_reader(BaseFileReader):
         variables = {}
         for var, info in self._f.variables.iteritems():
             variables[var] = {
-                'dims': info.getAxisIds(),
+                'axes': info.getAxisIds(),
                 'shape': info.getShape(),
                 'description': getattr(info, 'title', ''),
                 'dtype': info.typecode(),

@@ -10,9 +10,8 @@ sys.path.append(os.path.dirname(vtk.__file__))
 from vtk.web import server
 from vtk.web import wamp
 
-import protocols
 from external import exportRpc
-
+import settings
 
 class CDATWebVisualizer(wamp.ServerProtocol):
 
@@ -33,8 +32,32 @@ class CDATWebVisualizer(wamp.ServerProtocol):
         )
         self.registerVtkWebProtocol(protocols.FileLoader(self.uploadPath))
         self.registerVtkWebProtocol(protocols.FileFinder(self.uploadPath))
+        self.registerVtkWebProtocol(protocols.ViewportDeleter())
         self.registerVtkWebProtocol(TestProtocol())
 
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description='CDATWeb visualization server'
+    )
+
+    server.add_arguments(parser)
+    parser.add_argument(
+        '--testing',
+        action='store_true',
+        dest='testing',
+        help='Enable testing mode (bypass uvcdat)'
+    )
+
+    args = parser.parse_args()
+
+    settings.SERVER_TEST=args.testing
+
+    CDATWebVisualizer.authKey = args.authKey
+    CDATWebVisualizer.uploadPath = args.uploadPath
+
+
+import protocols
 class TestProtocol(protocols.BaseProtocol):
 
     @exportRpc('cdat.view.create')
@@ -60,24 +83,9 @@ class TestProtocol(protocols.BaseProtocol):
         renderer.ResetCamera()
         renderWindow.Render()
 
-        self.Application.GetObjectIdMap().SetActiveObject("VIEW", renderWindow)
+        # self.Application.GetObjectIdMap().SetActiveObject("VIEW", renderWindow)
         return self.getGlobalId(renderWindow)
 
-
-
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description='CDATWeb visualization server'
-    )
-
-    server.add_arguments(parser)
-
-    # Add local options here:
-
-    args = parser.parse_args()
-
-    CDATWebVisualizer.authKey = args.authKey
-    CDATWebVisualizer.uploadPath = args.uploadPath
-
     print "CDATWeb Visualization server initializing"
     server.start_webserver(options=args, protocol=CDATWebVisualizer)

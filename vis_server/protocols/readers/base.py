@@ -5,6 +5,7 @@ class BaseFileReader(object):
     calls.
     '''
 
+    name = ''
     def __init__(self, file_name):
         '''
         Open a local file for reading.
@@ -44,6 +45,7 @@ class BaseFileReader(object):
         return {
             'attributes': {},
             'axes': [],
+            'shape': [],
             'time': None,
             'level': None,
             'latitude': None,
@@ -55,3 +57,6 @@ class BaseFileReader(object):
         Return an object that can be passed to a visualizer for display.
         '''
         return None
+
+    def export(self):
+        pass

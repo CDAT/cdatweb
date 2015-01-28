@@ -33,8 +33,14 @@ class BaseVisualizer(object):
         self._height = opts.get('height', self._height)
         return False
 
-    def refresh(self, **kw):
+    def _render(self, **kw):
         '''
-        Refresh the active view (reset camera, etc).
+        Call render on the underlying view window.
         '''
         self.getView().Render()
+
+    def getViewId(self):
+        '''
+        Get the global object id for the render window being used.
+        '''
+        self.getGlobalId(self.getView())
