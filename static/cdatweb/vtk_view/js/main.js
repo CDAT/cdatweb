@@ -6,6 +6,18 @@
     // set bootstrap theme for jsPanel
     $.jsPanel.defaults.controls.iconfont = 'bootstrap';
 
+    function setBrowserHeight() {
+        var el = $('.vtk-file-browser');
+        if (!el.length) {
+            return;
+        }
+        var h = $(window).height();
+        el.css({
+            'max-height': (h - el.offset().top - 25)
+        });
+    }
+
+    $(window).resize(setBrowserHeight);
     function renderBrowser(connection, files) {
         el = $('.vtk-file-browser');
 
@@ -56,7 +68,8 @@
                 return $(this).data('node').type === 'variable';
             })
             .draggable();
-        $('.vtk-browser-container').trigger('cdat-render');
+        $('.vtk-browser-container').trigger('cdat-render').on('cdat-expand', setBrowserHeight);
+        setBrowserHeight();
 
         // make the backdrop droppable to open a new vis window
         $('.vtk-view-container').droppable({

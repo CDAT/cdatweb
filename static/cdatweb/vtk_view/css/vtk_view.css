@@ -13,13 +13,13 @@
 }
 
 .vtk-browser-container {
-  width: auto;
-  height: auto;
+  width: 100%;
+  height: 100%;
 }
 
 .vtk-file-browser {
   overflow: scroll;
-  height: auto;
+  height: 100%;
   width: 100%;
   line-height: normal;
 }
@@ -67,6 +67,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: inline-block;
+
+  /*
+   * This works for 1st level but need something more general.
+   * */
   max-width: calc(100% - 35px);
 }
 
