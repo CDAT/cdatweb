@@ -57,7 +57,7 @@ class FileFinder(BaseProtocol):
                     'nodes': [],
                     'full': full,
                     'type': 'directory',
-                    'icon': 'glyphicon glyphicon-folder-open cdat-icon-folder',
+                    'icon': 'fa fa-folder-open cdat-icon-folder',
                     'selectable': False
                 }
                 obj['nodes'].append(newobj)
@@ -67,10 +67,10 @@ class FileFinder(BaseProtocol):
                 full = os.path.join(root, f)
                 info = self._loader.fileInfo(full)
                 tags = []
-                icon = 'glyphicon glyphicon-exclamation-sign cdat-icon-alert'
+                icon = 'fa fa-exlamation-triangle cdat-icon-alert'
                 readable = False
                 if info is not None:
-                    icon = 'glyphicon glyphicon-file cdat-icon-normal'
+                    icon = 'fa fa-file cdat-icon-normal'
                     tags = [str(len(info['variables']))]
                     readable = True
 
@@ -99,7 +99,7 @@ class FileFinder(BaseProtocol):
                                 'type': 'variable',
                                 'info': vlist[v],
                                 'file': full,
-                                'icon': 'glyphicon glyphicon-link',
+                                'icon': 'fa fa-arrows-alt fa-lg',
                                 'selectable': False
                             },
                             vlist
