@@ -45,6 +45,7 @@ class BaseFileReader(object):
         return {
             'attributes': {},
             'axes': [],
+            'shape': [],
             'time': None,
             'level': None,
             'latitude': None,

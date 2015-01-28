@@ -1,5 +1,6 @@
 import json
 from os.path import join
+from os import makedirs
 
 import settings
 
@@ -24,10 +25,16 @@ class TestReader(BaseFileReader):
         self._content['attributes'] = {}
 
     def getInfo(self):
+        if not self._content:
+            self._open(self._file)
         return self._content
 
 
 def write_dir(tree, path):
+    try:
+        makedirs(path)
+    except Exception:
+        pass
     for f in tree.get('files', {}):
         open(join(path, f), 'w').write(json.dumps(tree['files'][f]))
     for d in tree.get('dirs', {}):
@@ -40,3 +47,4 @@ if __name__ == '__main__':
     assert len(sys.argv) == 3
     root = sys.argv[1]
     tree = json.loads(open(sys.argv[2]).read())
+    write_dir(tree, root)

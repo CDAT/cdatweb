@@ -37,7 +37,7 @@ class Cdms_reader(BaseFileReader):
         variables = {}
         for var, info in self._f.variables.iteritems():
             variables[var] = {
-                'dims': info.getAxisIds(),
+                'axes': info.getAxisIds(),
                 'shape': info.getShape(),
                 'description': getattr(info, 'title', ''),
                 'dtype': info.typecode(),

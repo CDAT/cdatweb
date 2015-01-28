@@ -47,7 +47,7 @@ mkdir -p ../tmp/logs &> /dev/null
 rm -fr ../tmp/test &> /dev/null
 mkdir -p ../tmp/test &> /dev/null
 export PYTHONPATH="${PYTHONPATH}:${VTK_PYTHON_PATH}"
-${python_program} testing.py ../tmp/test test_files.json
+${python_program} testing.py ../tmp/test test_files/test_files.json
 
 # start up the server
-${python_program} "${VTK_PYTHON_PATH}/web/launcher.py" test.json
+${python_program} "${VTK_PYTHON_PATH}/web/launcher.py" test_files/test.json
