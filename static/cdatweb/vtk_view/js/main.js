@@ -20,6 +20,8 @@
                 v.draggable({
                     helper: 'clone',
                     appendTo: 'body',
+                    containment: 'window',
+                    scroll: false,
                     scope: 'variable',
                     zIndex: 1000,
                     refreshPositions: true
