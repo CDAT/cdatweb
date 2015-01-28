@@ -12,8 +12,9 @@
             return;
         }
         var h = $(window).height();
+        var maxheight = h - el.offset().top - 25;
         el.css({
-            'max-height': (h - el.offset().top - 25)
+            'max-height': maxheight
         });
     }
 
@@ -89,7 +90,7 @@
                 null,
                 {
                   selector: '.vtk-view-container',
-                  title: '<span><i class="glyphicon glyphicon-eye-open"></i>' + varinfo + '</span>',
+                  title: '<span><i class="fa fa-picture-o"></i>' + varinfo + '</span>',
                   size: {width: 500, height: 500},
                   overflow: 'hidden',
                   callback: app.vtkViewCreator({session: connection.session})
