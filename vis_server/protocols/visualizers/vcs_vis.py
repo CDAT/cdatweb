@@ -4,12 +4,20 @@ from base import BaseVisualizer
 import vcs
 
 
-# TODO: make individual subclasses out of different vcs plot types
 class Vcs_plot(BaseVisualizer):
+    '''
+    Base class for all Vcs-based visualization classes.
+    '''
+
+    #: vcs plot type
+    plot_type = None
 
     @classmethod
     def canView(cls, var):
-        return len(var.info.get('dimensions', [])) == 4
+        try:
+            return len(var.info.get('dimensions', [])) >= 2
+        except Exception:
+            return False
 
     def __init__(self, *arg, **kw):
         super(Vcs_plot, self).__init__(*arg, **kw)
@@ -19,7 +27,7 @@ class Vcs_plot(BaseVisualizer):
     def loadVariable(self, var, info, opts={}):
         if len(info['dimensions']) == 4:
             self._var = var
-            self._gm = vcs.get3d_scalar('default')
+            self._gm = self.plot_type(opts.get('template', 'default'))
         else:
             return False
 
@@ -31,17 +39,32 @@ class Vcs_plot(BaseVisualizer):
     def render(self, opts={}):
         super(Vcs_plot, self).render(opts)
 
-        if self._plot is None:
-            self._plot = self._canvas.plot(
-                self._var,
-                self._gm,
-                cdmsfile=self._var.parent.id,
-                window_size=(self._width, self._height)
-            )
+        args = self._var[:]
+        args = args + [self._gm]
+        self._canvas = vcs.init()
+        self._plot = self._canvas.plot(
+            *args
+            cdmsfile=self._var.parent.id,
+            window_size=(self._width, self._height)
+        )
 
-        self._window = self.canvas.backend.plotApps[self._gm].getRenderWindow()
+        self._window = self._canvas.backend.plotApps[self._gm].getRenderWindow()
         self._render()
         return True
 
     def getView(self):
         return self._window
+
+
+class isofill(Vcs_plot):
+    plot_type = vcs.getisofill
+    info = dict(Vcs_plot.info)
+    info['ndims'] = 2
+    info['nvars'] = 1
+
+
+class volume(Vcs_plot):
+    plot_type = vcs.get3d_scalar()
+    info = dict(Vcs_plot.info)
+    info['ndims'] = 3
+    info['nvars'] = 1

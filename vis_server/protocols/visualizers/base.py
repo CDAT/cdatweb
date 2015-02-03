@@ -4,6 +4,11 @@ class BaseVisualizer(object):
     Base class for all visualization types.
     '''
 
+    info = {
+        'ndims': 0,
+        'nvars': 0
+    }
+
     @classmethod
     def canView(cls, var, info):
         return False
@@ -44,3 +49,15 @@ class BaseVisualizer(object):
         Get the global object id for the render window being used.
         '''
         self.getGlobalId(self.getView())
+
+
+class VectorVisualizer(BaseVisualizer):
+    '''
+    Base class for vector visualization types.
+    '''
+
+    @classmethod
+    def canView(cls, var, info):
+        if isinstance(var, dict):
+            return var['x'] and var['y']
+        return False

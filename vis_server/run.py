@@ -12,6 +12,7 @@ from vtk.web import wamp
 
 from external import exportRpc
 import settings
+_viewers = []
 
 class CDATWebVisualizer(wamp.ServerProtocol):
 
@@ -56,35 +57,70 @@ if __name__ == '__main__':
     CDATWebVisualizer.authKey = args.authKey
     CDATWebVisualizer.uploadPath = args.uploadPath
 
-
 import protocols
-class TestProtocol(protocols.BaseProtocol):
+if not args.testing:
+    import vcs
+    import cdms2
+    class TestProtocol(protocols.BaseProtocol):
+        _open_views = {}
 
-    @exportRpc('cdat.view.create')
-    def create_view(self):
-        # just for testing:
-        # VTK specific code
-        renderer = vtk.vtkRenderer()
-        renderWindow = vtk.vtkRenderWindow()
-        renderWindow.AddRenderer(renderer)
+        @exportRpc('cdat.view.create')
+        def create_view(self, fname, varname, opts={}):
+            reader = protocols.FileLoader.get_cached_reader(fname)
+            v = reader.read(varname)
+            canvas = vcs.init()
+            plot = canvas.plot(
+                v
+            )
+            window = canvas.backend.renWin
+            window.Render()
+            id = self.getGlobalId(window)
+            self._open_views[id] = (
+                window,
+                canvas
+            )
+            return id
 
-        renderWindowInteractor = vtk.vtkRenderWindowInteractor()
-        renderWindowInteractor.SetRenderWindow(renderWindow)
-        renderWindowInteractor.GetInteractorStyle().SetCurrentStyleToTrackballCamera()
+        @exportRpc('cdat.view.destroy')
+        def destroy_view(self, id):
+            cache = self._open_views.pop(id, None)
+            if cache:
+                cache[1].close()
+                cache[0].Finalize()
+else:
+    class TestProtocol(protocols.BaseProtocol):
+        _open_views = {}
 
-        cone = vtk.vtkConeSource()
-        mapper = vtk.vtkPolyDataMapper()
-        actor = vtk.vtkActor()
+        @exportRpc('cdat.view.create')
+        def create_view(self, *arg, **kw):
+            renderer = vtk.vtkRenderer()
+            renderWindow = vtk.vtkRenderWindow()
+            renderWindow.AddRenderer(renderer)
 
-        mapper.SetInputConnection(cone.GetOutputPort())
-        actor.SetMapper(mapper)
+            renderWindowInteractor = vtk.vtkRenderWindowInteractor()
+            renderWindowInteractor.SetRenderWindow(renderWindow)
+            renderWindowInteractor.GetInteractorStyle().SetCurrentStyleToTrackballCamera()
 
-        renderer.AddActor(actor)
-        renderer.ResetCamera()
-        renderWindow.Render()
+            cone = vtk.vtkConeSource()
+            mapper = vtk.vtkPolyDataMapper()
+            actor = vtk.vtkActor()
 
-        # self.Application.GetObjectIdMap().SetActiveObject("VIEW", renderWindow)
-        return self.getGlobalId(renderWindow)
+            mapper.SetInputConnection(cone.GetOutputPort())
+            actor.SetMapper(mapper)
+
+            renderer.AddActor(actor)
+            renderer.ResetCamera()
+            renderWindow.Render()
+            id = self.getGlobalId(renderWindow)
+            self._open_views[id] = renderWindow
+            return id
+
+        @exportRpc('cdat.view.destroy')
+        def destroy_view(self, id):
+            cache = self._open_views.pop(id, None)
+            if cache:
+                cache.Finalize()
+
 
 if __name__ == '__main__':
     print "CDATWeb Visualization server initializing"

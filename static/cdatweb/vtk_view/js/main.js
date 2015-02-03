@@ -84,7 +84,7 @@
             }
         }).on('drop', function (evt, ui) {
             var node = ui.draggable.data('node');
-            var varinfo = '    ' + node.file + ': ' + node.text;
+            var varinfo = '    ' + node.file.replace(/^\./, '') + ': ' + node.text;
             cdat.make_panel(
                 $('<div/>').get(0),
                 null,
@@ -93,7 +93,11 @@
                   title: '<span><i class="fa fa-picture-o"></i>' + varinfo + '</span>',
                   size: {width: 500, height: 500},
                   overflow: 'hidden',
-                  callback: app.vtkViewCreator({session: connection.session})
+                  callback: app.vtkViewCreator({
+                      session: connection.session,
+                      file: node.file,
+                      variable: node.text
+                  })
                 }
             );
         });
@@ -113,11 +117,6 @@
             msg = err;
         }
         console.error(msg);
-    };
-
-    app.variables = function () {
-        // list all variables in the given file
-
     };
 
     app.browser = function (connection) {
@@ -140,16 +139,15 @@
         options = $.extend({}, {
             enableInteractions: true,
             renderer: 'image',
-            interactiveQuality: 30,
+            interactiveQuality: 100,
             stillQuality: 100,
             keepServerInSync: false
         }, options);
         return function (panel) {
 
             var myId = panel.attr('id');
-            options.session.call('cdat.view.create', [])
+            options.session.call('cdat.view.create', [options.file, options.variable])
                 .then(function (view) {
-                    console.log('Created view with id: ' + view);
                     options.view = view;
                     var viewport;
                     function render() {
@@ -161,7 +159,6 @@
                         if (id === myId) {
                             viewport.unbind(panel.content.get(0));
                             options.session.call('cdat.view.destroy', [view]);
-                            console.log('closed view with id ' + view);
                             $('body').off('jspanelclosed', close);
                         }
                     }
