@@ -63,6 +63,6 @@ class Cdms_reader(BaseFileReader):
             self._info = self._getInfo()
         return self._info
 
-    def read(self):
+    def read(self, varname):
         # probably have to define a real api here:
-        return self._f
+        return self._f[varname]

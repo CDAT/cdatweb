@@ -84,7 +84,7 @@
             }
         }).on('drop', function (evt, ui) {
             var node = ui.draggable.data('node');
-            var varinfo = '    ' + node.file + ': ' + node.text;
+            var varinfo = '    ' + node.file.replace(/^\./, '') + ': ' + node.text;
             cdat.make_panel(
                 $('<div/>').get(0),
                 null,
@@ -93,7 +93,11 @@
                   title: '<span><i class="fa fa-picture-o"></i>' + varinfo + '</span>',
                   size: {width: 500, height: 500},
                   overflow: 'hidden',
-                  callback: app.vtkViewCreator({session: connection.session})
+                  callback: app.vtkViewCreator({
+                      session: connection.session,
+                      file: node.file,
+                      variable: node.text
+                  })
                 }
             );
         });
@@ -147,7 +151,7 @@
         return function (panel) {
 
             var myId = panel.attr('id');
-            options.session.call('cdat.view.create', [])
+            options.session.call('cdat.view.create', [options.file, options.variable])
                 .then(function (view) {
                     console.log('Created view with id: ' + view);
                     options.view = view;

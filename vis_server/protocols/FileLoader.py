@@ -36,3 +36,7 @@ class FileLoader(BaseProtocol):
             return None
 
         return reader.getInfo()
+
+    @classmethod
+    def get_cached_reader(cls, file_name):
+        return cls._file_cache.get(file_name)

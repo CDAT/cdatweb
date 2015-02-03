@@ -1,6 +1,7 @@
-from vcs_vis import Vcs_plot
+from vcs_vis import isofill, volume
 
 types = {
-    'vcs': Vcs_plot
+    'isofill': isofill,
+    'volume': volume
 }
-__all__ = [types]
+__all__ = types[:]
