@@ -63,23 +63,42 @@ if not args.testing:
     import cdms2
     class TestProtocol(protocols.BaseProtocol):
         _open_views = {}
+        _dirty_views = {}
 
         @exportRpc('cdat.view.create')
         def create_view(self, fname, varname, opts={}):
             reader = protocols.FileLoader.get_cached_reader(fname)
             v = reader.read(varname)
             canvas = vcs.init()
+            canvas.setbgoutputdimensions(width=500, height=500, units='pixels')
             plot = canvas.plot(
                 v
             )
             window = canvas.backend.renWin
-            window.Render()
             id = self.getGlobalId(window)
             self._open_views[id] = (
                 window,
                 canvas
             )
+
+            def dirty(*arg, **kw):
+                self._dirty_views[id] = True
+
+            def resize(*arg, **kw):
+                if self._dirty_views.pop(id, None):
+                    canvas.update()
+
+            window.AddObserver(vtk.vtkCommand.ModifiedEvent, dirty)
+            window.AddObserver(vtk.vtkCommand.EndEvent, resize)
+
             return id
+
+        @exportRpc('cdat.view.update')
+        def update_view(self, id):
+            window, canvas = self._open_views[id]
+            canvas.update()
+            window.Render()
+
 
         @exportRpc('cdat.view.destroy')
         def destroy_view(self, id):

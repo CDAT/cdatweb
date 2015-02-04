@@ -146,7 +146,11 @@
         return function (panel) {
 
             var myId = panel.attr('id');
-            options.session.call('cdat.view.create', [options.file, options.variable])
+            var opts = {
+                width: 500,
+                height: 500
+            };
+            options.session.call('cdat.view.create', [options.file, options.variable, opts])
                 .then(function (view) {
                     options.view = view;
                     var viewport;
@@ -167,7 +171,6 @@
                     panel.on('resize jspanelloaded jspanelmaximized jspanelnormalized', render);
 
                     $('body').on('jspanelclosed', close);
-                    window.viewport = viewport;
                 }, app.error);
         };
     };
