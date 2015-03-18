@@ -22,12 +22,20 @@ def search(request):
         context = request.POST.dict()
         host = context["host"]
         query = {}
-        query['query'] = context['text']
-        query['project'] = context['text']
-        query['limit'] = context['project']
-        query['offset'] = context['offset']
+        if context['text']:
+            print context['text']
+            query['query'] = context['text']
+        if context['project']:
+            print 'text'
+            query['project'] = context['project']
+        if context['limit']:
+            print 'limit'
+            query['limit'] = context['limit']
+        if context['offset']:
+            print 'offset'
+            query['offset'] = context['offset']
         query['fields'] = 'size,timestamp,project,id,experiment,title,url'
-        
+        print query
         data = files(host, query)
     else:
         data = "none"
