@@ -8,6 +8,9 @@
       <div class="vtk-browser-container">
         <div class="vtk-file-browser"></div>
       </div>
+      <div class="vtk-search-container">
+        <!-- esgf search component -->
+      </div>
     </div>
   </div>
 </div>
@@ -16,4 +19,5 @@
 {% block js %}
 {{ block.super }}
 {% include "vtk_view/fragments/panel.html" with container=".vtk-browser-container" help=browser.help icon="fa fa-database" title="Data" overflow="scroll" %}
+{% include "vtk_view/fragments/panel.html" with container=".vtk-search-container" help=search.help icon="fa fa-search" title="Search" overflow="scroll" %}
 {% endblock %}

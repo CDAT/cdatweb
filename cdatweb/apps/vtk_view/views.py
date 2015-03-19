@@ -29,7 +29,10 @@ def vtk_viewer(request):
     '''
     Open the main visualizer view.
     '''
-    data = _refresh(request)
+    try:
+        data = _refresh(request)
+    except Exception:
+        data = {}
     data['main'] = 'browser'
     data['browser'] = {
         'help': _browser_help
