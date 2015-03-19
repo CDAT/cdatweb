@@ -12,7 +12,7 @@ urlpatterns = patterns(
     url(r'^$', views.index, name='index'),
     url(r'^vtk/viewer.html', vtk_views.vtk_viewer),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^search/', views.search, name='search')
+    url(r'^vtk/search', vtk_views.search)
 )
 
 # Development

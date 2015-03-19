@@ -15,20 +15,3 @@ import os
 
 def index(request):
     return render(request, 'nav.html', {})
-
-def search(request):
-    context = RequestContext(request)
-    if request.method == 'POST':
-        context = request.POST.dict()
-        host = context["host"]
-        query = {}
-        query['query'] = context['text']
-        query['project'] = context['text']
-        query['limit'] = context['project']
-        query['offset'] = context['offset']
-        query['fields'] = 'size,timestamp,project,id,experiment,title,url'
-        
-        data = files(host, query)
-    else:
-        data = "none"
-    return render(request, 'cdat_fe/search.html', {"data":data})

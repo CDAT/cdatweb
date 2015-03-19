@@ -3,7 +3,7 @@ from cdatweb.settings.production import *
 import os
 
 TMP_PATH = os.path.abspath(os.path.join(PROJECT_ROOT, 'tmp'))
-
+ALLOWED_HOSTS = ['*']
 DEBUG = TEMPLATE_DEBUG = True
 SECRET = '42'
 DATABASES = {
