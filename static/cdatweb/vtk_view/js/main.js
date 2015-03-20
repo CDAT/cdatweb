@@ -124,8 +124,23 @@
         connection.session
             .call('file.server.list')
             .then(function (files) {
+                app.setSession(connection.session);
                 renderBrowser(connection, files);
             }, app.error);
+    };
+
+    app.getSession = function (func) {
+      if (app._sessionList === undefined) {
+        app._sessionList = [];
+      }
+      app._sessionList.push(func);
+    };
+
+    app.setSession = function (session) {
+      app._sessionList.forEach(function (l) {
+        l(session);
+      });
+      app._sessionList = [];
     };
 
     app.vtkViewCreator = function (options) {
