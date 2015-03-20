@@ -57,9 +57,11 @@
 <script type="text/javascript">
   function submit(){
     var host =    document.getElementById("host").value;
+    console.log(host);
     var text =    $("input[id=text]").val();
     var project = $("input[id=project]").val();
     var limit =   document.getElementById("limit").value;
+    console.log(limit);
     var offset =  $("input[id=offset]").val();
 
     var jsonObj = new Object;
@@ -79,15 +81,77 @@
   	  data: {query:jsonStr},
   	  dataType: 'json',
   	  success: function(data) {
-        results = data.data
-        obj = JSON.parse(results)
-        alert(str(obj))
+        results = data.data;
+        stacktop = [];
+        stacktop = results;
+        html = "<div><ul>"
+        for(var x = 0; x < stacktop.length; x++){
+          //console.log(stacktop[x]);
+          obj = stacktop[x];
+          /*
+          obj example 
+            dap: "http://esgdata1.nccs.nasa.gov/thredds/dodsC/NEX/dataportal/NEX/downscaled/NASA-Ames/BCSD/historical/mon/atmos/pr/r1i1p1/v1.0/CONUS/pr_amon_BCSD_historical_r1i1p1_CONUS_FGOALS-g2_199501-199912.nc.html"
+            experiment: "decadal2005"
+            http: "http://adm07.cmcc.it/thredds/fileServer/esg_dataroot/cmip5/output1/CMCC/CMCC-CM/decadal2005/mon/atmos/cct/r1i1p1/cct_Amon_CMCC-CM_decadal2005_r1i1p1_200511-201512.nc"
+            id: null
+            metadata_format: null
+            node: null
+            project: "CMIP5"
+            regridding: null
+            size: 56245984
+            timestamp: "2012-03-06T23:52:36Z"
+            title: "cct_Amon_CMCC-CM_decadal2005_r1i1p1_200511-201512.nc"
+            type: null
+            urls: Array[1]
+            variables: Array[0]
+          */
+          html = html + "<li>Project: " + obj.project + "<br/>" +
+                        "Experiment: " + obj.experiment + "<br/>" +
+                        "Title: " + obj.title + "<br/>" +
+                        "<a href=\"" + obj.http + "\">Downlaod</a><br/>";
+          
+          for(var v = 0; v < obj.variables.length; v++){
+            html = html + "Variables: <a  onclick=\"newImage(" + obj.dap + ", " + obj.variables[v].name + ")\"  href=\"javascript:void(0)\">" + obj.variables[v].name + "</a> &nbsp;";
+          }
+          
+          
+          html = html + "</li><hr>";
+        }
+        
+        //exampleURL = "http://esgcet.llnl.gov/dap/ipcc4/20c3m/ncar_ccsm3_0/pcmdi.ipcc4.ncar_ccsm3_0.20c3m.run6.atm.mo.xml";
+        //exampleVAR = "ua"; //rsut - ua - wap 
+        //html = html + "<li><a onclick=\"newImage(" + exampleURL + ", " + exampleVAR + ")\" href=\"javascript:void(0)\">Example</a>";
+        
+        html = html + "</ul></div>";
+        title = "Search Results";
+        newPanel(title, html);
       },
 		  error: function(request, status, error) {
 	      $("div .error").html(request + " | " + status + " | " + error);
 	      $("div .error").show();
 	    }
 	  });
+}
+
+function newPanel(title, content){
+  $.jsPanel({
+    title: title,
+    content: content,
+    overflow: 'scroll',
+    position: "center"
+  });
+}
+
+function emptyPanel(){
+  return $.jsPanel({});
+}
+
+function newImage(dap, variable){
+  console.log(dap);
+  console.log(variable);
+  var func = cdat.vtkViewCreator({file: dap, variable: variable});
+  var panel = emptyPanel();
+  func(panel);
 }
 </script>
 

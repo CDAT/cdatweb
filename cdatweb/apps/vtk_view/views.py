@@ -66,6 +66,7 @@ def vtk_test(request, test="cone"):
 @csrf_exempt
 def search(request):
     try:
+        results = {}
         inputstring = request.POST.get('query')
         context = simplejson.loads(inputstring)
     
@@ -80,16 +81,16 @@ def search(request):
             query["limit"] = context["limit"]
         if context["offset"]:
             query["offset"] = context["offset"]
-        query['fields'] = 'size,timestamp,project,id,experiment,title,url'
+        #query['fields'] = 'size,timestamp,project,id,experiment,title,url'
         
-        results = {}
         try:
             results['data'] = files(host, query)
         except Exception,e:
-            results['data'] = none
+            results['data'] = "failed to reach node"
             print "failed to reach node"
     except Exception,e:
-        print "failed"
+        results['data'] = "failed to parse json"
+        print "failed to parse json"
 
     print "DONE"
     return HttpResponse(json.dumps(results))
