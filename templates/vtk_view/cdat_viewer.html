@@ -110,8 +110,9 @@
                         "Title: " + obj.title + "<br/>" +
                         "<a href=\"" + obj.http + "\">Downlaod</a><br/>";
           
+          html = html + "Variables: ";
           for(var v = 0; v < obj.variables.length; v++){
-            html = html + "Variables: <a  onclick=\"newImage('" + obj.dap + "', '" + obj.variables[v].name + "')\"  href=\"javascript:void(0)\">" + obj.variables[v].name + "</a> &nbsp;";
+            html = html + " <a  onclick=\"newImage('" + obj.dap + "', '" + obj.variables[v].name + "')\"  href=\"javascript:void(0)\">" + obj.variables[v].name + "</a> &nbsp;";
           }
           
           
