@@ -16,7 +16,6 @@ _viewers = []
 
 class CDATWebVisualizer(wamp.ServerProtocol):
 
-    authKey = 'secret'
     basePath = '.'
     uploadPath = '.'
 
