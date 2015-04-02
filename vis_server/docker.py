@@ -13,7 +13,7 @@ background = []
 name = ''.join(choice(string.ascii_uppercase + string.digits) for _ in range(6))
 dockercmd = " ".join([
     "docker run --name={} --rm=true -p {}:{} -t uvcdat/cdatweb-vtkweb",
-    "python", "/opt/cdatweb/run.py", "--port", "{}", "--upload-directory", "/data"
+    "python", "/opt/cdatweb/run.py", "--port", "{}", "--upload-directory", "/opt/uvcdat/sample_data"
 ])
 
 def main_linux(port):

@@ -40,19 +40,19 @@ class Cdms_reader(BaseFileReader):
                 'axes': info.getAxisIds(),
                 'shape': info.getShape(),
                 'description': getattr(info, 'title', ''),
-                'dtype': info.typecode(),
+                'dtype': str(info.typecode()),
                 'units': getattr(info, 'units', None)
             }
         dimensions = {}
         for dim, info in self._f.axes.iteritems():
             dimensions[dim] = {
                 'units': getattr(info, 'units', None),
-                'dtype': info.typecode(),
+                'dtype': str(info.typecode()),
                 'type': _dim_type(info),
                 'data': info.getData().tolist(),
                 'size': len(info)
             }
-        attributes = dict(self._f.attributes)
+        attributes = {} # dict(self._f.attributes)
         return {
             'variables': variables,
             'dimensions': dimensions

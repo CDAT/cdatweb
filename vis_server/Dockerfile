@@ -7,4 +7,4 @@ ADD . /opt/cdatweb
 
 USER uvcdat
 EXPOSE 8000
-CMD ["python", "/opt/cdatweb/run.py", "--port", "8000", "--upload-directory", "/data"]
+CMD ["python", "/opt/cdatweb/run.py", "--port", "8000", "--upload-directory", "/opt/uvcdat/sample_data"]

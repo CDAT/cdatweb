@@ -20,6 +20,7 @@ class CDATWebVisualizer(wamp.ServerProtocol):
     uploadPath = '.'
 
     def initialize(self):
+
         # intialize protocols
         self.registerVtkWebProtocol(protocols.MouseHandler())
         self.registerVtkWebProtocol(protocols.ViewPort())
@@ -53,7 +54,6 @@ if __name__ == '__main__':
 
     settings.SERVER_TEST=args.testing
 
-    CDATWebVisualizer.authKey = args.authKey
     CDATWebVisualizer.uploadPath = args.uploadPath
 
 import protocols
