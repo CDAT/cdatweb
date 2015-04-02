@@ -9,16 +9,16 @@
     $(function () {
         vtkSession = {
             "host": "{{ host }}",
-            "secret": "{{ secret }}",
+            "secret": "vtkweb-secret",
             "sessionURL": "{{ sessionURL }}",
             "id": "{{ id }}",
-            "port": {{ port }}
+            "port": {{ port|default:0 }}
         };
 
         vtkWeb.connect(
             {
-              "sessionURL": vtkSession.sessionURL,
-              "secret": vtkSession.secret
+                "sessionURL": vtkSession.sessionURL,
+                "secret": vtkSession.secret
             },
             cdat.{{ main|default:"main" }},
             cdat.{{ error|default:"error" }}
