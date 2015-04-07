@@ -129,6 +129,7 @@
             }, app.error);
     };
 
+    app._sessionList = [];
     app.getSession = function (func) {
       if (app._sessionList === undefined) {
         app._sessionList = [];
