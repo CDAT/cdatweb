@@ -12,7 +12,7 @@
             "secret": "{{ secret }}",
             "sessionURL": "{{ sessionURL }}",
             "id": "{{ id }}",
-            "port": {{ port }}
+            "port": {{ port|default:0 }}
         };
 
         vtkWeb.connect(
