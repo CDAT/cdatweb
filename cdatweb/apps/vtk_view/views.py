@@ -1,5 +1,4 @@
 import json
-import simplejson
 import vtk_launcher
 import os
 from django.shortcuts import render
@@ -68,7 +67,7 @@ def search(request):
     try:
         results = {}
         inputstring = request.POST.get('query')
-        context = simplejson.loads(inputstring)
+        context = json.loads(inputstring)
     
         host = context["host"]
         print host
