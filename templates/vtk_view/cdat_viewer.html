@@ -150,15 +150,14 @@ function emptyPanel(){
 function newImage(dap, variable){
   console.log(dap);
   console.log(variable);
-  cdat.getSession(function (session) {
+  cdat.session.done(function (session) {
     var func = cdat.vtkViewCreator({file: dap, session: session, variable: variable});
     var panel = emptyPanel();
     func(panel);
-  });
+  }).fail(function (err) { console.log('session failed with: ' + err)});;
 }
 </script>
 
 {{ block.super }}
-{% include "vtk_view/fragments/panel.html" with container=".vtk-browser-container" help=browser.help icon="fa fa-database" title="Data" overflow="scroll" %}
 {% include "vtk_view/fragments/panel.html" with container=".vtk-search-container" help=search.help icon="fa fa-search" title="Search" overflow="scroll" %}
 {% endblock %}

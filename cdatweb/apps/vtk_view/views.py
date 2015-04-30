@@ -44,9 +44,10 @@ def vtk_viewer(request):
         data = _refresh(request)
     except Exception:
         data = {}
-    data['main'] = 'browser'
-    data['browser'] = {
-        'help': _browser_help
+    data['main'] = 'main'
+    data['error'] = 'error'
+    data['search'] = {
+        'help': ''
     }
     options = {
         'resizable': True
