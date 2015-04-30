@@ -113,8 +113,12 @@
           html = html + "Variables: ";
           for(var v = 0; v < obj.variables.length; v++){
             console.log(obj.dap);
-            
-            html = html + " <a  onclick=\"newImage('" + obj.dap + "', '" + obj.variables[v].name + "')\"  href=\"javascript:void(0)\">" + obj.variables[v].name + "</a> &nbsp;";
+            if (typeof(obj.dap) === "undefined"){
+              html = html + " " + obj.variables[v].name + "&nbsp;";
+            }
+            else{
+              html = html + " <a  onclick=\"newImage('" + obj.dap + "', '" + obj.variables[v].name + "')\"  href=\"javascript:void(0)\">" + obj.variables[v].name + "</a> &nbsp;";
+            }
           }
           
           
