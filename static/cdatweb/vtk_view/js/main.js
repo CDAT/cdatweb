@@ -104,19 +104,15 @@
 
     }
 
+    app.session = $.Deferred();
+
     app.main = function (connection) {
-        // default!?
+        app.session.resolve(connection.session);
     };
 
     app.error = function (err) {
         // TODO: create general error page
-        var msg;
-        try {
-            msg = JSON.stringify(err, null, 2);
-        } catch (e) {
-            msg = err;
-        }
-        console.error(msg);
+        app.session.reject(err);
     };
 
     app.browser = function (connection) {
@@ -171,7 +167,11 @@
                     panel.on('resize jspanelloaded jspanelmaximized jspanelnormalized', render);
 
                     $('body').on('jspanelclosed', close);
-                }, app.error);
+                },
+                function (err) {
+                    console.log('Applicaton failed with: ' + JSON.stringify(err, null, 2));
+                }
+            );
         };
     };
 

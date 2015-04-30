@@ -10,6 +10,8 @@ sys.path.append(os.path.dirname(vtk.__file__))
 from vtk.web import server
 from vtk.web import wamp
 
+from protocols.readers import cdms_reader
+
 from external import exportRpc
 import settings
 _viewers = []
@@ -66,7 +68,7 @@ if not args.testing:
 
         @exportRpc('cdat.view.create')
         def create_view(self, fname, varname, opts={}):
-            reader = protocols.FileLoader.get_cached_reader(fname)
+            reader = cdms_reader.Cdms_reader(fname)
             v = reader.read(varname)
             canvas = vcs.init()
             canvas.setbgoutputdimensions(width=500, height=500, units='pixels')
