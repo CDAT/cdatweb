@@ -151,10 +151,27 @@ function newImage(dap, variable){
   console.log(dap);
   console.log(variable);
   cdat.session.done(function (session) {
-    var func = cdat.vtkViewCreator({file: dap, session: session, variable: variable});
-    var panel = emptyPanel();
-    func(panel);
-  }).fail(function (err) { console.log('session failed with: ' + err)});;
+    //var func = cdat.vtkViewCreator({file: dap, session: session, variable: variable});
+    //var func = cdat.make_panel()
+    //var panel = emptyPanel();
+    //func(panel);
+    
+    cdat.make_panel(
+                $('<div/>').get(0),
+                null,
+                {
+                  selector: '.vtk-view-container',
+                  title: '<span><i class="fa fa-picture-o"></i>' + varinfo + '</span>',
+                  size: {width: 500, height: 500},
+                  overflow: 'hidden',
+                  callback: app.vtkViewCreator({
+                      session: session,
+                      file: dap,
+                      variable: variable
+                  })
+                }
+            );
+  });
 }
 </script>
 
