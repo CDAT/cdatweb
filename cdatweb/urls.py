@@ -9,8 +9,7 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', views.index, name='index'),
-    url(r'^vtk/viewer.html', vtk_views.vtk_viewer),
+    url(r'^$', vtk_views.vtk_viewer),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^vtk/search', vtk_views.search)
 )
