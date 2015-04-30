@@ -63,13 +63,39 @@ Once the server is running, browse to
 [http://localhost:8000/vtk/viewer.html](http://localhost:8000/vtk/viewer.html).
 In case of trouble, see the server logs in `tmp/logs`.
 
-1. Running a test server
+1. Running vtkWeb from a docker image (Mac OS or Linux ony)
 
-  There is a testing only version of the visualization server that you can
-  run without installing UV-CDAT.  This server generates data on the fly to
-  mock the behavior of the full fledged server for testing purposes.  It
-  can also be used as a quick demo of the cdatweb front end in lieu building
-  the entire UV-CDAT backend.
+  You first must have [Docker](https://docs.docker.com/) installed.  See the
+  installation guide for more information.  The setup here assumes you have
+  `boot2docker` on you `PATH` and that you have run `$(boot2docker shellinit)`
+  in your current terminal window on Mac OS.
+
+  First, get the latest docker image from dockerhub by running
+  ```
+  docker pull uvcdat/cdatweb-vtkweb
+  ```
+  Once that is complete, go
+  to the `static` directory at the root of this repository and run
+  the following command to copy the vtkweb javascript sources
+  ```
+  docker run uvcdat/cdatweb-vtkweb tar c -C /opt/uvcdat/Externals/lib www | tar x && ln -sf www vtkweb
+  ```
+  Now go to the `vis_server` directory and install the requirements
+  for the vtkweb launcher
+  ```
+  pip install -r requirements.txt
+  ```
+  You should now be able to run the launcher
+  ```
+  python launcher.py config.json
+  ```
+  This will serve the launcher at port 7000 on your machine.
+
+  At this point, you can start up the django server from a different terminal
+  window as described above.  If everything is working correctly, you
+  should see a list of files when you browse to
+  [http://localhost:8000/vtk/viewer.html](http://localhost:8000/vtk/viewer.html).
+
 
 2. Running a local vtkWeb instance
 
