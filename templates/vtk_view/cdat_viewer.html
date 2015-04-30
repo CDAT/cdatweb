@@ -161,10 +161,10 @@ function newImage(dap, variable){
                 null,
                 {
                   selector: '.vtk-view-container',
-                  title: '<span><i class="fa fa-picture-o"></i>' + varinfo + '</span>',
+                  title: '<span><i class="fa fa-picture-o"></i>' + variable + '</span>',
                   size: {width: 500, height: 500},
                   overflow: 'hidden',
-                  callback: app.vtkViewCreator({
+                  callback: cdat.vtkViewCreator({
                       session: session,
                       file: dap,
                       variable: variable
