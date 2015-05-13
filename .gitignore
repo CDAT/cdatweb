@@ -1,7 +1,6 @@
 *.sqlite3
 *.py[co]
 .*.swp
-static/vtkweb
 cdatweb.egg-info/
 django/
 public/
