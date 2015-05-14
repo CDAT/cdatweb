@@ -112,7 +112,16 @@
           
           html = html + "Variables: ";
           for(var v = 0; v < obj.variables.length; v++){
-            html = html + " <a  onclick=\"newImage('" + obj.dap + "', '" + obj.variables[v].name + "')\"  href=\"javascript:void(0)\">" + obj.variables[v].name + "</a> &nbsp;";
+            if (typeof(obj.dap) === "undefined"){
+              html = html + " " + obj.variables[v].name + "&nbsp;";
+            }
+            else{
+              _dap = obj.dap
+              if(_dap.substring(_dap.length - 5, _dap.length) == ".html"){
+                _dap = _dap.substring(0, _dap.length - 5)
+              }
+              html = html + " <a  onclick=\"newImage('" + _dap + "', '" + obj.variables[v].name + "')\"  href=\"javascript:void(0)\">" + obj.variables[v].name + "</a> &nbsp;";
+            }
           }
           
           
@@ -151,11 +160,6 @@ function newImage(dap, variable){
   console.log(dap);
   console.log(variable);
   cdat.session.done(function (session) {
-    //var func = cdat.vtkViewCreator({file: dap, session: session, variable: variable});
-    //var func = cdat.make_panel()
-    //var panel = emptyPanel();
-    //func(panel);
-    
     cdat.make_panel(
                 $('<div/>').get(0),
                 null,
