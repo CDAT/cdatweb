@@ -3,6 +3,8 @@
 CDATWeb 2.0 alpha
 =================
 
+##Please read the [Devlopment Guidelines](https://github.com/UV-CDAT/cdatweb/wiki/Development-Guidelines)
+
 This is an early version of CDAT Web 2.0 with the basic organizational
 structure in place.  Work is ongoing to restore features and document
 the development process.  For the moment, the application relies on
