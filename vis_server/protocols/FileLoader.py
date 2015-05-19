@@ -1,10 +1,9 @@
-import traceback
 import os
 
 from . import BaseProtocol
 from external import exportRpc
 
-from readers import __all__ as readers
+from readers import all_readers as readers
 
 
 class FileLoader(BaseProtocol):

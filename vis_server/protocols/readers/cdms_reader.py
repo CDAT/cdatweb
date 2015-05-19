@@ -21,6 +21,7 @@ class Cdms_reader(BaseFileReader):
     '''
 
     name = 'cdms2'
+
     def _open(self, file_name):
         self._f = cdms2.open(file_name)
         self._info = None
@@ -29,7 +30,7 @@ class Cdms_reader(BaseFileReader):
     def canOpen(self, file_name):
         try:
             cdms2.open(file_name)
-        except Exception as e:
+        except Exception:
             return False
         return True
 
@@ -52,7 +53,6 @@ class Cdms_reader(BaseFileReader):
                 'data': info.getData().tolist(),
                 'size': len(info)
             }
-        attributes = {} # dict(self._f.attributes)
         return {
             'variables': variables,
             'dimensions': dimensions
