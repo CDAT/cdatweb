@@ -13,6 +13,7 @@ from vtk.web import wamp
 
 import protocols
 from protocols.readers import cdms_reader
+from protocols import opendap_auth
 import vcs
 
 from external import exportRpc
@@ -61,6 +62,27 @@ if __name__ == '__main__':
     settings.SERVER_TEST = args.testing
 
     CDATWebVisualizer.uploadPath = args.uploadPath
+
+
+class LogonProtocol(protocols.BaseProtocol):
+
+    """Exposes ESGF logon to the client."""
+
+    @exportRpc('cdat.esgf.logon')
+    def esgf_logon(self, openid, password):
+        """Logon to the ESGF node by openid.
+
+        The authentication token is stored in a temporary directory that
+        is cleaned on exiting the process.  Calling logon again will
+        replace the credentials.
+
+        :param openid: The user's openid
+        :type openid: str
+        :param password: The user's password
+        :type password: str
+        :returns bool: Success (true) or failure (false)
+        """
+        return opendap_auth.logon(openid, password)
 
 
 class TestProtocol(protocols.BaseProtocol):
