@@ -3,6 +3,7 @@
 import sys
 import os
 import argparse
+import tempfile
 
 import vtk
 
@@ -129,5 +130,8 @@ class TestProtocol(protocols.BaseProtocol):
             cache[0].Finalize()
 
 if __name__ == '__main__':
+    # switch to a new temp directory (in the future we will want
+    # user specific directories to save state between sessions
+    os.chdir(os.tempfile.gettempdir())
     print("CDATWeb Visualization server initializing")
     server.start_webserver(options=args, protocol=CDATWebVisualizer)
