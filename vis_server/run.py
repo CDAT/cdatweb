@@ -42,6 +42,7 @@ class CDATWebVisualizer(wamp.ServerProtocol):
         self.registerVtkWebProtocol(protocols.FileLoader(self.uploadPath))
         self.registerVtkWebProtocol(protocols.FileFinder(self.uploadPath))
         self.registerVtkWebProtocol(protocols.ViewportDeleter())
+        self.registerVtkWebProtocol(LogonProtocol())
         self.registerVtkWebProtocol(TestProtocol())
 
 
