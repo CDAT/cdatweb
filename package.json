@@ -1,0 +1,13 @@
+{
+  "name": "cdatweb",
+  "version": "0.0.1",
+  "description": "dummy package existing to manage dependencies and testing",
+  "private": true,
+  "dependencies": {
+    "jscs": "^1.13.1",
+    "jshint": "^2.8"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/jshint static && ./node_modules/.bin/jscs static"
+  }
+}

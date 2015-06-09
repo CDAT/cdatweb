@@ -4,6 +4,8 @@ sudo: false
 
 before_install:
   - pip install -U -r requirements.txt -r requirements-dev.txt
+  - npm install -g
 
 script:
-  flake8 .
+  - flake8 .
+  - npm test
