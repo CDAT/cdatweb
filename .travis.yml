@@ -9,4 +9,7 @@ before_install:
 script:
   - flake8 .
   - npm test
-  - py.test
+  - py.test --cov-report=term --cov .
+
+after_success:
+  coveralls
