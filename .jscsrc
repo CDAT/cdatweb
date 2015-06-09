@@ -1,5 +1,7 @@
 {
   "preset": "crockford",
+  "disallowDanglingUnderscores": null,
+  "requireMultipleVarDecl": null,
   "excludeFiles": [
     "static/vtkweb/**/*.js",
     "static/js/*.js",
