@@ -4,15 +4,16 @@ from os import makedirs
 
 import settings
 
-settings.SERVER_TEST = True
+settings.SERVER_TEST = True  # noqa
 from protocols.readers.base import BaseFileReader
+
 
 class TestReader(BaseFileReader):
 
     name = 'test'
 
     @classmethod
-    def canOpen(self, file_name):
+    def canOpen(cls, file_name):
         try:
             json.loads(open(file_name).read())
             return True
@@ -41,7 +42,6 @@ def write_dir(tree, path):
         write_dir(tree['dirs'][d], join(path, d))
 
 if __name__ == '__main__':
-    import json
     import sys
 
     assert len(sys.argv) == 3

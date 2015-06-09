@@ -7,7 +7,7 @@ else:
     from testing import TestReader
     __all__ = [TestReader]
 
-_reader_map = { reader.name: reader for reader in __all__ }
+_reader_map = {reader.name: reader for reader in __all__}
 
 
 def get_reader(name):

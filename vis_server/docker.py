@@ -13,8 +13,10 @@ background = []
 name = ''.join(choice(string.ascii_uppercase + string.digits) for _ in range(6))
 dockercmd = " ".join([
     "docker run --name={} --rm=true -p {}:{} -t uvcdat/cdatweb-vtkweb",
-    "python", "/opt/cdatweb/run.py", "--port", "{}", "--upload-directory", "/opt/uvcdat/sample_data"
+    "python", "/opt/cdatweb/run.py", "--port", "{}", "--upload-directory",
+    "/opt/uvcdat/sample_data"
 ])
+
 
 def main_linux(port):
     """Start a vis server from a linux host on the given port."""

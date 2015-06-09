@@ -66,6 +66,8 @@ for fname in sys.argv[1:]:
 
 
 tree = {}
+
+
 def buildTree(root, path):
     root['files'] = {}
     root['dirs'] = {}

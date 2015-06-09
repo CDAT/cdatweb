@@ -5,7 +5,7 @@ import argparse
 
 import vtk
 
-sys.path.append(os.path.dirname(vtk.__file__))
+sys.path.append(os.path.dirname(vtk.__file__))  # noqa
 
 from vtk.web import server
 from vtk.web import wamp
@@ -15,6 +15,7 @@ from protocols.readers import cdms_reader
 from external import exportRpc
 import settings
 _viewers = []
+
 
 class CDATWebVisualizer(wamp.ServerProtocol):
 
@@ -54,14 +55,15 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    settings.SERVER_TEST=args.testing
+    settings.SERVER_TEST = args.testing
 
     CDATWebVisualizer.uploadPath = args.uploadPath
 
-import protocols
+import protocols  # noqa
 if not args.testing:
-    import vcs
-    import cdms2
+    import vcs  # noqa
+    import cdms2  # noqa
+
     class TestProtocol(protocols.BaseProtocol):
         _open_views = {}
         _dirty_views = {}
@@ -72,9 +74,7 @@ if not args.testing:
             v = reader.read(varname)
             canvas = vcs.init()
             canvas.setbgoutputdimensions(width=500, height=500, units='pixels')
-            plot = canvas.plot(
-                v
-            )
+            canvas.plot(v)
             window = canvas.backend.renWin
             id = self.getGlobalId(window)
             self._open_views[id] = (
@@ -99,7 +99,6 @@ if not args.testing:
             window, canvas = self._open_views[id]
             canvas.update()
             window.Render()
-
 
         @exportRpc('cdat.view.destroy')
         def destroy_view(self, id):

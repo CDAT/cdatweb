@@ -1,1 +1,1 @@
-SERVER_TEST=False
+SERVER_TEST = False

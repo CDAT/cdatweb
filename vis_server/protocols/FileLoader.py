@@ -1,4 +1,3 @@
-import traceback
 import os
 
 from . import BaseProtocol

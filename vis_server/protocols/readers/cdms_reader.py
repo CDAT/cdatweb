@@ -16,20 +16,20 @@ def _dim_type(d):
 
 
 class Cdms_reader(BaseFileReader):
-    '''
-    A reader based on the cdms2 python library.
-    '''
+
+    """A reader based on the cdms2 python library."""
 
     name = 'cdms2'
+
     def _open(self, file_name):
         self._f = cdms2.open(file_name)
         self._info = None
 
     @classmethod
-    def canOpen(self, file_name):
+    def canOpen(cls, file_name):
         try:
             cdms2.open(file_name)
-        except Exception as e:
+        except Exception:
             return False
         return True
 
@@ -52,7 +52,6 @@ class Cdms_reader(BaseFileReader):
                 'data': info.getData().tolist(),
                 'size': len(info)
             }
-        attributes = {} # dict(self._f.attributes)
         return {
             'variables': variables,
             'dimensions': dimensions
