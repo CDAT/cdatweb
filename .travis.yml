@@ -9,3 +9,4 @@ before_install:
 script:
   - flake8 .
   - npm test
+  - py.test

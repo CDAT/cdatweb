@@ -39,10 +39,8 @@ def raw(host, query):
     query['format'] = 'application/solr+json'
 
     req = requests.get(host.rstrip('/') + '/search', params=query)
-    print req.url
 
     if not req.ok:
-        print req.url
         raise Exception("ESGF request failed with code {0}".format(req.status_code))
 
     return req.json()
