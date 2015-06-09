@@ -6,4 +6,4 @@ before_install:
   - pip install -U -r requirements.txt -r requirements-dev.txt
 
 script:
-  flake8 vis_server
+  flake8 .

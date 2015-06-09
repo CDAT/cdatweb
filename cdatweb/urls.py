@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
-from . import views
 from .apps.vtk_view import views as vtk_views
 
 admin.autodiscover()
@@ -15,7 +14,7 @@ urlpatterns = patterns(
 )
 
 # Development
-from django.conf import settings
+from django.conf import settings  # noqa
 if settings.DEBUG:
     from django.conf.urls.static import static
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
