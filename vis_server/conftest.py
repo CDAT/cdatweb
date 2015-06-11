@@ -17,7 +17,8 @@ sys.path.append(
 try:
     import vtk  # noqa
 except ImportError:
-    sys.modules['vtk'] = __import__('mock_vtk')
+    vtk = __import__('mock_vtk')
+    sys.modules['vtk'] = vtk
     sys.modules['autobahn'] = __import__('mock_autobahn')
 
 sys.path.append(os.path.dirname(vtk.__file__))  # noqa

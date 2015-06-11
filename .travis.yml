@@ -8,8 +8,6 @@ env:
 before_install:
   - pip install -U -r requirements.txt -r requirements-dev.txt -r vis_server/requirements.txt
   - npm install
-  - wget http://midas3.kitware.com/midas/download/bitstream/366970/vtk-precise64-118242.tar.gz -O vtk-precise64.tar.gz
-  - tar xzvf vtk-precise64.tar.gz -C ~
 
 script:
   - flake8 .
