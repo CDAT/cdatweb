@@ -4,4 +4,4 @@ types = {
     'isofill': isofill,
     'volume': volume
 }
-__all__ = types[:]
+__all__ = types.keys()
