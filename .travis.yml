@@ -15,4 +15,5 @@ script:
   - py.test --cov-report=term --cov .
 
 after_success:
+  coverage combine
   coveralls
