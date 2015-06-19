@@ -1,12 +1,5 @@
-from cdms_reader import Cdms_reader
-__all__ = [Cdms_reader]
+"""Package containing all file reader protocols."""
 
-_reader_map = {reader.name: reader for reader in __all__}
+from cdms_reader import CdmsReader
 
-
-def get_reader(name):
-    '''
-    Get a reader from its unique name.  If no reader is found,
-    returns None.
-    '''
-    return _reader_map.get(name, None)
+__all__ = ('CdmsReader',)

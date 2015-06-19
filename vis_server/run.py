@@ -26,7 +26,7 @@ class CDatProtocol(protocols.BaseProtocol):
 
     @exportRpc('cdat.view.create')
     def create_view(self, fname, varname, opts={}):
-        reader = cdms_reader.Cdms_reader(fname)
+        reader = cdms_reader.CdmsReader(fname)
         v = reader.read(varname)
         canvas = vcs.init()
         canvas.setbgoutputdimensions(width=500, height=500, units='pixels')

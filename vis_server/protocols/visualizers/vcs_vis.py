@@ -4,7 +4,7 @@ from base import BaseVisualizer
 import vcs
 
 
-class Vcs_plot(BaseVisualizer):
+class VcsPlot(BaseVisualizer):
 
     """Base class for all Vcs-based visualization classes."""
 
@@ -19,7 +19,7 @@ class Vcs_plot(BaseVisualizer):
             return False
 
     def __init__(self, *arg, **kw):
-        super(Vcs_plot, self).__init__(*arg, **kw)
+        super(VcsPlot, self).__init__(*arg, **kw)
         self._canvas = vcs.init()
         self._plot = None
 
@@ -36,7 +36,7 @@ class Vcs_plot(BaseVisualizer):
         return True
 
     def render(self, opts={}):
-        super(Vcs_plot, self).render(opts)
+        super(VcsPlot, self).render(opts)
 
         args = self._var[:]
         args = args + [self._gm]
@@ -55,15 +55,15 @@ class Vcs_plot(BaseVisualizer):
         return self._window
 
 
-class isofill(Vcs_plot):
+class Isofill(VcsPlot):
     plot_type = vcs.getisofill
-    info = dict(Vcs_plot.info)
+    info = dict(VcsPlot.info)
     info['ndims'] = 2
     info['nvars'] = 1
 
 
-class volume(Vcs_plot):
+class Volume(VcsPlot):
     plot_type = vcs.get3d_scalar()
-    info = dict(Vcs_plot.info)
+    info = dict(VcsPlot.info)
     info['ndims'] = 3
     info['nvars'] = 1

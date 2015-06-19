@@ -15,7 +15,7 @@ def _dim_type(d):
         return 'unknown'
 
 
-class Cdms_reader(BaseFileReader):
+class CdmsReader(BaseFileReader):
 
     """A reader based on the cdms2 python library."""
 
