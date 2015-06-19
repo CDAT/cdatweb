@@ -1,12 +1,16 @@
 machine:
   python:
     version: 2.7
+  services:
+    - docker
 
 dependencies:
   override:
     - pip install -U -r requirements.txt
     - pip install -U -r requirements-dev.txt
     - pip install -U -r vis_server/requirements.txt
+    - docker info
+    - docker build -t uvcdat/cdatweb-vtkweb vis_server
 
 test:
   override:
