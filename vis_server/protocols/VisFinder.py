@@ -36,9 +36,8 @@ class Visualizer(BaseProtocol):
         vis.loadVariable(var, opts)
         vis.render(opts)
         k = plottype + '_' + fname + '_' + '_'.join(varnames)
-        _active[k] = vis
+        self._active[k] = vis
 
         view = vis.getView()
         view.Render()
         return self.getGlobalId(view)
-

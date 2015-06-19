@@ -1,5 +1,4 @@
-"""
-WSGI config for cdatweb project.
+"""WSGI config for cdatweb project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -8,7 +7,7 @@ https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/
 """
 
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cdatweb.settings.development")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cdatweb.settings.development")  # noqa
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()

@@ -1,10 +1,10 @@
+"""Module defining the interface for server side file browsing.
 
-'''
 This module exposes methods that query for available files.  For the
 moment it only supports local files, but eventually it will be expanded
 to support remote files as well.
-'''
-import traceback
+"""
+
 import os
 
 from . import BaseProtocol
@@ -12,12 +12,16 @@ from external import exportRpc
 
 from FileLoader import FileLoader
 
+
 class FileFinder(BaseProtocol):
-    '''
+
+    """Server-side file browser protocol.
+
     This class is resposible for generating (and caching) available files
     on the server.  The response to the exposed `list` method is a tree
     like object compatible with the bootstrap-treeview plugin.
-    '''
+    """
+
     #: cache of the file system
     _file_tree = None
 
@@ -43,7 +47,6 @@ class FileFinder(BaseProtocol):
 
             root = root.replace(self._datadir, '', 1)
             root = '.' + root
-                
 
             obj = roots.get(root)
             if obj is None:
@@ -105,7 +108,6 @@ class FileFinder(BaseProtocol):
                             vlist
                         )
                 obj['nodes'].append(newobj)
-
 
         # remove empty subtrees
         def has_files(root):

@@ -1,0 +1,6 @@
+[run]
+omit = env/*
+       scripts/*
+       setup.py
+       *test*
+parallel = True

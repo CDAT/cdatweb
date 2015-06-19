@@ -1,0 +1,13 @@
+{
+  "preset": "crockford",
+  "disallowDanglingUnderscores": null,
+  "requireMultipleVarDecl": null,
+  "excludeFiles": [
+    "static/vtkweb/**/*.js",
+    "static/js/*.js",
+    "static/cdatweb/js/*.js",
+    "static/cdatweb/vtk_view/js/bootstrap-treeview.js",
+    "static/cdatweb/vtk_view/js/jquery.jspanel.js",
+    "static/cdatweb/vtk_view/js/tree.jquery.js"
+  ]
+}

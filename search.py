@@ -39,10 +39,8 @@ def raw(host, query):
     query['format'] = 'application/solr+json'
 
     req = requests.get(host.rstrip('/') + '/search', params=query)
-    print req.url
 
     if not req.ok:
-        print req.url
         raise Exception("ESGF request failed with code {0}".format(req.status_code))
 
     return req.json()
@@ -97,8 +95,8 @@ def _normalize_variable(doc, ivar):
         * desc: a description of the variable
         * units: the units of the variable
 
-    If any of these fields are missing from the input, the corresponding value will
-    be set to ``None``.
+    If any of these fields are missing from the input, the corresponding value
+    will be set to ``None``.
 
     :param dict doc: The file description
     :param integer ivar: The variable number inside the file
@@ -133,7 +131,8 @@ def _normalize_variable(doc, ivar):
 def _normalize_doc(doc):
     """Normalize a single document from a raw ESGF search."""
     norm = {
-        'variables': [_normalize_variable(doc, i) for i in xrange(len(doc.get('variable', [])))]
+        'variables': [_normalize_variable(doc, i)
+                      for i in xrange(len(doc.get('variable', [])))]
     }
     for url in doc.get('url', []):
         url_parsed = url.split('|')
@@ -170,7 +169,7 @@ def _normalize_doc(doc):
 
 
 def _parse_results(result):
-    """Normalize a search result from an ESGF server as a list of files with metadata.
+    """Normalize a search result from an ESGF server as a list of files.
 
     :param dict result: The raw search results
     :returns: A list of results in normalized form

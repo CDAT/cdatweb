@@ -1,6 +1,4 @@
-'''
-Handles visualization server launcher endpoints.
-'''
+"""Handles visualization server launcher endpoints."""
 
 import json
 import requests
@@ -9,10 +7,10 @@ from django.conf import settings
 
 
 def new_instance(app='default'):
-    '''
-    Create a new vtkweb instance.  Returns an object
-    containing status/websocket address to the instance.
-    '''
+    """Create a new vtkweb instance.
+
+    Returns an object containing status/websocket address to the instance.
+    """
     data = {
         'application': app
     }

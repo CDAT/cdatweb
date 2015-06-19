@@ -5,9 +5,8 @@ import vcs
 
 
 class Vcs_plot(BaseVisualizer):
-    '''
-    Base class for all Vcs-based visualization classes.
-    '''
+
+    """Base class for all Vcs-based visualization classes."""
 
     #: vcs plot type
     plot_type = None
@@ -43,7 +42,7 @@ class Vcs_plot(BaseVisualizer):
         args = args + [self._gm]
         self._canvas = vcs.init()
         self._plot = self._canvas.plot(
-            *args
+            *args,
             cdmsfile=self._var.parent.id,
             window_size=(self._width, self._height)
         )

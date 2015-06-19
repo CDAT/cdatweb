@@ -26,16 +26,14 @@ from .FileFinder import FileFinder
 
 from external import exportRpc
 
+
 class ViewportDeleter(BaseProtocol):
-    '''
-    Provides a method for deleting a viewport window once the client is done.
-    '''
+
+    """Provides a method for deleting a viewport window when client is ready"""
 
     @exportRpc('cdat.view.destroy')
     def destroy(self, viewId):
-        '''
-        Delete the viewport corresponding to the given object ID.
-        '''
+        """Delete the viewport corresponding to the given object ID."""
         r = None
         try:
             view = self.getView(viewId)
@@ -49,7 +47,7 @@ class ViewportDeleter(BaseProtocol):
             print 'Failed to remove view'
         return r
 
-__all__ = [
+__all__ = (
     BaseProtocol,
     MouseHandler,
     ViewPort,
@@ -59,4 +57,4 @@ __all__ = [
     FileLoader,
     FileFinder,
     ViewportDeleter
-]
+)
