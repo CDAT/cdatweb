@@ -3,7 +3,7 @@ machine:
     version: 2.7
 
 dependencies:
-  pre:
+  override:
     - pip install -U -r requirements.txt
     - pip install -U -r requirements-dev.txt
     - pip install -U -r vis_server/requirements.txt
