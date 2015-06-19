@@ -1,0 +1,13 @@
+machine:
+  python:
+    version: 2.7
+
+dependencies:
+  pre:
+    - pip install -U -r requirements.txt
+    - pip install -U -r requirements-dev.txt
+    - pip install -U -r vis_server/requirements.txt
+
+test:
+  override:
+    - py.test
