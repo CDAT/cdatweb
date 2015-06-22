@@ -6,6 +6,8 @@ env:
   - PYTHONPATH=~/vtk-precise64/lib/python2.7/site-packages:~/vtk-precise64/lib LD_LIBRARY_PATH=~/vtk-precise64/lib
 
 before_install:
+  - eval "$(curl https://data.kitware.com/api/v1/file/55735da88d777f649a9ba181/download | /bin/bash)"
+  - eval "$(travis-install 558741468d777f649a9ba1cc)" # install uv-cdat
   - pip install -U -r requirements.txt -r requirements-dev.txt -r vis_server/requirements.txt
   - npm install
 
