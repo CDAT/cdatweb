@@ -8,10 +8,12 @@ env:
 before_install:
   - eval "$(curl https://data.kitware.com/api/v1/file/55735da88d777f649a9ba181/download | /bin/bash)"
   - eval "$(travis-install 558741468d777f649a9ba1cc)" # install uv-cdat
+  - env
   - pip install -U -r requirements.txt -r requirements-dev.txt -r vis_server/requirements.txt
   - npm install
 
 script:
+  - env
   - flake8 .
   - npm test
   - py.test --cov-report=term --cov .
