@@ -63,7 +63,15 @@ Visualization installation
 Refer to one of the items below for starting up the visualization server.
 Once the server is running, browse to
 [http://localhost:8000/vtk/viewer.html](http://localhost:8000/vtk/viewer.html).
-In case of trouble, see the server logs in `tmp/logs`.
+In case of trouble, see the server logs in `tmp/logs`.  By default, CDATWeb is
+configured to use a development visualization server at LLNL.  In order to use
+a local visualization server, you will need to modify your django configuration
+at `cdatweb/settings/development.py`.  The value of `VISUALIZATION_LAUNCHER`
+should be set to your launcher service endpoint.  By default this is
+
+```python
+VISUALIZATION_LAUNCHER = 'http://localhost:7000/vtk'
+```
 
 1. Running vtkWeb from a docker image (Mac OS or Linux ony)
 
@@ -89,7 +97,7 @@ In case of trouble, see the server logs in `tmp/logs`.
   ```
   You should now be able to run the launcher
   ```
-  python launcher.py config.json
+  python launcher.py config-docker.json
   ```
   This will serve the launcher at port 7000 on your machine.
 
