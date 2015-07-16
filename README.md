@@ -103,7 +103,7 @@ In case of trouble, see the server logs in `tmp/logs`.
 
   As noted above, you may be able use a prebuilt UV-CDAT, but if you run
   into troubles, try to rebuild the latest version with the following
-  option: `cmake -D CDAT_BUILD_PARAVIEW=ON /path/to/uvcdat`.  Make sure
+  option: `cmake -D -DCDAT_BUILD_WEB=ON /path/to/uvcdat`.  Make sure
   you are not in your django virtual environment and source your
   UV-CDAT setup script.  If everything is setup correctly, you should be
   able to run the following:
