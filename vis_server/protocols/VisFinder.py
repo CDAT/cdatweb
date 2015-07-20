@@ -27,17 +27,32 @@ class Visualizer(BaseProtocol):
         # todo
         return None
 
-    @exportRpc('visualize.server.plot')
-    def create(self, fname, varnames, plottype, opts={}):
+    @exportRpc('visualize.server.draw')
+    def create(self, fname, varnames, plottype=None, opts={}):
+        if plottype is None:
+            plottype = 'Isofill'
         f = FileLoader.get_cached_reader(fname)
         var = map(f.read, varnames)
 
         vis = visualizers[plottype]()
         vis.loadVariable(var, opts)
         vis.render(opts)
-        k = plottype + '_' + fname + '_' + '_'.join(varnames)
-        self._active[k] = vis
 
         view = vis.getView()
         view.Render()
-        return self.getGlobalId(view)
+        id = self.getGlobalId(view)
+        self._active[id] = view
+        return id
+
+    @exportRpc('visualize.server.render')
+    def render_view(self, id):
+        view = self._active.get(id)
+        if not view:
+            return
+        view.Render()
+
+    @exportRpc('visualize.server.close')
+    def remove_view(self, id):
+        view = self._active.pop(id)
+        if view:
+            view.Finalize()

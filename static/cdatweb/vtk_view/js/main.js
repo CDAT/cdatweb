@@ -146,7 +146,7 @@
                 width: 500,
                 height: 500
             };
-            options.session.call('cdat.view.create', [options.file, options.variable, opts])
+            options.session.call('visualize.server.plot', [options.file, options.variable, 'Isofill', opts])
                 .then(function (view) {
                     options.view = view;
                     var viewport;
