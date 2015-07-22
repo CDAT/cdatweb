@@ -146,7 +146,7 @@
                 width: 500,
                 height: 500
             };
-            options.session.call('cdat.view.create', [options.file, options.variable, 'Isofill', opts])
+            options.session.call('cdat.view.create', [options.file, options.variable, options.type, opts])
                 .then(function (view) {
                     options.view = view;
                     var viewport;

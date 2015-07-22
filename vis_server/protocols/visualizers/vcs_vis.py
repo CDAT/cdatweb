@@ -22,6 +22,7 @@ class VcsPlot(BaseVisualizer):
 
         self._plot = self._canvas.plot(
             self._var[0],
+            self.plot_type,
             window_size=(self._width, self._height)
         )
 

@@ -13,14 +13,14 @@ class Visualizer(BaseProtocol):
     _active = {}
 
     @exportRpc('cdat.view.create')
-    def create(self, fname, varnames, plottype=None, opts={}):
+    def create(self, fname, varnames, plottype='Isofill', opts={}):
         if plottype is None:
             plottype = 'Isofill'
 
         f = FileLoader().get_reader(fname)
         var = [f[v] for v in varnames]
 
-        vis = visualizers.Isofill()
+        vis = getattr(visualizers, plottype)()
         vis.loadVariable(var, opts)
         vis.render(opts)
 
