@@ -12,7 +12,6 @@ from vtk.web import wamp
 
 import vcs
 
-from protocols.readers import cdms_reader
 from protocols.VisFinder import Visualizer
 
 from external import exportRpc

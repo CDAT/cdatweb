@@ -11,37 +11,30 @@ class VcsPlot(BaseVisualizer):
     #: vcs plot type
     plot_type = None
 
-    @classmethod
-    def canView(cls, var):
-        try:
-            return len(var.info.get('dimensions', [])) >= 2
-        except Exception:
-            return False
-
     def __init__(self, *arg, **kw):
         super(VcsPlot, self).__init__(*arg, **kw)
         self._canvas = vcs.init()
+        self._canvas.setbgoutputdimensions(width=500, height=500, units='pixels')
         self._plot = None
-
-    def loadVariable(self, var, opts={}):
-        self._var = var
-        self._gm = self.plot_type  # configure plot type here
-        return True
 
     def render(self, opts={}):
         super(VcsPlot, self).render(opts)
 
-        self._canvas = vcs.init()
         self._plot = self._canvas.plot(
             self._var[0],
-            self._gm,
-            cdmsfile=self._var[0].parent.id,
             window_size=(self._width, self._height)
         )
 
-        self._window = self._canvas.backend.plotApps[self._gm].getRenderWindow()
+        self._window = self._canvas.backend.renWin
         self._render()
         return True
+
+    def loadVariable(self, var, opts={}):
+        """Load a variable into the visualization.
+
+        Returns success or failure.
+        """
+        self._var = var
 
     def getView(self):
         return self._window
