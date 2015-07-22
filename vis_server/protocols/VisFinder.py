@@ -1,7 +1,4 @@
-'''
-This module exposes methods for finding and creating visualizations
-compatible with a variable object.
-'''
+"""This module exposes methods for finding and creating visualizations."""
 
 from . import BaseProtocol
 from external import exportRpc

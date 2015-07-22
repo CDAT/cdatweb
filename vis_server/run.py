@@ -10,11 +10,8 @@ sys.path.append(os.path.dirname(vtk.__file__))  # noqa
 from vtk.web import server
 from vtk.web import wamp
 
-import vcs
-
 from protocols.VisFinder import Visualizer
 
-from external import exportRpc
 import protocols
 
 _viewers = []
