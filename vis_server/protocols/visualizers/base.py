@@ -42,7 +42,11 @@ class BaseVisualizer(object):
 
     def getViewId(self):
         """Get the global object id for the render window being used."""
-        self.getGlobalId(self.getView())
+        return self.getGlobalId(self.getView())
+
+    def close(self):
+        """Exit the current view and free memory."""
+        self.getView().Finalize()
 
 
 class VectorVisualizer(BaseVisualizer):

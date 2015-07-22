@@ -23,27 +23,19 @@ class VcsPlot(BaseVisualizer):
         self._canvas = vcs.init()
         self._plot = None
 
-    def loadVariable(self, var, info, opts={}):
-        if len(info['dimensions']) == 4:
-            self._var = var
-            self._gm = self.plot_type(opts.get('template', 'default'))
-        else:
-            return False
-
-        for param, value in opts.get('parameters', {}).iteritems():
-            self._gm.setParameter(param, value)
-
+    def loadVariable(self, var, opts={}):
+        self._var = var
+        self._gm = self.plot_type  # configure plot type here
         return True
 
     def render(self, opts={}):
         super(VcsPlot, self).render(opts)
 
-        args = self._var[:]
-        args = args + [self._gm]
         self._canvas = vcs.init()
         self._plot = self._canvas.plot(
-            *args,
-            cdmsfile=self._var.parent.id,
+            self._var[0],
+            self._gm,
+            cdmsfile=self._var[0].parent.id,
             window_size=(self._width, self._height)
         )
 
@@ -56,7 +48,7 @@ class VcsPlot(BaseVisualizer):
 
 
 class Isofill(VcsPlot):
-    plot_type = vcs.getisofill
+    plot_type = vcs.getisofill()
     info = dict(VcsPlot.info)
     info['ndims'] = 2
     info['nvars'] = 1
