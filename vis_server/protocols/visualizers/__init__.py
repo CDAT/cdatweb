@@ -1,7 +1,3 @@
-from vcs_vis import isofill, volume
+from vcs_vis import Isofill, Volume
 
-types = {
-    'isofill': isofill,
-    'volume': volume
-}
-__all__ = types.keys()
+__all__ = ('Isofill', 'Volume')

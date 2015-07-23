@@ -1,12 +1,9 @@
-'''
-This module exposes methods for finding and creating visualizations
-compatible with a variable object.
-'''
+"""This module exposes methods for finding and creating visualizations."""
 
 from . import BaseProtocol
 from external import exportRpc
 
-from visualizers import __all__ as visualizers
+import visualizers
 
 from FileLoader import FileLoader
 
@@ -15,29 +12,28 @@ class Visualizer(BaseProtocol):
 
     _active = {}
 
-    @exportRpc('visualize.server.list')
-    def list(self, file_info=None):
-        '''
-        List all visualizers capable of openinng the given file.
-        If no file is provided, then list all visualizers.
-        '''
-        if file_info is None:
-            return visualizers.keys()
+    @exportRpc('cdat.view.create')
+    def create(self, fname, varnames, plottype='Isofill', opts={}):
+        if plottype is None:
+            plottype = 'Isofill'
 
-        # todo
-        return None
+        f = FileLoader().get_reader(fname)
+        var = [f[v] for v in varnames]
 
-    @exportRpc('visualize.server.plot')
-    def create(self, fname, varnames, plottype, opts={}):
-        f = FileLoader.get_cached_reader(fname)
-        var = map(f.read, varnames)
-
-        vis = visualizers[plottype]()
+        vis = getattr(visualizers, plottype)()
         vis.loadVariable(var, opts)
         vis.render(opts)
-        k = plottype + '_' + fname + '_' + '_'.join(varnames)
-        self._active[k] = vis
 
-        view = vis.getView()
-        view.Render()
-        return self.getGlobalId(view)
+        id = self.getGlobalId(vis.getView())
+        self._active[id] = vis
+        return id
+
+    @exportRpc('cdat.view.update')
+    def render_view(self, id, opts={}):
+        return self._active[id].render(opts)
+
+    @exportRpc('cdat.view.destroy')
+    def remove_view(self, id):
+        view = self._active.pop(id)
+        if view:
+            view.close()
