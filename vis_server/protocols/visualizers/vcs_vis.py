@@ -14,7 +14,6 @@ class VcsPlot(BaseVisualizer):
     def __init__(self, *arg, **kw):
         super(VcsPlot, self).__init__(*arg, **kw)
         self._canvas = vcs.init()
-        self._canvas.setbgoutputdimensions(width=500, height=500, units='pixels')
         self._plot = None
 
     def render(self, opts={}):
@@ -22,9 +21,9 @@ class VcsPlot(BaseVisualizer):
 
         self._plot = self._canvas.plot(
             self._var[0],
-            self.plot_type,
-            window_size=(self._width, self._height)
+            self.plot_type
         )
+        self._canvas.geometry(self._width, self._height, 0, 0)
 
         self._window = self._canvas.backend.renWin
         self._render()
