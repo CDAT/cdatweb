@@ -24,6 +24,7 @@ class VcsPlot(BaseVisualizer):
             self.plot_type
         )
         self._canvas.geometry(self._width, self._height, 0, 0)
+        self._canvas.update()
 
         self._window = self._canvas.backend.renWin
         self._render()
