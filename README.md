@@ -3,6 +3,8 @@
 CDATWeb 2.0 alpha
 =================
 
+##Please read the [Devlopment Guidelines](https://github.com/UV-CDAT/cdatweb/wiki/Development-Guidelines)
+
 This is an early version of CDAT Web 2.0 with the basic organizational
 structure in place.  Work is ongoing to restore features and document
 the development process.  For the moment, the application relies on
@@ -61,7 +63,15 @@ Visualization installation
 Refer to one of the items below for starting up the visualization server.
 Once the server is running, browse to
 [http://localhost:8000/vtk/viewer.html](http://localhost:8000/vtk/viewer.html).
-In case of trouble, see the server logs in `tmp/logs`.
+In case of trouble, see the server logs in `tmp/logs`.  By default, CDATWeb is
+configured to use a development visualization server at LLNL.  In order to use
+a local visualization server, you will need to modify your django configuration
+at `cdatweb/settings/development.py`.  The value of `VISUALIZATION_LAUNCHER`
+should be set to your launcher service endpoint.  By default this is
+
+```python
+VISUALIZATION_LAUNCHER = 'http://localhost:7000/vtk'
+```
 
 1. Running vtkWeb from a docker image (Mac OS or Linux ony)
 
@@ -87,7 +97,7 @@ In case of trouble, see the server logs in `tmp/logs`.
   ```
   You should now be able to run the launcher
   ```
-  python launcher.py config.json
+  python launcher.py config-docker.json
   ```
   This will serve the launcher at port 7000 on your machine.
 
@@ -101,7 +111,7 @@ In case of trouble, see the server logs in `tmp/logs`.
 
   As noted above, you may be able use a prebuilt UV-CDAT, but if you run
   into troubles, try to rebuild the latest version with the following
-  option: `cmake -D CDAT_BUILD_PARAVIEW=ON /path/to/uvcdat`.  Make sure
+  option: `cmake -D -DCDAT_BUILD_WEB=ON /path/to/uvcdat`.  Make sure
   you are not in your django virtual environment and source your
   UV-CDAT setup script.  If everything is setup correctly, you should be
   able to run the following:

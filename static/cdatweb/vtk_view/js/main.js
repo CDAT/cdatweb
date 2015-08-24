@@ -89,15 +89,15 @@
                 $('<div/>').get(0),
                 null,
                 {
-                  selector: '.vtk-view-container',
-                  title: '<span><i class="fa fa-picture-o"></i>' + varinfo + '</span>',
-                  size: {width: 500, height: 500},
-                  overflow: 'hidden',
-                  callback: app.vtkViewCreator({
-                      session: connection.session,
-                      file: node.file,
-                      variable: node.text
-                  })
+                    selector: '.vtk-view-container',
+                    title: '<span><i class="fa fa-picture-o"></i>' + varinfo + '</span>',
+                    size: {width: 500, height: 500},
+                    overflow: 'hidden',
+                    callback: app.vtkViewCreator({
+                        session: connection.session,
+                        file: node.file,
+                        variable: node.text
+                    })
                 }
             );
         });
@@ -146,7 +146,7 @@
                 width: 500,
                 height: 500
             };
-            options.session.call('cdat.view.create', [options.file, options.variable, opts])
+            options.session.call('cdat.view.create', [options.file, options.variable, options.type, opts])
                 .then(function (view) {
                     options.view = view;
                     var viewport;

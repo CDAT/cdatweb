@@ -1,0 +1,19 @@
+language: python
+python: "2.7"
+sudo: false
+
+env:
+  - PYTHONPATH=~/vtk-precise64/lib/python2.7/site-packages:~/vtk-precise64/lib LD_LIBRARY_PATH=~/vtk-precise64/lib
+
+before_install:
+  - pip install -U -r requirements.txt -r requirements-dev.txt -r vis_server/requirements.txt
+  - npm install
+
+script:
+  - flake8 .
+  - npm test
+  - py.test --cov-report=term --cov .
+
+after_success:
+  coverage combine
+  coveralls

@@ -1,0 +1,22 @@
+machine:
+  python:
+    version: 2.7
+  services:
+    - docker
+
+dependencies:
+  cache_directories:
+    - "~/docker"
+  override:
+    - mkdir -p ~/docker || true
+    - if [[ -e ~/docker/base.tar ]] ; then docker load -i ~/docker/base.tar; fi
+    - docker pull uvcdat/uvcdat
+    - docker save uvcdat/uvcdat > ~/docker/base.tar
+    - pip install -U -r requirements.txt -r requirements-dev.txt
+    - pip install -U -r vis_server/requirements.txt
+    - docker info
+    - docker build -t uvcdat/cdatweb-vtkweb vis_server
+
+test:
+  override:
+    - py.test

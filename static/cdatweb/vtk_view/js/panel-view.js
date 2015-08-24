@@ -36,8 +36,8 @@
      * @returns {cdat.Panel}
      */
     cdat.Panel = function (options) {
-        if (!this instanceof cdat.Panel) {
-            return new cdat.Panel(opts);
+        if (!(this instanceof cdat.Panel)) {
+            return new cdat.Panel(options);
         }
         var _this = this;
 

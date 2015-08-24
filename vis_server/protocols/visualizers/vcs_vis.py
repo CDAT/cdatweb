@@ -4,67 +4,52 @@ from base import BaseVisualizer
 import vcs
 
 
-class Vcs_plot(BaseVisualizer):
-    '''
-    Base class for all Vcs-based visualization classes.
-    '''
+class VcsPlot(BaseVisualizer):
+
+    """Base class for all Vcs-based visualization classes."""
 
     #: vcs plot type
     plot_type = None
 
-    @classmethod
-    def canView(cls, var):
-        try:
-            return len(var.info.get('dimensions', [])) >= 2
-        except Exception:
-            return False
-
     def __init__(self, *arg, **kw):
-        super(Vcs_plot, self).__init__(*arg, **kw)
+        super(VcsPlot, self).__init__(*arg, **kw)
         self._canvas = vcs.init()
         self._plot = None
 
-    def loadVariable(self, var, info, opts={}):
-        if len(info['dimensions']) == 4:
-            self._var = var
-            self._gm = self.plot_type(opts.get('template', 'default'))
-        else:
-            return False
-
-        for param, value in opts.get('parameters', {}).iteritems():
-            self._gm.setParameter(param, value)
-
-        return True
-
     def render(self, opts={}):
-        super(Vcs_plot, self).render(opts)
+        super(VcsPlot, self).render(opts)
 
-        args = self._var[:]
-        args = args + [self._gm]
-        self._canvas = vcs.init()
         self._plot = self._canvas.plot(
-            *args
-            cdmsfile=self._var.parent.id,
-            window_size=(self._width, self._height)
+            self._var[0],
+            self.plot_type
         )
+        self._canvas.geometry(self._width, self._height, 0, 0)
+        self._canvas.update()
 
-        self._window = self._canvas.backend.plotApps[self._gm].getRenderWindow()
+        self._window = self._canvas.backend.renWin
         self._render()
         return True
+
+    def loadVariable(self, var, opts={}):
+        """Load a variable into the visualization.
+
+        Returns success or failure.
+        """
+        self._var = var
 
     def getView(self):
         return self._window
 
 
-class isofill(Vcs_plot):
-    plot_type = vcs.getisofill
-    info = dict(Vcs_plot.info)
+class Isofill(VcsPlot):
+    plot_type = vcs.getisofill()
+    info = dict(VcsPlot.info)
     info['ndims'] = 2
     info['nvars'] = 1
 
 
-class volume(Vcs_plot):
+class Volume(VcsPlot):
     plot_type = vcs.get3d_scalar()
-    info = dict(Vcs_plot.info)
+    info = dict(VcsPlot.info)
     info['ndims'] = 3
     info['nvars'] = 1
