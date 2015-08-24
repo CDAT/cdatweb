@@ -14,39 +14,44 @@
         <!-- esgf search component -->
         <div id="search">
           <style>
-            .alert-sm{
-              margin-bottom: 10px;
-            }
+.alert-sm{
+  margin-bottom: 10px;
+}
           </style>
-            <h2>ESGF Search</h2>
-            {% csrf_token %}
-            <select type="text" name="host" value="" id="host" class="form-control">
-              <option value="http://esg.ccs.ornl.gov/esg-search">esg.css.ornl</option>
-              <option value="http://pcmdi9.llnl.gov/esg-search">pcmdi9.llnl</option>
-            </select>
-            <div class="alert-sm alert-warning" role="alert">The ESGF host URL to search. For example, "esg.ccs.ornl.gov/esg-search"</div>
+          <h2>ESGF Search</h2>
+          {% csrf_token %}
+          <select type="text" name="host" value="" id="host" class="form-control">
+            <option value="http://esg.ccs.ornl.gov/esg-search">esg.css.ornl</option>
+            <option value="http://pcmdi9.llnl.gov/esg-search">pcmdi9.llnl</option>
+          </select>
+          <div class="alert-sm alert-warning" role="alert">The ESGF host URL to search. For example, "esg.ccs.ornl.gov/esg-search"</div>
 
-            <input type="text" name="text" value="" id="text" class="form-control" placeholder="Text">
-            <div class="alert-sm alert-warning" role="alert">A free text search query in any metadata field</div>
+          <input type="text" name="text" value="" id="text" class="form-control" placeholder="Text">
+          <div class="alert-sm alert-warning" role="alert">A free text search query in any metadata field</div>
 
-            <input type="text" name="project" value="" id="project" class="form-control" placeholder="Project Name">
-            <div class="alert-sm alert-warning" role="alert">Search by project</div>
+          <input type="text" name="project" value="" id="project" class="form-control" placeholder="Project Name">
+          <div class="alert-sm alert-warning" role="alert">Search by project</div>
 
-            <select type="text" name="limit" value="" id="limit" class="form-control" placeholder="Limit">
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>  
-            <div class="alert-sm alert-warning" role="alert">The maximum number of files to return</div>
+          <select type="text" name="limit" value="" id="limit" class="form-control" placeholder="Limit">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>  
+          <div class="alert-sm alert-warning" role="alert">The maximum number of files to return</div>
 
-            <input type="number" name="offset" value="" id="offset" class="form-control" placeholder="Off Set">
+          <input type="number" name="offset" value="" id="offset" class="form-control" placeholder="Off Set">
 
-            <div class="alert-sm alert-warning" role="alert">Start at this result</div>
-            <a onclick="submit()"  href="javascript:void(0);"><button class="btn btn-success">Search</button></a>
+          <div class="alert-sm alert-warning" role="alert">Start at this result</div>
+          <a onclick="submit()"  href="javascript:void(0);"><button class="btn btn-success">Search</button></a>
         </div>
 
       </div>
+
+      <div class="vtk-file-browser">
+        <div id="filebrowser">Testing</div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -55,105 +60,105 @@
 {% block js %}
 
 <script type="text/javascript">
-  function submit(){
-    var host =    document.getElementById("host").value;
-    console.log(host);
-    var text =    $("input[id=text]").val();
-    var project = $("input[id=project]").val();
-    var limit =   document.getElementById("limit").value;
-    console.log(limit);
-    var offset =  $("input[id=offset]").val();
+function submit(){
+  var host =    document.getElementById("host").value;
+  console.log(host);
+  var text =    $("input[id=text]").val();
+  var project = $("input[id=project]").val();
+  var limit =   document.getElementById("limit").value;
+  console.log(limit);
+  var offset =  $("input[id=offset]").val();
 
-    var jsonObj = new Object;
-    jsonObj.host = host;
-	  jsonObj.text = text;
-	  jsonObj.project = project;
-	  jsonObj.limit = limit;
-	  jsonObj.offset = offset;
-	
-	  var jsonStr = JSON.stringify(jsonObj);
-	  var search_url = '/vtk/search';
-	  $.ajax({
-	    type: "POST",
-      url: search_url,
-	    async: true,
-	    cache: false,
-  	  data: {query:jsonStr},
-  	  dataType: 'json',
-  	  success: function(data) {
-        results = data.data;
-        stacktop = [];
-        stacktop = results;
-        html = "<div><ul>"
-        for(var x = 0; x < stacktop.length; x++){
-          //console.log(stacktop[x]);
-          obj = stacktop[x];
-          /*
-          obj example 
-            dap: "http://esgdata1.nccs.nasa.gov/thredds/dodsC/NEX/dataportal/NEX/downscaled/NASA-Ames/BCSD/historical/mon/atmos/pr/r1i1p1/v1.0/CONUS/pr_amon_BCSD_historical_r1i1p1_CONUS_FGOALS-g2_199501-199912.nc.html"
-            experiment: "decadal2005"
-            http: "http://adm07.cmcc.it/thredds/fileServer/esg_dataroot/cmip5/output1/CMCC/CMCC-CM/decadal2005/mon/atmos/cct/r1i1p1/cct_Amon_CMCC-CM_decadal2005_r1i1p1_200511-201512.nc"
-            id: null
-            metadata_format: null
-            node: null
-            project: "CMIP5"
-            regridding: null
-            size: 56245984
-            timestamp: "2012-03-06T23:52:36Z"
-            title: "cct_Amon_CMCC-CM_decadal2005_r1i1p1_200511-201512.nc"
-            type: null
-            urls: Array[1]
-            variables: Array[0]
-          */
-          html = html + "<li>Project: " + obj.project + "<br/>" +
-                        "Experiment: " + obj.experiment + "<br/>" +
-                        "Title: " + obj.title + "<br/>" +
-                        "<a href=\"" + obj.http + "\">Downlaod</a><br/>";
-          
-          html = html + "Variables: ";
-          for(var v = 0; v < obj.variables.length; v++){
-            if (typeof(obj.dap) === "undefined"){
-              html = html + " " + obj.variables[v].name + "&nbsp;";
-            }
-            else{
-              _dap = obj.dap
-              if(_dap.substring(_dap.length - 5, _dap.length) == ".html"){
-                _dap = _dap.substring(0, _dap.length - 5)
-              }
-              html = html + " <a  onclick=\"newImage('" + _dap + "', '" + obj.variables[v].name + "')\"  href=\"javascript:void(0)\">" + obj.variables[v].name + "</a> &nbsp;";
-            }
-          }
-          
-          
-          html = html + "</li><hr>";
-        }
-        
-        exampleURL = "http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc";
-        exampleVAR = "TS"; //rsut - ua - wap 
-        html = html + "<li><a onclick=\"newImage('" + exampleURL + "', '" + exampleVAR + "', 'Isofill')\" href=\"javascript:void(0)\">Isofill iexample</a>";
+  var jsonObj = new Object;
+  jsonObj.host = host;
+  jsonObj.text = text;
+  jsonObj.project = project;
+  jsonObj.limit = limit;
+  jsonObj.offset = offset;
 
-        exampleURL = "http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc";
-        exampleVAR = "T"; //rsut - ua - wap 
-        html = html + "<li><a onclick=\"newImage('" + exampleURL + "', '" + exampleVAR + "', 'Volume')\" href=\"javascript:void(0)\">Volume example</a>";
-        
-        html = html + "</ul></div>";
-        title = "Search Results";
-        newPanel(title, html);
-      },
-		  error: function(request, status, error) {
-	      $("div .error").html(request + " | " + status + " | " + error);
-	      $("div .error").show();
-	    }
-	  });
+  var jsonStr = JSON.stringify(jsonObj);
+  var search_url = '/vtk/search';
+  $.ajax({
+type: "POST",
+url: search_url,
+async: true,
+cache: false,
+data: {query:jsonStr},
+dataType: 'json',
+success: function(data) {
+results = data.data;
+stacktop = [];
+stacktop = results;
+html = "<div><ul>"
+for(var x = 0; x < stacktop.length; x++){
+//console.log(stacktop[x]);
+obj = stacktop[x];
+/*
+   obj example 
+dap: "http://esgdata1.nccs.nasa.gov/thredds/dodsC/NEX/dataportal/NEX/downscaled/NASA-Ames/BCSD/historical/mon/atmos/pr/r1i1p1/v1.0/CONUS/pr_amon_BCSD_historical_r1i1p1_CONUS_FGOALS-g2_199501-199912.nc.html"
+experiment: "decadal2005"
+http: "http://adm07.cmcc.it/thredds/fileServer/esg_dataroot/cmip5/output1/CMCC/CMCC-CM/decadal2005/mon/atmos/cct/r1i1p1/cct_Amon_CMCC-CM_decadal2005_r1i1p1_200511-201512.nc"
+id: null
+metadata_format: null
+node: null
+project: "CMIP5"
+regridding: null
+size: 56245984
+timestamp: "2012-03-06T23:52:36Z"
+title: "cct_Amon_CMCC-CM_decadal2005_r1i1p1_200511-201512.nc"
+type: null
+urls: Array[1]
+variables: Array[0]
+ */
+html = html + "<li>Project: " + obj.project + "<br/>" +
+  "Experiment: " + obj.experiment + "<br/>" +
+  "Title: " + obj.title + "<br/>" +
+  "<a href=\"" + obj.http + "\">Downlaod</a><br/>";
+
+html = html + "Variables: ";
+for(var v = 0; v < obj.variables.length; v++){
+  if (typeof(obj.dap) === "undefined"){
+    html = html + " " + obj.variables[v].name + "&nbsp;";
+  }
+  else{
+    _dap = obj.dap
+      if(_dap.substring(_dap.length - 5, _dap.length) == ".html"){
+        _dap = _dap.substring(0, _dap.length - 5)
+      }
+    html = html + " <a  onclick=\"newImage('" + _dap + "', '" + obj.variables[v].name + "')\"  href=\"javascript:void(0)\">" + obj.variables[v].name + "</a> &nbsp;";
+  }
+}
+
+
+html = html + "</li><hr>";
+}
+
+exampleURL = "http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc";
+exampleVAR = "TS"; //rsut - ua - wap 
+html = html + "<li><a onclick=\"newImage('" + exampleURL + "', '" + exampleVAR + "', 'Isofill')\" href=\"javascript:void(0)\">Isofill iexample</a>";
+
+exampleURL = "http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc";
+exampleVAR = "T"; //rsut - ua - wap 
+html = html + "<li><a onclick=\"newImage('" + exampleURL + "', '" + exampleVAR + "', 'Volume')\" href=\"javascript:void(0)\">Volume example</a>";
+
+html = html + "</ul></div>";
+title = "Search Results";
+newPanel(title, html);
+},
+error: function(request, status, error) {
+         $("div .error").html(request + " | " + status + " | " + error);
+         $("div .error").show();
+       }
+});
 }
 
 function newPanel(title, content){
   $.jsPanel({
-    title: title,
-    content: content,
-    overflow: 'scroll',
-    position: "center"
-  });
+title: title,
+content: content,
+overflow: 'scroll',
+position: "center"
+});
 }
 
 function emptyPanel(){
@@ -164,26 +169,27 @@ function newImage(dap, variable, type){
   console.log(dap);
   console.log(variable);
   cdat.session.done(function (session) {
-    cdat.make_panel(
-                $('<div/>').get(0),
-                null,
-                {
-                  selector: '.vtk-view-container',
-                  title: '<span><i class="fa fa-picture-o"></i>' + variable + '</span>',
-                  size: {width: 500, height: 500},
-                  overflow: 'hidden',
-                  callback: cdat.vtkViewCreator({
-                      session: session,
-                      file: dap,
-                      variable: variable,
-                      type: type
-                  })
-                }
-            );
-  });
+      cdat.make_panel(
+        $('<div/>').get(0),
+        null,
+        {
+selector: '.vtk-view-container',
+title: '<span><i class="fa fa-picture-o"></i>' + variable + '</span>',
+size: {width: 500, height: 500},
+overflow: 'hidden',
+callback: cdat.vtkViewCreator({
+session: session,
+file: dap,
+variable: variable,
+type: type
+})
+}
+);
+      });
 }
 </script>
 
 {{ block.super }}
 {% include "vtk_view/fragments/panel.html" with container=".vtk-search-container" help=search.help icon="fa fa-search" title="Search" overflow="scroll" %}
+{% include "vtk_view/fragments/panel.html" with container=".vtk-file-browser" help=search.help icon="fa fa-search" title="File Browser" overflow="scroll" %}
 {% endblock %}
