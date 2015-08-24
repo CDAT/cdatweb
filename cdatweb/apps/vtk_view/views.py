@@ -1,7 +1,6 @@
 import json
 import vtk_launcher
 from django.shortcuts import render
-from django.utils.safestring import mark_safe
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from search import files
