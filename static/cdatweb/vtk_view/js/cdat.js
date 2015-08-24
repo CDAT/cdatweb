@@ -159,7 +159,7 @@
                     viewport.unbind(config.node);
                     // this is technically a race condition, but I can't be bothered
                     // to fix it because it is unlikely to occur
-                    connection.call('cdat.view.destroy', [view]);
+                    connection.session.call('cdat.view.destroy', [view]);
                     viewport = null;
                     view = null;
                 }
