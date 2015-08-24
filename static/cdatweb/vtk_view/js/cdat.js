@@ -42,7 +42,7 @@
         setup: function (config) {
             config = config || {};
             config.application  = config.application || 'default';
-            config.sessionManagerURL = 'vtk/';
+            config.sessionManagerURL = 'vtk/launch/';
             open = new $.Deferred();
 
             /*
@@ -156,7 +156,7 @@
             // append a close method to the promise
             promise.close = function () {
                 if (viewport) {
-                    viewport.unbind($(config.node.get(0)));
+                    viewport.unbind(config.node);
                     // this is technically a race condition, but I can't be bothered
                     // to fix it because it is unlikely to occur
                     connection.call('cdat.view.destroy', [view]);
@@ -190,7 +190,7 @@
                                     keepServerInSync: false         // prevent double renders in some cases
                                 }, connection, config.viewportopts) // override defaults
                             );
-                            viewport.bind($(config.node).get(0));
+                            viewport.bind(config.node);
                             defer.resolve(viewport);
 
                             // @todo store open viewport somehow to clean up

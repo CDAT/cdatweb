@@ -27,28 +27,38 @@ def _refresh(request):
 
 def vtk_viewer(request):
     """Open the main visualizer view."""
-    try:
-        data = _refresh(request)
-    except Exception:
-        data = {}
-    data['main'] = 'main'
-    data['error'] = 'error'
-    data['search'] = {
-        'help': ''
-    }
-    options = {
-        'resizable': True
-    }
-    data['options'] = mark_safe(json.dumps(options))
     return render(
         request,
-        'vtk_view/cdat_viewer.html',
-        data
+        'vtk_view/cdat_viewer.html'
     )
 
 
 def vtk_test(request, test="cone"):
     return render(request, 'vtk_view/view_test.html', {"test": test})
+
+
+@csrf_exempt  # should probably fix this at some point
+def vtkweb_launcher(request):
+    """Proxy requests to the configured launcher service."""
+    import requests
+    try:
+        from local_settings import VISUALIZATION_LAUNCHER
+    except ImportError:
+        VISUALIZATION_LAUNCHER = 'http://aims1.llnl.gov/vtk'
+
+    if not VISUALIZATION_LAUNCHER:
+        # unconfigured launcher
+        return HttpResponse(status=404)
+
+    # TODO: add status and delete methods
+    if request.method == 'POST':
+        req = requests.post(VISUALIZATION_LAUNCHER, request.body)
+        if req.ok:
+            return HttpResponse(req.content)
+        else:
+            return HttpResponse(status=500)
+
+    return HttpResponse(status=404)
 
 
 @csrf_exempt

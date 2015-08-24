@@ -141,37 +141,15 @@
         }, options);
         return function (panel) {
 
-            var myId = panel.attr('id');
             var opts = {
                 width: 500,
                 height: 500
             };
-            options.session.call('cdat.view.create', [options.file, options.variable, options.type, opts])
-                .then(function (view) {
-                    options.view = view;
-                    var viewport;
-                    function render() {
-                        viewport.render();
-                    }
-
-                    // Handle closing the vtkweb instance when the panel closes.
-                    function close(e, id) {
-                        if (id === myId) {
-                            viewport.unbind(panel.content.get(0));
-                            options.session.call('cdat.view.destroy', [view]);
-                            $('body').off('jspanelclosed', close);
-                        }
-                    }
-                    viewport = new vtkWeb.createViewport(options);
-                    viewport.bind(panel.content.get(0));
-                    panel.on('resize jspanelloaded jspanelmaximized jspanelnormalized', render);
-
-                    $('body').on('jspanelclosed', close);
-                },
-                function (err) {
-                    console.log('Applicaton failed with: ' + JSON.stringify(err, null, 2));
-                }
-            );
+            options.node = panel.content.get(0);
+            options.cdatopts = opts;
+            var view = cdat.show(options);
+            panel.on('resize jspanelloaded jspanelmaximized jspanelnormalized', view.render);
+            $('body').on('jspanelclosed', view.close);
         };
     };
 
