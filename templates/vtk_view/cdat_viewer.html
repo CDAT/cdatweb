@@ -120,7 +120,7 @@
               if(_dap.substring(_dap.length - 5, _dap.length) == ".html"){
                 _dap = _dap.substring(0, _dap.length - 5)
               }
-              html = html + " <a  onclick=\"newImage('" + _dap + "', '" + obj.variables[v].name + "')\"  href=\"javascript:void(0)\">" + obj.variables[v].name + "</a> &nbsp;";
+              html = html + " <a  onclick=\"cdat.create_plot('" + _dap + "', '" + obj.variables[v].name + "')\"  href=\"javascript:void(0)\">" + obj.variables[v].name + "</a> &nbsp;";
             }
           }
           
@@ -130,11 +130,11 @@
         
         exampleURL = "http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc";
         exampleVAR = "TS"; //rsut - ua - wap 
-        html = html + "<li><a onclick=\"newImage('" + exampleURL + "', '" + exampleVAR + "', 'Isofill')\" href=\"javascript:void(0)\">Isofill iexample</a>";
+        html = html + "<li><a onclick=\"cdat.create_plot('" + exampleURL + "', '" + exampleVAR + "', 'Isofill')\" href=\"javascript:void(0)\">Isofill iexample</a>";
 
         exampleURL = "http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc";
         exampleVAR = "T"; //rsut - ua - wap 
-        html = html + "<li><a onclick=\"newImage('" + exampleURL + "', '" + exampleVAR + "', 'Volume')\" href=\"javascript:void(0)\">Volume example</a>";
+        html = html + "<li><a onclick=\"cdat.create_plot('" + exampleURL + "', '" + exampleVAR + "', 'Volume')\" href=\"javascript:void(0)\">Volume example</a>";
         
         html = html + "</ul></div>";
         title = "Search Results";
@@ -153,33 +153,6 @@ function newPanel(title, content){
     content: content,
     overflow: 'scroll',
     position: "center"
-  });
-}
-
-function emptyPanel(){
-  return $.jsPanel({});
-}
-
-function newImage(dap, variable, type){
-  console.log(dap);
-  console.log(variable);
-  cdat.session.done(function (session) {
-    cdat.make_panel(
-                $('<div/>').get(0),
-                null,
-                {
-                  selector: '.vtk-view-container',
-                  title: '<span><i class="fa fa-picture-o"></i>' + variable + '</span>',
-                  size: {width: 500, height: 500},
-                  overflow: 'hidden',
-                  callback: cdat.vtkViewCreator({
-                      session: session,
-                      file: dap,
-                      variable: variable,
-                      type: type
-                  })
-                }
-            );
   });
 }
 </script>

@@ -93,7 +93,7 @@
                     title: '<span><i class="fa fa-picture-o"></i>' + varinfo + '</span>',
                     size: {width: 500, height: 500},
                     overflow: 'hidden',
-                    callback: app.vtkViewCreator({
+                    callback: cdat.vtkViewCreator({
                         session: connection.session,
                         file: node.file,
                         variable: node.text
@@ -107,12 +107,12 @@
     app.session = $.Deferred();
 
     app.main = function (connection) {
-        app.session.resolve(connection.session);
+        cdat.session.resolve(connection.session);
     };
 
     app.error = function (err) {
         // TODO: create general error page
-        app.session.reject(err);
+        cdat.session.reject(err);
     };
 
     app.browser = function (connection) {
@@ -121,16 +121,12 @@
             .call('file.server.list')
             .then(function (files) {
                 renderBrowser(connection, files);
-            }, app.error);
+            }, cdat.error);
     };
 
     app.vtkViewCreator = function (options) {
         // return a function that generates a view inside
         // a given element
-
-        if (!options.session) {
-            throw new Error('A session must be provided.');
-        }
 
         options = $.extend({}, {
             enableInteractions: true,
@@ -156,5 +152,29 @@
     app.make_panel = function (container, help, opts) {
         opts = $.extend(true, {content: container}, opts);
         return cdat.Panel(opts).$el;
+    };
+
+    app.create_plot = function (file, variable, type) {
+        console.log(
+            "Opening file: " + file +
+            " variable: " + variable +
+            " as type: " + type
+        );
+
+        cdat.make_panel(
+            $('<div/>').get(0),
+            null,
+            {
+                selector: '.vtk-view-container',
+                title: '<span><i class="fa fa-picture-o"></i>' + variable + '</span>',
+                size: {width: 500, height: 500},
+                overflow: 'hidden',
+                callback: cdat.vtkViewCreator({
+                    file: file,
+                    variable: variable,
+                    type: type
+                })
+            }
+        );
     };
 })();
