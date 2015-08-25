@@ -19,7 +19,7 @@ class BaseVisualizer(object):
     def getView(self):
         """Return a vtkRenderWindow corresponding to the current viewport.
 
-        This wiill return None if nothing is loaded yet.
+        This will return None if nothing is loaded yet.
         """
         return None
 
@@ -47,14 +47,3 @@ class BaseVisualizer(object):
     def close(self):
         """Exit the current view and free memory."""
         self.getView().Finalize()
-
-
-class VectorVisualizer(BaseVisualizer):
-
-    """Base class for vector visualization types."""
-
-    @classmethod
-    def canView(cls, var, info):
-        if isinstance(var, dict):
-            return var['x'] and var['y']
-        return False

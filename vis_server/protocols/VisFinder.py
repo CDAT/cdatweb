@@ -18,6 +18,8 @@ class Visualizer(BaseProtocol):
             plottype = 'Isofill'
 
         f = FileLoader().get_reader(fname)
+        if isinstance(varnames, basestring):
+            varnames = [varnames]
         var = [f[v] for v in varnames]
 
         vis = getattr(visualizers, plottype)()

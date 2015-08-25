@@ -1,3 +1,3 @@
-from vcs_vis import Isofill, Volume
+from vcs_vis import Isofill, Volume, Vector3D, Vector2D
 
-__all__ = ('Isofill', 'Volume')
+__all__ = ('Isofill', 'Volume', 'Vector3D', 'Vector2D')
