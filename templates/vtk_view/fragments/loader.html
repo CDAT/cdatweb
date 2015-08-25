@@ -1,11 +1,8 @@
 {% load staticfiles %}
 <script src="{% static "vtkweb/ext/core/autobahn.min.js" %}"></script>
 <script src="{% static "vtkweb/ext/core/jquery.hammer.js" %}"></script>
-<script src="{% static "vtkweb/lib/core/vtkweb-all.js" %}"></script>
-<script src="{% static "cdatweb/vtk_view/js/cdat.js" %}"></script>
 <script type="text/javascript">
     $(function () {
-        cdat.setup({})
-            .then(cdat.main, cdat.error);
+        cdat.setup({});
     });
 </script>

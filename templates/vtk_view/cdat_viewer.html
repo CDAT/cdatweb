@@ -148,11 +148,15 @@
 }
 
 function newPanel(title, content){
-  $.jsPanel({
+  if (typeof content === 'string') {
+    content = $(content);
+  }
+  cdat.Panel({
     title: title,
     content: content,
     overflow: 'scroll',
-    position: "center"
+    position: "center",
+    size: {width: 400, height: 600}
   });
 }
 </script>

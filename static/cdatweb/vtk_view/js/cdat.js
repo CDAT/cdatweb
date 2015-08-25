@@ -206,6 +206,58 @@
                 }
             );
             return promise;
+        },
+
+        /**
+         * Returns a method that inserts a vtkWeb viewport inside a jquery panel element.
+         * @param {object} options See {@link cdat.show}
+         */
+        _panel: function (options) {
+            return function (panel) {
+                options.node = panel.content.get(0);
+                var view = cdat.show(options);
+                panel.on('resize jspanelloaded jspanelmaximized jspanelnormalized', view.render);
+                $('body').on('jspanelclosed', view.close);
+            };
+        },
+
+        /**
+         * Generate a jspanel containing the given content.
+         * @returns {$.Panel} The panel dom element
+         */
+        make_panel: function (container, help, opts) {
+            opts = $.extend(true, {content: container}, opts);
+            return cdat.Panel(opts).$el;
+        },
+
+        /**
+         * This is the main method for inserting a cdatweb variable view into a panel.
+         * @param {string} file A file name or opendap url
+         * @param {string} variable A variable name that exists in the file
+         * @param {string} type A view type understood by the visualization server
+         */
+        create_plot: function (file, variable, type) {
+            console.log(
+                "Opening file: " + file +
+                " variable: " + variable +
+                " as type: " + type
+            );
+
+            cdat.make_panel(
+                $('<div/>').get(0),
+                null,
+                {
+                    selector: '.vtk-view-container',
+                    title: '<span><i class="fa fa-picture-o"></i>' + variable + '</span>',
+                    size: {width: 500, height: 500},
+                    overflow: 'hidden',
+                    callback: cdat._panel({
+                        file: file,
+                        variable: variable,
+                        type: type
+                    })
+                }
+            );
         }
     };
 
