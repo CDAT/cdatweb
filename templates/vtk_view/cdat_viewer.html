@@ -137,8 +137,7 @@
         html = html + "<li><a onclick=\"cdat.create_plot('" + exampleURL + "', '" + exampleVAR + "', 'Volume')\" href=\"javascript:void(0)\">Volume example</a>";
 
         exampleURL = "http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc";
-        exampleVAR = ["U", "V"];
-        html = html + "<li><a onclick=\"cdat.create_plot('" + exampleURL + "', '" + exampleVAR + "', 'Vector3D')\" href=\"javascript:void(0)\">Volume example</a>";
+        html = html + "<li><a onclick=\"cdat.create_plot('" + exampleURL + "', ['U', 'V'], 'Vector3D')\" href=\"javascript:void(0)\">Vector3D example</a>";
 
         html = html + "</ul></div>";
         title = "Search Results";
