@@ -1,5 +1,6 @@
 
 from base import BaseVisualizer
+from plotter import PlotManager
 
 import vcs
 
@@ -14,22 +15,20 @@ class VcsPlot(BaseVisualizer):
     def __init__(self, *arg, **kw):
         super(VcsPlot, self).__init__(*arg, **kw)
         self._canvas = vcs.init()
-        self._plot = None
-
-    def _create_plot(self):
-        args = self._var[:]
-        args.append(self.plot_type)
-        return self._canvas.plot(*args)
+        self._plot = PlotManager(self._canvas)
+        self._plot.graphics_method = self.plot_type
+        self._plot.template = vcs.elements['template']['default']
 
     def render(self, opts={}):
         super(VcsPlot, self).render(opts)
 
-        self._plot = self._create_plot()
-        self._canvas.geometry(self._width, self._height, 0, 0)
-        self._canvas.update()
-
         self._window = self._canvas.backend.renWin
-        self._render()
+
+        if not self._window:
+            return
+        self._window.SetSize(self._width, self._height)
+        self._canvas.backend.configureEvent(None, None)
+        self._canvas.update()
         return True
 
     def loadVariable(self, var, opts={}):
@@ -37,9 +36,7 @@ class VcsPlot(BaseVisualizer):
 
         Returns success or failure.
         """
-        if not isinstance(var, (list, tuple)):
-            var = [var]
-        self._var = var
+        self._plot.variables = var
 
     def getView(self):
         return self._window

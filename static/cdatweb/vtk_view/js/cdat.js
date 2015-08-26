@@ -258,6 +258,33 @@
                     })
                 }
             );
+        },
+
+        /**
+         * Given a file or opendap url, return an object containing the list of variables
+         * in the file.
+         * @param {string} filename An absolute path to a file on the vis server.
+         * @return {$.Deferred} A promise resolving with the variable info object
+         */
+        get_variables: function (filename) {
+            if (!open) {
+                throw new Error('cdat.setup must be called before get_variables');
+            }
+            var defer = new $.Deferred();
+            var promise = defer.promise();
+            open.then(
+                function (connection) {
+                    connection.session.call(
+                        'cdat.file.list_variables',
+                        [filename]
+                    ).then(function (vars) {
+                        defer.resolve(vars);
+                    }, function (vars) {
+                        defer.reject.apply(this, arguments);
+                    });
+                }
+            )
+            return promise;
         }
     };
 
