@@ -279,7 +279,57 @@
                         [filename]
                     ).then(function (vars) {
                         defer.resolve(vars);
-                    }, function (vars) {
+                    }, function () {
+                        defer.reject.apply(this, arguments);
+                    });
+                }
+            )
+            return promise;
+        },
+
+        /**
+         * Return a list of graphics methods.
+         * @return {$.Deferred} A promise resolving with a list of strings
+         */
+        get_graphics_methods: function () {
+            if (!open) {
+                throw new Error('cdat.setup must be called before get_graphics_methods');
+            }
+            var defer = new $.Deferred();
+            var promise = defer.promise();
+            open.then(
+                function (connection) {
+                    connection.session.call(
+                        'cdat.file.methods',
+                        []
+                    ).then(function (m) {
+                        defer.resolve(m);
+                    }, function () {
+                        defer.reject.apply(this, arguments);
+                    });
+                }
+            )
+            return promise;
+        },
+
+        /**
+         * Return a list of graphics templates.
+         * @return {$.Deferred} A promise resolving with a list of strings
+         */
+        get_templates: function () {
+            if (!open) {
+                throw new Error('cdat.setup must be called before get_templates');
+            }
+            var defer = new $.Deferred();
+            var promise = defer.promise();
+            open.then(
+                function (connection) {
+                    connection.session.call(
+                        'cdat.file.templates',
+                        []
+                    ).then(function (m) {
+                        defer.resolve(m);
+                    }, function () {
                         defer.reject.apply(this, arguments);
                     });
                 }

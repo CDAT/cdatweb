@@ -7,10 +7,26 @@ import visualizers
 
 from FileLoader import FileLoader
 
+import vcs
+# initialize the list of templates and graphics methods
+_ = vcs.init()
+_templates = sorted(vcs.elements['template'].keys())
+_methods = sorted(vcs.graphicsmethodlist())
+
 
 class Visualizer(BaseProtocol):
 
     _active = {}
+
+    @exportRpc('cdat.view.templates')
+    def list_templates(self):
+        """Return a list of plot templates."""
+        return _templates
+
+    @exportRpc('cdat.view.methods')
+    def list_methods(self):
+        """Return a list of plot methods."""
+        return _methods
 
     @exportRpc('cdat.view.create')
     def create(self, fname, varnames, plottype='Isofill', opts={}):
