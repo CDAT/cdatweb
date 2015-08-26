@@ -6,7 +6,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from search import files
 from cdatweb.settings.local_settings import *
-
 _browser_help = (
     "Choose a variable from the list of files available on the server "
     "and drag it to the canvas."
@@ -28,9 +27,12 @@ def _refresh(request):
 
 def vtk_viewer(request):
     """Open the main visualizer view."""
+    data = {}
+    data['files'] = os.listdir(base_path)
     return render(
         request,
-        'vtk_view/cdat_viewer.html'
+        'vtk_view/cdat_viewer.html',
+        data
     )
 
 
