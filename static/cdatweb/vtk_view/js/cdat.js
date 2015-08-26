@@ -300,7 +300,7 @@
             open.then(
                 function (connection) {
                     connection.session.call(
-                        'cdat.file.methods',
+                        'cdat.view.methods',
                         []
                     ).then(function (m) {
                         defer.resolve(m);
@@ -325,7 +325,7 @@
             open.then(
                 function (connection) {
                     connection.session.call(
-                        'cdat.file.templates',
+                        'cdat.view.templates',
                         []
                     ).then(function (m) {
                         defer.resolve(m);
