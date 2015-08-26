@@ -49,7 +49,7 @@
         <div class="mtree-demo">
           <ul class="mtree bubba" style="opacity: 1;">
             {% for folder in files%}
-            <li id="{{folder}}"class="mtree-node mtree-closed" style="opacity: 1; -webkit-transform: translateY(0px);"><a href="javascript:void(0);" onclick="get_children('/Users/harris112/projects/UV-CDAT/cdatweb/Data/{{folder}}', '{{folder}}_child', '1')" style="cursor: pointer;"> {{folder}} </a>
+            <li id="{{folder}}"class="mtree-node mtree-closed" style="opacity: 1; -webkit-transform: translateY(0px);"><a href="javascript:void(0);" onclick="get_children('{{base}}/{{folder}}', '{{folder}}_child', '1')" style="cursor: pointer;"> {{folder}} </a>
             <ul id="{{folder}}_child"class="mtree-level-1" style="overflow: hidden; height: 0px; display: none;">
             </ul>
             </li>
