@@ -163,8 +163,6 @@ function get_children(path, parent, level){
           element.find("ul").attr("id", parent_id + "_" + display_name).addClass("mtree-level-" + next_level);
         }
         $('#' + parent).append(element);
-        console.log(parent);
-        console.log($('#' + parent));
       }
     },
     error: function(request, status, error) {
@@ -174,7 +172,10 @@ function get_children(path, parent, level){
 }
 
 function get_variables(path, parent, level){
-  console.log(path);
-
-  //cdat.get_variables(filename).then(function (variables) { // do something with the object })
+  cdat.get_variables(path).then(
+    function (variables){
+      console.log(variables)
+      //display varables under file
+    }
+  )
 }
