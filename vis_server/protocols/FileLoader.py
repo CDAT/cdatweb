@@ -25,10 +25,8 @@ class FileLoader(BaseProtocol):
         for vname in reader.variables:
             var = reader.variables[vname]
             out[vname] = {
-                'ndims': var.rank() - 1,
-                'info': '\n'.join(var.listall()),
-                'longname': var.long_name,
-                'shape': var.shape[1:]
+                'shape': var.shape[1:],
+                'ndims': len(var.shape[1:])
             }
         return out
 
