@@ -22,12 +22,13 @@ class FileLoader(BaseProtocol):
         except Exception:
             return {}
         out = {}
-        for var in reader.variables:
-            out[var] = {
+        for vname in reader.variables:
+            var = reader.variables[vname]
+            out[vname] = {
                 'ndims': var.rank() - 1,
                 'info': '\n'.join(var.listall()),
                 'longname': var.long_name,
-                'units': var.units
+                'shape': var.shape[1:]
             }
         return out
 
