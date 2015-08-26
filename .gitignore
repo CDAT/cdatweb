@@ -4,3 +4,5 @@
 cdatweb.egg-info/
 django/
 public/
+Data/
+cdatweb/settings/local_settings.py

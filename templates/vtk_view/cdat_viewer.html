@@ -2,6 +2,7 @@
 
 {% block app-body %}
 
+
 <div class="container-fluid">
   <div class="row">
     <div class="md-col-12 vtk-view-container">
@@ -14,39 +15,52 @@
         <!-- esgf search component -->
         <div id="search">
           <style>
-            .alert-sm{
-              margin-bottom: 10px;
-            }
+.alert-sm{
+  margin-bottom: 10px;
+}
           </style>
-            <h2>ESGF Search</h2>
-            {% csrf_token %}
-            <select type="text" name="host" value="" id="host" class="form-control">
-              <option value="http://esg.ccs.ornl.gov/esg-search">esg.css.ornl</option>
-              <option value="http://pcmdi9.llnl.gov/esg-search">pcmdi9.llnl</option>
-            </select>
-            <div class="alert-sm alert-warning" role="alert">The ESGF host URL to search. For example, "esg.ccs.ornl.gov/esg-search"</div>
+          <h2>ESGF Search</h2>
+          {% csrf_token %}
+          <select type="text" name="host" value="" id="host" class="form-control">
+            <option value="http://esg.ccs.ornl.gov/esg-search">esg.css.ornl</option>
+            <option value="http://pcmdi9.llnl.gov/esg-search">pcmdi9.llnl</option>
+          </select>
+          <div class="alert-sm alert-warning" role="alert">The ESGF host URL to search. For example, "esg.ccs.ornl.gov/esg-search"</div>
 
-            <input type="text" name="text" value="" id="text" class="form-control" placeholder="Text">
-            <div class="alert-sm alert-warning" role="alert">A free text search query in any metadata field</div>
+          <input type="text" name="text" value="" id="text" class="form-control" placeholder="Text">
+          <div class="alert-sm alert-warning" role="alert">A free text search query in any metadata field</div>
 
-            <input type="text" name="project" value="" id="project" class="form-control" placeholder="Project Name">
-            <div class="alert-sm alert-warning" role="alert">Search by project</div>
+          <input type="text" name="project" value="" id="project" class="form-control" placeholder="Project Name">
+          <div class="alert-sm alert-warning" role="alert">Search by project</div>
 
-            <select type="text" name="limit" value="" id="limit" class="form-control" placeholder="Limit">
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-            <div class="alert-sm alert-warning" role="alert">The maximum number of files to return</div>
+          <select type="text" name="limit" value="" id="limit" class="form-control" placeholder="Limit">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>  
+          <div class="alert-sm alert-warning" role="alert">The maximum number of files to return</div>
 
-            <input type="number" name="offset" value="" id="offset" class="form-control" placeholder="Off Set">
+          <input type="number" name="offset" value="" id="offset" class="form-control" placeholder="Off Set">
 
-            <div class="alert-sm alert-warning" role="alert">Start at this result</div>
-            <a onclick="submit()"  href="javascript:void(0);"><button class="btn btn-success">Search</button></a>
+          <div class="alert-sm alert-warning" role="alert">Start at this result</div>
+          <a onclick="submit()"  href="javascript:void(0);"><button class="btn btn-success">Search</button></a>
         </div>
-
       </div>
+
+      <div class="cdatweb-file-browser">
+        <div class="mtree-demo">
+          <ul class="mtree bubba" style="opacity: 1;">
+            {% for folder in files%}
+            <li id="{{folder}}"class="mtree-node mtree-closed" style="opacity: 1; -webkit-transform: translateY(0px);"><a href="javascript:void(0);" onclick="get_children('/Users/harris112/projects/UV-CDAT/cdatweb/Data/{{folder}}', '{{folder}}_child', '1')" style="cursor: pointer;"> {{folder}} </a>
+            <ul id="{{folder}}_child"class="mtree-level-1" style="overflow: hidden; height: 0px; display: none;">
+            </ul>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -55,14 +69,14 @@
 {% block js %}
 
 <script type="text/javascript">
-  function submit(){
-    var host =    document.getElementById("host").value;
-    console.log(host);
-    var text =    $("input[id=text]").val();
-    var project = $("input[id=project]").val();
-    var limit =   document.getElementById("limit").value;
-    console.log(limit);
-    var offset =  $("input[id=offset]").val();
+function submit(){
+  var host =    document.getElementById("host").value;
+  console.log(host);
+  var text =    $("input[id=text]").val();
+  var project = $("input[id=project]").val();
+  var limit =   document.getElementById("limit").value;
+  console.log(limit);
+  var offset =  $("input[id=offset]").val();
 
     var jsonObj = new Object;
     jsonObj.host = host;
@@ -114,6 +128,10 @@
           for(var v = 0; v < obj.variables.length; v++){
             if (typeof(obj.dap) === "undefined"){
               html = html + " " + obj.variables[v].name + "&nbsp;";
+        html = html + "Variables: ";
+          for(var v = 0; v < obj.variables.length; v++){
+            if (typeof(obj.dap) === "undefined"){
+              html = html + " " + obj.variables[v].name + "&nbsp;";
             }
             else{
               _dap = obj.dap
@@ -162,8 +180,78 @@ function newPanel(title, content){
     size: {width: 400, height: 600}
   });
 }
+
+function emptyPanel(){
+  return $.jsPanel({});
+}I
+
+function get_children(path, parent, level){
+  var next_level = parseInt(level) + 1;
+  var parent_id = parent;
+
+  var jsonObj = new Object;
+  jsonObj.path = path;
+  var jsonStr = JSON.stringify(jsonObj);
+  var search_url = '/vtk/get_children';
+  $.ajax({
+    type: "POST",
+    url: search_url,
+    async: true,
+    cache: false,
+    data: {query:jsonStr},
+    dataType: 'json',
+    success: function(data) {
+      results = []
+      results = data.files
+      for(var x = 0; x < results.length; x ++){
+        var short_name = results[x].split("/")
+        var display_name = short_name[short_name.length - 1]
+        display_name =display_name.replace("+","_");
+        var element;
+        if(results[x].indexOf(".") > -1){
+          //file
+          element = $("<li><a></a></li>");
+          element.attr("id", parent_id);
+          element.find("a").click(function(e){
+            var path = $(this).attr("data-path");
+            var ul = $(this).parent().find("ul");
+            get_variables(path, ul.attr('id'), next_level);
+            e.preventDefault();
+          }).text(display_name).attr("data-path", results[x]);
+        }
+        else {
+          //folder
+          element = $("<li><a></a><ul></ul></li>");
+          element.attr("id", parent_id).addClass("mtree-node mtree-closed");
+          element.find("a").click(function(e){
+            var path = $(this).attr("data-path");
+            var ul = $(this).parent().find("ul");
+            get_children(path, ul.attr('id'), next_level);
+            e.preventDefault();
+          }).text(display_name).attr("data-path", results[x]);
+          element.find("ul").attr("id", parent_id + "_" + display_name).addClass("mtree-level-" + next_level);
+        }
+        $('#' + parent).append(element);
+        console.log(parent);
+        console.log($('#' + parent));
+      }
+    },
+    error: function(request, status, error) {
+      console.log(status + " | " + error)
+    }
+  });
+}
+
+function get_variables(path, parent, level){
+  console.log(path);
+
+  //cdat.get_variables(filename).then(function (variables) { // do something with the object })
+}
+
+
 </script>
 
 {{ block.super }}
 {% include "vtk_view/fragments/panel.html" with container=".vtk-search-container" help=search.help icon="fa fa-search" title="Search" overflow="scroll" %}
+{% include "vtk_view/fragments/panel.html" with container=".cdatweb-file-browser" help=search.help icon="fa fa-search" title="File Browser" overflow="scroll" %}
 {% endblock %}
