@@ -2,6 +2,7 @@
 
 {% block app-body %}
 
+
 <div class="container-fluid">
   <div class="row">
     <div class="md-col-12 vtk-view-container">
@@ -45,11 +46,19 @@
           <div class="alert-sm alert-warning" role="alert">Start at this result</div>
           <a onclick="submit()"  href="javascript:void(0);"><button class="btn btn-success">Search</button></a>
         </div>
-
       </div>
 
-      <div class="vtk-file-browser">
-        <div id="filebrowser">Testing</div>
+      <div class="cdatweb-file-browser">
+        <div class="mtree-demo">
+          <ul class="mtree bubba" style="opacity: 1;">
+            {% for folder in files%}
+            <li id="{{folder}}"class="mtree-node mtree-closed" style="opacity: 1; -webkit-transform: translateY(0px);"><a href="javascript:void(0);" onclick="get_children('/Users/harris112/projects/UV-CDAT/cdatweb/Data/{{folder}}', '{{folder}}_child', '1')" style="cursor: pointer;"> {{folder}} </a>
+            <ul id="{{folder}}_child"class="mtree-level-1" style="overflow: hidden; height: 0px; display: none;">
+            </ul>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
       </div>
 
     </div>
@@ -79,86 +88,85 @@ function submit(){
   var jsonStr = JSON.stringify(jsonObj);
   var search_url = '/vtk/search';
   $.ajax({
-type: "POST",
-url: search_url,
-async: true,
-cache: false,
-data: {query:jsonStr},
-dataType: 'json',
-success: function(data) {
-results = data.data;
-stacktop = [];
-stacktop = results;
-html = "<div><ul>"
-for(var x = 0; x < stacktop.length; x++){
-//console.log(stacktop[x]);
-obj = stacktop[x];
-/*
-   obj example 
-dap: "http://esgdata1.nccs.nasa.gov/thredds/dodsC/NEX/dataportal/NEX/downscaled/NASA-Ames/BCSD/historical/mon/atmos/pr/r1i1p1/v1.0/CONUS/pr_amon_BCSD_historical_r1i1p1_CONUS_FGOALS-g2_199501-199912.nc.html"
-experiment: "decadal2005"
-http: "http://adm07.cmcc.it/thredds/fileServer/esg_dataroot/cmip5/output1/CMCC/CMCC-CM/decadal2005/mon/atmos/cct/r1i1p1/cct_Amon_CMCC-CM_decadal2005_r1i1p1_200511-201512.nc"
-id: null
-metadata_format: null
-node: null
-project: "CMIP5"
-regridding: null
-size: 56245984
-timestamp: "2012-03-06T23:52:36Z"
-title: "cct_Amon_CMCC-CM_decadal2005_r1i1p1_200511-201512.nc"
-type: null
-urls: Array[1]
-variables: Array[0]
- */
-html = html + "<li>Project: " + obj.project + "<br/>" +
-  "Experiment: " + obj.experiment + "<br/>" +
-  "Title: " + obj.title + "<br/>" +
-  "<a href=\"" + obj.http + "\">Downlaod</a><br/>";
+    type: "POST",
+    url: search_url,
+    async: true,
+    cache: false,
+    data: {query:jsonStr},
+    dataType: 'json',
+    success: function(data) {
+      results = data.data;
+      stacktop = [];
+      stacktop = results;
+      html = "<div><ul>"
+      for(var x = 0; x < stacktop.length; x++){
+        //console.log(stacktop[x]);
+        obj = stacktop[x];
+        /*
+          obj example 
+          dap: "http://esgdata1.nccs.nasa.gov/thredds/dodsC/NEX/dataportal/NEX/downscaled/NASA-Ames/BCSD/historical/mon/atmos/pr/r1i1p1/v1.0/CONUS/pr_amon_BCSD_historical_r1i1p1_CONUS_FGOALS-g2_199501-199912.nc.html"
+          experiment: "decadal2005"
+          http: "http://adm07.cmcc.it/thredds/fileServer/esg_dataroot/cmip5/output1/CMCC/CMCC-CM/decadal2005/mon/atmos/cct/r1i1p1/cct_Amon_CMCC-CM_decadal2005_r1i1p1_200511-201512.nc"
+          id: null
+          metadata_format: null
+          node: null
+          project: "CMIP5"
+          regridding: null
+          size: 56245984
+          timestamp: "2012-03-06T23:52:36Z"
+          title: "cct_Amon_CMCC-CM_decadal2005_r1i1p1_200511-201512.nc"
+          type: null
+          urls: Array[1]
+          variables: Array[0]
+         */
+        html = html + "<li>Project: " + obj.project + "<br/>" +
+                "Experiment: " + obj.experiment + "<br/>" +
+                "Title: " + obj.title + "<br/>" +
+                "<a href=\"" + obj.http + "\">Downlaod</a><br/>";
+    
+        html = html + "Variables: ";
+        for(var v = 0; v < obj.variables.length; v++){
+          if (typeof(obj.dap) === "undefined"){
+            html = html + " " + obj.variables[v].name + "&nbsp;";
+          }
+          else{
+            _dap = obj.dap
+            if(_dap.substring(_dap.length - 5, _dap.length) == ".html"){
+              _dap = _dap.substring(0, _dap.length - 5)
+            }
+            html = html + " <a  onclick=\"newImage('" + _dap + "', '" + obj.variables[v].name + "')\"  href=\"javascript:void(0)\">" + obj.variables[v].name + "</a> &nbsp;";
+          }
+        }
 
-html = html + "Variables: ";
-for(var v = 0; v < obj.variables.length; v++){
-  if (typeof(obj.dap) === "undefined"){
-    html = html + " " + obj.variables[v].name + "&nbsp;";
-  }
-  else{
-    _dap = obj.dap
-      if(_dap.substring(_dap.length - 5, _dap.length) == ".html"){
-        _dap = _dap.substring(0, _dap.length - 5)
+        html = html + "</li><hr>";
       }
-    html = html + " <a  onclick=\"newImage('" + _dap + "', '" + obj.variables[v].name + "')\"  href=\"javascript:void(0)\">" + obj.variables[v].name + "</a> &nbsp;";
-  }
-}
 
+      exampleURL = "http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc";
+      exampleVAR = "TS"; //rsut - ua - wap 
+      html = html + "<li><a onclick=\"newImage('" + exampleURL + "', '" + exampleVAR + "', 'Isofill')\" href=\"javascript:void(0)\">Isofill iexample</a>";
 
-html = html + "</li><hr>";
-}
+      exampleURL = "http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc";
+      exampleVAR = "T"; //rsut - ua - wap 
+      html = html + "<li><a onclick=\"newImage('" + exampleURL + "', '" + exampleVAR + "', 'Volume')\" href=\"javascript:void(0)\">Volume example</a>";
 
-exampleURL = "http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc";
-exampleVAR = "TS"; //rsut - ua - wap 
-html = html + "<li><a onclick=\"newImage('" + exampleURL + "', '" + exampleVAR + "', 'Isofill')\" href=\"javascript:void(0)\">Isofill iexample</a>";
-
-exampleURL = "http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc";
-exampleVAR = "T"; //rsut - ua - wap 
-html = html + "<li><a onclick=\"newImage('" + exampleURL + "', '" + exampleVAR + "', 'Volume')\" href=\"javascript:void(0)\">Volume example</a>";
-
-html = html + "</ul></div>";
-title = "Search Results";
-newPanel(title, html);
-},
-error: function(request, status, error) {
-         $("div .error").html(request + " | " + status + " | " + error);
-         $("div .error").show();
-       }
-});
+      html = html + "</ul></div>";
+      title = "Search Results";
+      newPanel(title, html);
+    },
+    error: function(request, status, error) {
+      $("div .error").html(request + " | " + status + " | " + error);
+      $("div .error").show();
+    }
+  });
 }
 
 function newPanel(title, content){
   $.jsPanel({
-title: title,
-content: content,
-overflow: 'scroll',
-position: "center"
-});
+    title: title,
+    content: content,
+    overflow: 'scroll',
+    position: "center"
+  });
 }
 
 function emptyPanel(){
@@ -169,27 +177,92 @@ function newImage(dap, variable, type){
   console.log(dap);
   console.log(variable);
   cdat.session.done(function (session) {
-      cdat.make_panel(
-        $('<div/>').get(0),
-        null,
-        {
-selector: '.vtk-view-container',
-title: '<span><i class="fa fa-picture-o"></i>' + variable + '</span>',
-size: {width: 500, height: 500},
-overflow: 'hidden',
-callback: cdat.vtkViewCreator({
-session: session,
-file: dap,
-variable: variable,
-type: type
-})
+    cdat.make_panel(
+      $('<div/>').get(0),
+      null,
+      {
+        selector: '.vtk-view-container',
+        title: '<span><i class="fa fa-picture-o"></i>' + variable + '</span>',
+        size: {width: 500, height: 500},
+        overflow: 'hidden',
+        callback: cdat.vtkViewCreator({
+          session: session,
+          file: dap,
+          variable: variable,
+          type: type
+        })
+      }
+    );
+  });
 }
-);
-      });
+
+function get_children(path, parent, level){
+  var next_level = parseInt(level) + 1;
+  var parent_id = parent;
+
+  var jsonObj = new Object;
+  jsonObj.path = path;
+  var jsonStr = JSON.stringify(jsonObj);
+  var search_url = '/vtk/get_children';
+  $.ajax({
+    type: "POST",
+    url: search_url,
+    async: true,
+    cache: false,
+    data: {query:jsonStr},
+    dataType: 'json',
+    success: function(data) {
+      results = []
+      results = data.files
+      for(var x = 0; x < results.length; x ++){
+        var short_name = results[x].split("/")
+        var display_name = short_name[short_name.length - 1]
+        display_name =display_name.replace("+","_");
+        var element;
+        if(results[x].indexOf(".") > -1){
+          //file
+          element = $("<li><a></a></li>");
+          element.attr("id", parent_id);
+          element.find("a").click(function(e){
+            var path = $(this).attr("data-path");
+            var ul = $(this).parent().find("ul");
+            get_variables(path, ul.attr('id'), next_level);
+            e.preventDefault();
+          }).text(display_name).attr("data-path", results[x]);
+        }
+        else {
+          //folder
+          element = $("<li><a></a><ul></ul></li>");
+          element.attr("id", parent_id).addClass("mtree-node mtree-closed");
+          element.find("a").click(function(e){
+            var path = $(this).attr("data-path");
+            var ul = $(this).parent().find("ul");
+            get_children(path, ul.attr('id'), next_level);
+            e.preventDefault();
+          }).text(display_name).attr("data-path", results[x]);
+          element.find("ul").attr("id", parent_id + "_" + display_name).addClass("mtree-level-" + next_level);
+        }
+        $('#' + parent).append(element);
+        console.log(parent);
+        console.log($('#' + parent));
+      }
+    },
+    error: function(request, status, error) {
+      console.log(status + " | " + error)
+    }
+  });
 }
+
+function get_variables(path, parent, level){
+  console.log(path);
+
+  //cdat.get_variables(filename).then(function (variables) { // do something with the object })
+}
+
+
 </script>
 
 {{ block.super }}
 {% include "vtk_view/fragments/panel.html" with container=".vtk-search-container" help=search.help icon="fa fa-search" title="Search" overflow="scroll" %}
-{% include "vtk_view/fragments/panel.html" with container=".vtk-file-browser" help=search.help icon="fa fa-search" title="File Browser" overflow="scroll" %}
+{% include "vtk_view/fragments/panel.html" with container=".cdatweb-file-browser" help=search.help icon="fa fa-search" title="File Browser" overflow="scroll" %}
 {% endblock %}
