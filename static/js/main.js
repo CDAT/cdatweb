@@ -207,7 +207,6 @@ $("body").ready(function(){
 
   cdat.get_graphics_methods().then(
     function(plots){
-      console.log(plots);
       parent = $(".cdatweb-plot-types")
       html = "<div class=\"mtree-demo\"><ul class=\"mtree bubba\" style=\"opacity: 1;\">";
       for(plot_familys in plots){
@@ -231,6 +230,14 @@ $("body").ready(function(){
       }
       html = html + "</ul></div>"
       parent.append(html);
+    },
+    function(){
+      console.log(arguments)
+    }
+  );
+  cdat.get_templates().then(
+    function(templates){
+      console.log("hellp");
     },
     function(){
       console.log(arguments)
