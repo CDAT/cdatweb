@@ -146,10 +146,10 @@
 
             var defer = new $.Deferred();
             var promise = defer.promise();
-            var view;
+            var view, v;
 
             // backward compatibility
-            if (!config.variables && config.file && config.variable) {
+            if (config.file && config.variable) {
                 if (typeof config.variable === 'string') {
                     config.variables = [{
                         name: config.variable,
@@ -157,9 +157,9 @@
                     }];
                 } else {
                     config.variables = [];
-                    for (v in config.variables) {
+                    for (v in config.variable) {
                         config.variables.push({
-                            name: v,
+                            name: config.variable[v],
                             file: config.file
                         });
                     }
@@ -224,10 +224,28 @@
          */
         _panel: function (options) {
             return function (panel) {
+                var spinner = new Spinner().spin();
+                panel.content.append(spinner.el);
                 options.node = panel.content.get(0);
+
+                function destroy_spinner() {
+                    if (spinner) {
+                        spinner.el.remove();
+                        spinner = null;
+                    }
+                    panel.content.off('stop-loading', destroy_spinner);
+                }
+
                 var view = cdat.show(options);
+                view.then(function () {
+                    panel.content.on('stop-loading', destroy_spinner);
+                });
                 panel.on('resize jspanelloaded jspanelmaximized jspanelnormalized', view.render);
-                $('body').on('jspanelclosed', view.close);
+                $('body').on('jspanelclosed', function (evt, id) {
+                    if (panel.attr('id') === id.toString()) {
+                        view.close();
+                    }
+                });
             };
         },
 
@@ -245,8 +263,10 @@
          * @param {string} file A file name or opendap url
          * @param {string} variable A variable name that exists in the file
          * @param {string} type A view type understood by the visualization server
+         * @param {string} method A graphics method
+         * @param {string} template A graphics template
          */
-        create_plot: function (file, variable, type) {
+        create_plot: function (file, variable, type, method, template) {
             console.log(
                 "Opening file: " + file +
                 " variable: " + variable +
@@ -264,7 +284,9 @@
                     callback: cdat._panel({
                         file: file,
                         variable: variable,
-                        type: type
+                        type: type,
+                        method: method,
+                        template: template
                     })
                 }
             );
