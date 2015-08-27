@@ -1,3 +1,3 @@
-from vcs_vis import Isofill, Volume, Vector3D, Vector2D
+from vcs_vis import VcsPlot
 
-__all__ = ('Isofill', 'Volume', 'Vector3D', 'Vector2D')
+__all__ = ('VcsPlot',)

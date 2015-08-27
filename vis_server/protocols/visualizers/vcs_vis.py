@@ -16,8 +16,8 @@ class VcsPlot(BaseVisualizer):
         super(VcsPlot, self).__init__(*arg, **kw)
         self._canvas = vcs.init()
         self._plot = PlotManager(self._canvas)
-        self._plot.graphics_method = self.plot_type
-        self._plot.template = vcs.elements['template']['default']
+        self._plot.graphics_method = vcs.getisofill() # default
+        self._plot.template = vcs.elements['template']['default'] # default
 
     def render(self, opts={}):
         super(VcsPlot, self).render(opts)
@@ -31,40 +31,28 @@ class VcsPlot(BaseVisualizer):
         self._canvas.update()
         return True
 
+    def setPlotMethod(self, plot_type, plot_method):
+        method = vcs.getgraphicsmethod(plot_type, plot_method)
+        if method:
+            self._plot.graphics_method = method
+            return True
+        else:
+            return False
+
+    def setTemplate(self, template):
+        if template in vcs.elements['template']:
+            self._plot.template = vcs.elements['template'][template]
+            return True
+        else:
+            return False
+
     def loadVariable(self, var, opts={}):
         """Load a variable into the visualization.
 
         Returns success or failure.
         """
         self._plot.variables = var
+        return True
 
     def getView(self):
         return self._window
-
-
-class Isofill(VcsPlot):
-    plot_type = vcs.getisofill()
-    info = dict(VcsPlot.info)
-    info['ndims'] = 2
-    info['nvars'] = 1
-
-
-class Volume(VcsPlot):
-    plot_type = vcs.get3d_scalar()
-    info = dict(VcsPlot.info)
-    info['ndims'] = 3
-    info['nvars'] = 1
-
-
-class Vector2D(VcsPlot):
-    plot_type = vcs.getvector()
-    info = dict(VcsPlot.info)
-    info['ndims'] = 2
-    info['nvars'] = 2
-
-
-class Vector3D(VcsPlot):
-    plot_type = vcs.get3d_vector()
-    info = dict(VcsPlot.info)
-    info['ndims'] = 3
-    info['nvars'] = 2  # http://uvcdat.llnl.gov/documentation/vcs/vcs-8.html#vcs3D_vector
