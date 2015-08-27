@@ -224,8 +224,22 @@
          */
         _panel: function (options) {
             return function (panel) {
+                var spinner = new Spinner().spin();
+                panel.content.append(spinner.el);
                 options.node = panel.content.get(0);
+
+                function destroy_spinner() {
+                    if (spinner) {
+                        spinner.el.remove();
+                        spinner = null;
+                    }
+                    panel.content.off('stop-loading', destroy_spinner);
+                }
+
                 var view = cdat.show(options);
+                view.then(function () {
+                    panel.content.on('stop-loading', destroy_spinner);
+                });
                 panel.on('resize jspanelloaded jspanelmaximized jspanelnormalized', view.render);
                 $('body').on('jspanelclosed', function (evt, id) {
                     if (panel.attr('id') === id.toString()) {

@@ -5,3 +5,7 @@ div {
 nav {
   z-index: 1000;
 }
+
+.jsPanel-content .spinner {
+  transform: scale(2);
+}
