@@ -118,7 +118,7 @@ function emptyPanel(){
 
 function get_children(path, parent, level){
   var next_level = parseInt(level) + 1;
-  var parent_id = parent;
+  var parent_id = parent.attr('id');
 
   var jsonObj = new Object;
   jsonObj.path = path;
@@ -138,33 +138,29 @@ function get_children(path, parent, level){
         var short_name = results[x].split("/")
         var display_name = short_name[short_name.length - 1]
         display_name =display_name.replace("+","_");
+        display_name =display_name.replace(".","_");
         var element;
-        if(results[x].indexOf(".") > -1){
-          //file
-          element = $("<li><a></a></li>");
-          element.attr("id", parent_id);
-          element.find("a").click(function(e){
-            var path = $(this).attr("data-path");
-            var ul = $(this).parent().find("ul");
-            get_variables(path, ul.attr('id'), next_level);
-            e.preventDefault();
-          }).text(display_name).attr("data-path", results[x]);
-        }
-        else {
-          //folder
-          element = $("<li><a></a><ul></ul></li>");
-          element.attr("id", parent_id).addClass("mtree-node mtree-closed");
-          element.find("a").click(function(e){
-            var path = $(this).attr("data-path");
-            var ul = $(this).parent().find("ul");
-            get_children(path, ul.attr('id'), next_level);
-            e.preventDefault();
-          }).text(display_name).attr("data-path", results[x]);
-          element.find("ul").attr("id", parent_id + "_" + display_name).addClass("mtree-level-" + next_level);
-        }
-        $('#' + parent).append(element);
-      }
-    },
+
+        element = $("<li><a></a><ul></ul></li>");
+        element.addClass("mtree-node mtree-closed");
+        element.find("a").click(function(e){
+          var path = $(this).attr("data-path");
+          var ul = $(this).parent().find("ul");
+          console.log(path);
+          if(path.indexOf(".") > -1){
+            //file
+            get_variables(path, ul, next_level);
+          }
+          else{
+            //folder
+            get_children(path, ul, next_level);
+          }
+          e.preventDefault();
+        }).text(display_name).attr("data-path", results[x]);
+        element.find("ul").attr("id", parent_id + "_" + display_name).addClass("mtree-level-" + next_level);
+      parent.append(element);
+    }
+  },
     error: function(request, status, error) {
       console.log(status + " | " + error)
     }
@@ -172,10 +168,30 @@ function get_children(path, parent, level){
 }
 
 function get_variables(path, parent, level){
-  cdat.get_variables(path).then(
+  cdat.get_variables("/var/www/Data/ne120_monthly_ens3/gridded/1979/gridded_ne120_v0.3_00003.cam.h0.1979-01.nc").then(
     function (variables){
-      console.log(variables)
-      //display varables under file
-    }
+      for(v in variables){
+        element = $("<li><a></a></li>");
+        element.find("a").click(function(e){
+          var path = $(this).attr("data-path");
+          var li = $(this).parent().find("li");
+          get_plot(path, ul.attr('id'), level + 1);
+          e.preventDefault();
+        }).text(v).attr("data-path", v);
+        parent.append(element);
+      }
+    }, function(){console.log(arguments)}
   )
 }
+
+function get_plot(path, parent, level){
+  console.log("get_plot")
+}
+
+$("body").ready(function(){
+
+  $(".cdatweb-file-browser  .mtree.bubba > li > a").click(function(e){
+    get_children($(this).attr("data-path"), $(this).next("ul"), 1);
+    e.preventDefault();
+  });
+});

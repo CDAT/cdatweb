@@ -28,6 +28,7 @@ def _refresh(request):
 def vtk_viewer(request):
     """Open the main visualizer view."""
     data = {}
+    data['base'] = base_path
     data['files'] = os.listdir(base_path)
     return render(
         request,
