@@ -58,6 +58,8 @@
         </div>
       </div>
 
+      <div class="cdatweb-plot-types"></div>
+
     </div>
   </div>
 </div>
@@ -67,4 +69,5 @@
 {{ block.super }}
 {% include "vtk_view/fragments/panel.html" with container=".vtk-search-container" help=search.help icon="fa fa-search" title="Search" overflow="scroll" %}
 {% include "vtk_view/fragments/panel.html" with container=".cdatweb-file-browser" help=search.help icon="fa fa-search" title="File Browser" overflow="scroll" %}
+{% include "vtk_view/fragments/panel.html" with container=".cdatweb-plot-types" help=search.help icon="fa fa-search" title="Plot Types" overflow="scroll" %}
 {% endblock %}

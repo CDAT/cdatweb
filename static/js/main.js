@@ -169,6 +169,8 @@ function get_children(path, parent, level){
 
 function get_variables(path, parent, level){
   cdat.get_variables("/var/www/Data/ne120_monthly_ens3/gridded/1979/gridded_ne120_v0.3_00003.cam.h0.1979-01.nc").then(
+  //testing above
+  //cdat.get_variables(path).then(
     function (variables){
       for(v in variables){
         element = $("<li><a></a></li>");
@@ -194,4 +196,37 @@ $("body").ready(function(){
     get_children($(this).attr("data-path"), $(this).next("ul"), 1);
     e.preventDefault();
   });
+
+  cdat.get_graphics_methods().then(
+    function(plots){
+      console.log(plots);
+      parent = $(".cdatweb-plot-types")
+      html = "<div class=\"mtree-demo\"><ul class=\"mtree bubba\" style=\"opacity: 1;\">";
+      for(plot_familys in plots){
+        //console.log(plot_familys);
+        html = html + 
+               "<li id=\"" + plot_familys + "\"class=\"mtree-node mtree-closed\" style=\"opacity: 1; -webkit-transform: translateY(0px);\">" + 
+               "<a style=\"cursor: pointer;\">" + plot_familys + "</a>" +
+               "<ul class=\"mtree-level-1\" style=\"overflow: hidden; height: 0px; display: none;\">";
+
+        for(plot_type in plots[plot_familys]){
+          //console.log("    " + plot_type);
+          //console.log("        " + plots[plot_familys][plot_type].nvars);
+          html = html +  
+                "<li id=\"" + plot_type + "\" class=\"mtree-node mtree-closed\" style=\"opacity: 1; -webkit-transform: translateY(0px);\">" + 
+                "<a data-path=\"" + plots[plot_familys][plot_type].nvars + "\"style=\"cursor: pointer;\">" + plot_type + "</a>" + 
+                "</li>";
+        }
+        html = html + 
+               "</ul>" + 
+               "</li>";
+      }
+      html = html + "</ul></div>"
+      parent.append(html);
+    },
+    function(){
+      console.log(arguments)
+    }
+  );
+
 });
