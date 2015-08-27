@@ -355,8 +355,8 @@
                         'cdat.vcs.templates',
                         []
                     ).then(
-                        function (m) { return m; },
-                        function () { return arguments; }
+                        function (m) { defer.resolve(m); },
+                        function () { defer.reject(arguments); }
                     );
                 }
             );
