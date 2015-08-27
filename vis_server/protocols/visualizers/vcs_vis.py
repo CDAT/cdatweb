@@ -14,6 +14,7 @@ class VcsPlot(BaseVisualizer):
 
     def __init__(self, *arg, **kw):
         super(VcsPlot, self).__init__(*arg, **kw)
+        self._window = None
         self._canvas = vcs.init()
         self._plot = PlotManager(self._canvas)
         self._plot.graphics_method = vcs.getisofill() # default
@@ -22,7 +23,7 @@ class VcsPlot(BaseVisualizer):
     def render(self, opts={}):
         super(VcsPlot, self).render(opts)
 
-        self._window = self._canvas.backend.renWin
+        self._window = self.getView()
 
         if not self._window:
             return
@@ -55,4 +56,4 @@ class VcsPlot(BaseVisualizer):
         return True
 
     def getView(self):
-        return self._window
+        return self._canvas.backend.renWin

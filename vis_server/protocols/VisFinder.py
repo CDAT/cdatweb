@@ -43,13 +43,22 @@ class Visualizer(BaseProtocol):
         return False
 
     @exportRpc('cdat.view.create')
-    def create(self, plottype, plotmethod, opts={}):
+    def create(self, plottype, plotmethod, variable, template, opts={}):
 
         vis = visualizers.VcsPlot()
         vis.setPlotMethod(
             plottype, plotmethod
         )
-        id = self.getGlobalId(vis.getView())
+        vis.setTemplate(template)
+        all_vars = []
+        for obj in variable:
+            f = FileLoader().get_reader(obj['file'])
+            all_vars.append(
+                f[obj['name']]
+            )
+        vis.loadVariable(all_vars)
+        view = vis.getView()
+        id = self.getGlobalId(view)
         self._active[id] = vis
         return id
 

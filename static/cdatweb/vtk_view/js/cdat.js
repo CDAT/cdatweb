@@ -148,64 +148,54 @@
             var promise = defer.promise();
             var view;
 
-            open.then(
-                function (connection) {
-                    return connection.session.call(
-                        'cdat.view.create',
-                        [
-                            config.type,
-                            config.method,
-                            config.opts || {}
-                        ]
-                    )
-                }
-            ).then(function (_view) {
-                view = _view;
-
-                // Generate the viewport in the dom element
-                // @todo store open viewport somehow to clean up
-                viewport = new vtkWeb.createViewport(
-                    $.extend({
-                        view: view,
-                        enableInteractions: true,
-                        renderer: 'image',
-                        interactiveQuality: 100,        // possibly reduce for remote connections
-                        stillQuality: 100,              // ditto
-                        keepServerInSync: false         // prevent double renders in some cases
-                    }, connection, config.viewportopts) // override defaults
-                );
-                viewport.bind(config.node);
-            }).then(function () {
-                return connection.session.call(
-                    'cdat.view.template',
-                    [view, config.template]
-                );
-            }).then(function () {
-                var v;
-                // backward compatibility
-                if (!config.variables && config.file && config.variable) {
-                    if (typeof config.variable === 'string') {
-                        config.variables = [{
-                            name: config.variable,
+            // backward compatibility
+            if (!config.variables && config.file && config.variable) {
+                if (typeof config.variable === 'string') {
+                    config.variables = [{
+                        name: config.variable,
+                        file: config.file
+                    }];
+                } else {
+                    config.variables = [];
+                    for (v in config.variables) {
+                        config.variables.push({
+                            name: v,
                             file: config.file
-                        }];
-                    } else {
-                        config.variables = [];
-                        for (v in config.variables) {
-                            config.variables.push({
-                                name: v,
-                                file: config.file
-                            });
-                        }
+                        });
                     }
                 }
-                return connection.session.call(
-                    'cdat.view.variable',
-                    [view, config.variables]
-                );
-            }).then(function () {
-                return viewport;
-            });
+            }
+
+            open.then(
+                function (connection) {
+                    connection.session.call(
+                        'cdat.view.create',
+                        [
+                            config.type || 'isofill',
+                            config.method || 'default',
+                            config.variables,
+                            config.template || 'default',
+                            config.opts || {}
+                        ]
+                    ).then(function (_view) {
+                        view = _view;
+
+                        // Generate the viewport in the dom element
+                        // @todo store open viewport somehow to clean up
+                        viewport = new vtkWeb.createViewport(
+                            $.extend({
+                                view: view,
+                                enableInteractions: true,
+                                renderer: 'image',
+                                interactiveQuality: 100,        // possibly reduce for remote connections
+                                stillQuality: 100,              // ditto
+                                keepServerInSync: false         // prevent double renders in some cases
+                            }, connection, config.viewportopts) // override defaults
+                        );
+                        viewport.bind(config.node);
+                        defer.resolve(viewport);
+                    }, function () { defer.reject(arguments); });
+            }, function () { defer.reject(arguments); });
 
             // append a render function to the promise
             promise.render = function () {
@@ -290,14 +280,19 @@
             if (!open) {
                 throw new Error('cdat.setup must be called before get_variables');
             }
-            return open.then(
+            var defer = new $.Deferred();
+            open.then(
                 function (connection) {
                     return connection.session.call(
                         'cdat.file.list_variables',
                         [filename]
+                    ).then(
+                        function (m) { defer.resolve(m); },
+                        function (m) { defer.reject(arguments); }
                     );
                 }
-            )
+            );
+            return defer.promise();
         },
 
         /**
@@ -308,14 +303,19 @@
             if (!open) {
                 throw new Error('cdat.setup must be called before get_graphics_methods');
             }
-            return open.then(
+            var defer = new $.Deferred();
+            open.then(
                 function (connection) {
-                    return connection.session.call(
+                    connection.session.call(
                         'cdat.vcs.methods',
                         []
-                    );
+                    ).then(
+                        function (m) { defer.resolve(m); },
+                        function () { defer.reject(arguments); }
+                    )
                 }
-            )
+            );
+            return defer.promise();
         },
 
         /**
@@ -326,14 +326,19 @@
             if (!open) {
                 throw new Error('cdat.setup must be called before get_templates');
             }
+            var defer = new $.Deferred();
             open.then(
-                return function (connection) {
-                    return connection.session.call(
+                function (connection) {
+                    connection.session.call(
                         'cdat.vcs.templates',
                         []
+                    ).then(
+                        function (m) { return m; },
+                        function () { return arguments; }
                     );
                 }
             );
+            return defer.promise();
         }
     };
 
