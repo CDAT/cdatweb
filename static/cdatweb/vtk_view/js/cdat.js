@@ -227,7 +227,11 @@
                 options.node = panel.content.get(0);
                 var view = cdat.show(options);
                 panel.on('resize jspanelloaded jspanelmaximized jspanelnormalized', view.render);
-                $('body').on('jspanelclosed', view.close);
+                $('body').on('jspanelclosed', function (evt, id) {
+                    if (panel.attr('id') === id.toString()) {
+                        view.close();
+                    }
+                });
             };
         },
 
