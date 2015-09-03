@@ -125,6 +125,9 @@ function emptyPanel(){
 }
 
 function get_children(path, parent, level){
+  if (parent.attr("data-loaded") === "true") {
+    return;
+  }
   var next_level = parseInt(level) + 1;
   var parent_id = parent.attr('id');
 
@@ -150,11 +153,12 @@ function get_children(path, parent, level){
         var element;
 
         element = $("<li><a></a><ul></ul></li>");
-        element.addClass("mtree-node mtree-closed");
         element.find("a").click(function(e){
+          if ($(this).attr("data-loaded") === "true") {
+            return;
+          }
           var path = $(this).attr("data-path");
           var ul = $(this).parent().find("ul");
-          console.log(path);
           if(path.indexOf(".") > -1){
             //file
             get_variables(path, ul, next_level);
@@ -163,11 +167,11 @@ function get_children(path, parent, level){
             //folder
             get_children(path, ul, next_level);
           }
-          e.preventDefault();
+          $(this).attr('data-loaded', "true");
         }).text(display_name).attr("data-path", results[x]);
-        element.find("ul").attr("id", parent_id + "_" + display_name).addClass("mtree-level-" + next_level);
-      parent.append(element);
-    }
+        element.find("ul").attr("id", parent_id + "_" + display_name);
+        parent.append(element);
+      }
   },
     error: function(request, status, error) {
       console.log(status + " | " + error)
@@ -185,7 +189,7 @@ function get_variables(path, parent, level){
         element.find("a").click(function(e){
           var path = $(this).attr("data-path");
           var li = $(this).parent().find("li");
-          get_plot(path, ul.attr('id'), level + 1);
+          get_plot(path, $(this).next("ul").attr('id'), level + 1);
           e.preventDefault();
         }).text(v).attr("data-path", v);
         parent.append(element);
@@ -200,48 +204,68 @@ function get_plot(path, parent, level){
 
 $("body").ready(function(){
 
-  $(".cdatweb-file-browser  .mtree.bubba > li > a").click(function(e){
+  $(".cdatweb-file-browser > ul > li > a").click(function(e){
+    if ($(this).attr("data-loaded") === "true") {
+      return;
+    }
     get_children($(this).attr("data-path"), $(this).next("ul"), 1);
+    $(this).attr('data-loaded', 'true');
     e.preventDefault();
   });
 
   cdat.get_graphics_methods().then(
     function(plots){
-      parent = $(".cdatweb-plot-types")
-      html = "<div class=\"mtree-demo\"><ul class=\"mtree bubba\" style=\"opacity: 1;\">";
-      for(plot_familys in plots){
-        //console.log(plot_familys);
-        html = html + 
-               "<li id=\"" + plot_familys + "\"class=\"mtree-node mtree-closed\" style=\"opacity: 1; -webkit-transform: translateY(0px);\">" + 
-               "<a style=\"cursor: pointer;\">" + plot_familys + "</a>" +
-               "<ul class=\"mtree-level-1\" style=\"overflow: hidden; height: 0px; display: none;\">";
-
-        for(plot_type in plots[plot_familys]){
-          //console.log("    " + plot_type);
-          //console.log("        " + plots[plot_familys][plot_type].nvars);
-          html = html +  
-                "<li id=\"" + plot_type + "\" class=\"mtree-node mtree-closed\" style=\"opacity: 1; -webkit-transform: translateY(0px);\">" + 
-                "<a data-path=\"" + plots[plot_familys][plot_type].nvars + "\"style=\"cursor: pointer;\">" + plot_type + "</a>" + 
-                "</li>";
+      parent = $(".cdatweb-plot-types");
+      var item = $("<li><a></a><ul class='qtree'></ul></li>");
+      var child = $("<li><a></a></li>");
+      var plot_fam_item, plot_family, plot_item;
+      for (plot_family in plots) {
+        if (plots.hasOwnProperty(plot_family) === false) {
+          continue;
         }
-        html = html + 
-               "</ul>" + 
-               "</li>";
+
+        plot_fam_item = item.clone();
+
+        plot_fam_item.attr('id', plot_family);
+        plot_fam_item.find('a').text(plot_family);
+
+        for(plot_type in plots[plot_family]){
+          plot_item = child.clone();
+          plot_item.attr('id', plot_type);
+          plot_item.find('a').attr('data-nvars', plots[plot_family][plot_type].nvars).text(plot_type)
+          plot_item.hide();
+          plot_fam_item.find("ul").append(plot_item);
+        }
+        parent.append(plot_fam_item);
+        plot_fam_item.hide();
       }
-      html = html + "</ul></div>"
-      parent.append(html);
     },
     function(){
       console.log(arguments)
     }
   );
+
   cdat.get_templates().then(
     function(templates){
-      console.log("hellp");
-    },
+      parent = $(".cdatweb-plot-templates");
+      var item = $("<li><a></a><ul class='qtree'></ul></li>");
+      var temp_fam_item, temp_name;
+      console.log(templates);
+      for(temp_name = 0; temp_name < templates.length; temp_name++) {
+        console.log(templates[temp_name]); 
+        temp_fam_item = item.clone();
+        temp_fam_item.attr('id', templates[temp_name]);
+        temp_fam_item.find('a').text(templates[temp_name]);
+
+        parent.append(temp_fam_item);
+        temp_fam_item.hide();
+      }
+ 
+  },
     function(){
       console.log(arguments)
     }
   );
-
+  $(".qtree").quicktree();
 });
+
