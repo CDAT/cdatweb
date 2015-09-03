@@ -67,6 +67,13 @@
         </ul>
       </div>
 
+      <div class="cdatweb-plot-examples">
+        <ul>
+          <li><a onclick="cdat.create_plot('http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc', 'TS', 'isofill', 'robinson', 'no_legend')" href="javascript:void(0)">Isofill example</a></li>
+          <li><a onclick="cdat.create_plot('http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc', 'T', '3d_scalar', 'default', 'default')" href="javascript:void(0)">Volume example</a></li>
+          <li><a onclick="cdat.create_plot('http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc', ['U', 'V'], '3d_vector', 'default', 'default')" href="javascript:void(0)">Vector3D example</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
@@ -74,7 +81,8 @@
 
 {% block js %}
 {{ block.super }}
-{% include "vtk_view/fragments/panel.html" with container=".vtk-search-container" help=search.help icon="fa fa-search" title="Search" overflow="scroll" %}
+{% include "vtk_view/fragments/panel.html" with container=".vtk-search-container" help=search.help icon="fa fa-search" title="ESGF Search" overflow="scroll" %}
 {% include "vtk_view/fragments/panel.html" with container=".cdatweb-file-browser" help=search.help icon="fa fa-search" title="File Browser" overflow="scroll" %}
 {% include "vtk_view/fragments/panel.html" with container=".cdatweb-plot-selectors" help=search.help icon="fa fa-search" title="Plot Selectors" overflow="scroll" %}
+{% include "vtk_view/fragments/panel.html" with container=".cdatweb-plot-examples" help=search.help icon="fa fa-search" title="Examples" overflow="scroll" %}
 {% endblock %}

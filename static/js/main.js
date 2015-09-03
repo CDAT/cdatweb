@@ -85,16 +85,6 @@ function submit(){
           //  method,
           //  template
         // )
-        exampleURL = "http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc";
-        exampleVAR = "TS"; //rsut - ua - wap
-        html = html + "<li><a onclick=\"cdat.create_plot('" + exampleURL + "', '" + exampleVAR + "', 'isofill', 'robinson', 'no_legend')\" href=\"javascript:void(0)\">Isofill iexample</a>";
-
-        exampleURL = "http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc";
-        exampleVAR = "T"; //rsut - ua - wap
-        html = html + "<li><a onclick=\"cdat.create_plot('" + exampleURL + "', '" + exampleVAR + "', '3d_scalar', 'default', 'default')\" href=\"javascript:void(0)\">Volume example</a>";
-
-        exampleURL = "http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc";
-        html = html + "<li><a onclick=\"cdat.create_plot('" + exampleURL + "', ['U', 'V'], '3d_vector', 'default', 'default')\" href=\"javascript:void(0)\">Vector3D example</a>";
 
         html = html + "</ul></div>";
         title = "Search Results";
