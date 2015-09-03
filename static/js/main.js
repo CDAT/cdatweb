@@ -250,9 +250,7 @@ $("body").ready(function(){
       parent = $(".cdatweb-plot-templates");
       var item = $("<li><a></a><ul class='qtree'></ul></li>");
       var temp_fam_item, temp_name;
-      console.log(templates);
       for(temp_name = 0; temp_name < templates.length; temp_name++) {
-        console.log(templates[temp_name]); 
         temp_fam_item = item.clone();
         temp_fam_item.attr('id', templates[temp_name]);
         temp_fam_item.find('a').text(templates[temp_name]);
