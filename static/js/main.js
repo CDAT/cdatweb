@@ -1,4 +1,4 @@
-function submit(){
+function cdat_esgf_submit(){
   var host =    document.getElementById("host").value;
   console.log(host);
   var text =    $("input[id=text]").val();
@@ -192,8 +192,48 @@ function get_plot(path, parent, level){
   console.log("get_plot")
 }
 
+/**
+ * Create a droppable DOM element that handles drags from make_draggable.
+ * @param {jQuery} node A jquery DOM element
+ * @param {function?} ondrop A drop event handler
+ * @param {function?} ondrag A drag event handler
+ */
+function make_droppable(node, ondrop, ondrag) {
+  node.on('drop', function (evt) {
+    evt.preventDefault();
+    if (ondrop) {
+      ondrop.call(node, evt);
+    }
+  }).on('dragover', function (evt) {
+    evt.preventDefault();
+    if (ondrag) {
+      ondrag.call(node, evt);
+    }
+  });
+  return node;
+}
+
+
+/**
+ * Make the given element draggable.
+ * @param {jQuery} node A jquery DOM element
+ * @param {function?} ondrag A drag event handler
+ */
+function make_draggable(node, ondrag) {
+  node.attr('draggable', 'true')
+    .on('dragstart', function (evt) {
+      evt.preventDefault();
+      if (ondrag) {
+        ondrag.call(node, evt);
+      }
+    });
+
+  return node;
+}
+
 $("body").ready(function(){
 
+  /*
   $(".cdatweb-file-browser > ul > li > a").click(function(e){
     if ($(this).attr("data-loaded") === "true") {
       return;
@@ -202,6 +242,7 @@ $("body").ready(function(){
     $(this).attr('data-loaded', 'true');
     e.preventDefault();
   });
+  */
 
   cdat.get_graphics_methods().then(
     function(plots){
@@ -226,6 +267,7 @@ $("body").ready(function(){
             .attr('data-nvars', plots[plot_family][plot_type].nvars)
             .text(plot_type);
           plot_item.hide();
+          make_draggable(plot_item);
           plot_fam_item.find("ul").append(plot_item);
         }
         parent.append(plot_fam_item);
@@ -246,16 +288,42 @@ $("body").ready(function(){
         temp_fam_item = item.clone();
         temp_fam_item.attr('id', templates[temp_name]);
         temp_fam_item.find('a').text(templates[temp_name]);
-
+        make_draggable(temp_fam_item);
         parent.append(temp_fam_item);
         temp_fam_item.hide();
       }
- 
+
   },
     function(){
       console.log(arguments)
     }
   );
   $(".qtree").quicktree();
+  $(".cdat-search-link").click(function () {
+    if ($(".cdat-search-container").get(0)) {
+      return;
+    }
+
+    $(".cdat-search-container").remove();
+    $("<div/>").addClass("cdat-search-container")
+      .appendTo(".vtk-view-container");
+
+    $.ajax('/fragments/search')
+      .then(function (data) {
+        $('.cdat-search-container').html(data);
+        cdat.make_panel(
+          $('.cdat-search-container').get(0),
+          '',
+          {
+            title: '<span><i class="fa fa-search"></i>ESGF search</span>',
+            size: 'auto',
+            overflow: 'scroll'
+          }
+        );
+      }, function () {
+        console.log('search fragment load failed.');
+        $('.cdat-search-container').remove();
+      });
+  });
 });
 

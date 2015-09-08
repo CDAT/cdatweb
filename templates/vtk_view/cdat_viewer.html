@@ -1,4 +1,16 @@
 {% extends "vtk_view/vtk_base.html" %}
+
+{% block navbar-right %}
+<li><a class="cdat-search-link" href="#">
+    <span class="glyphicon glyphicon-search"></span>
+    <span>Search</span>
+</a></li>
+<li><a class="cdat-plot-link" href="#">
+    <span class="glyphicon glyphicon-plus"></span>
+    <span>Plot</span>
+</a></li>
+{% endblock navbar-right %}
+
 {% block app-body %}
 <div class="container-fluid">
   <div class="row">
@@ -7,44 +19,7 @@
       <div class="vtk-browser-container">
         <div class="vtk-file-browser"></div>
       </div>
-
-      <div class="vtk-search-container">
-        <!-- esgf search component -->
-        <div id="search">
-          <style>
-            .alert-sm{
-              margin-bottom: 10px;
-            }
-          </style>
-          <h2>ESGF Search</h2>
-          {% csrf_token %}
-          <select type="text" name="host" value="" id="host" class="form-control">
-            <option value="http://esg.ccs.ornl.gov/esg-search">esg.css.ornl</option>
-            <option value="http://pcmdi9.llnl.gov/esg-search">pcmdi9.llnl</option>
-          </select>
-          <div class="alert-sm alert-warning" role="alert">The ESGF host URL to search. For example, "esg.ccs.ornl.gov/esg-search"</div>
-
-          <input type="text" name="text" value="" id="text" class="form-control" placeholder="Text">
-          <div class="alert-sm alert-warning" role="alert">A free text search query in any metadata field</div>
-
-          <input type="text" name="project" value="" id="project" class="form-control" placeholder="Project Name">
-          <div class="alert-sm alert-warning" role="alert">Search by project</div>
-
-          <select type="text" name="limit" value="" id="limit" class="form-control" placeholder="Limit">
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>  
-          <div class="alert-sm alert-warning" role="alert">The maximum number of files to return</div>
-
-          <input type="number" name="offset" value="" id="offset" class="form-control" placeholder="Off Set">
-
-          <div class="alert-sm alert-warning" role="alert">Start at this result</div>
-          <a onclick="submit()"  href="javascript:void(0);"><button class="btn btn-success">Search</button></a>
-        </div>
-      </div>
-
+      
       <div class="cdatweb-file-browser cdatweb-tree">
           <ul class="qtree">
             {% for folder in files%}
@@ -67,13 +42,13 @@
         </ul>
       </div>
 
-      <div class="cdatweb-plot-examples cdatweb-tree">
+      <!--div class="cdatweb-plot-examples cdatweb-tree">
         <ul>
           <li><a onclick="cdat.create_plot('http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc', 'TS', 'isofill', 'robinson', 'no_legend')" href="javascript:void(0)">Isofill example</a></li>
           <li><a onclick="cdat.create_plot('http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc', 'T', '3d_scalar', 'default', 'default')" href="javascript:void(0)">Volume example</a></li>
           <li><a onclick="cdat.create_plot('http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc', ['U', 'V'], '3d_vector', 'default', 'default')" href="javascript:void(0)">Vector3D example</a></li>
         </ul>
-      </div>
+      </div-->
     </div>
   </div>
 </div>
@@ -81,8 +56,6 @@
 
 {% block js %}
 {{ block.super }}
-{% include "vtk_view/fragments/panel.html" with container=".vtk-search-container" help=search.help icon="fa fa-search" title="ESGF Search" overflow="scroll" %}
 {% include "vtk_view/fragments/panel.html" with container=".cdatweb-file-browser" help=search.help icon="fa fa-search" title="File Browser" overflow="scroll" %}
 {% include "vtk_view/fragments/panel.html" with container=".cdatweb-plot-selectors" help=search.help icon="fa fa-search" title="Plot Selectors" overflow="scroll" %}
-{% include "vtk_view/fragments/panel.html" with container=".cdatweb-plot-examples" help=search.help icon="fa fa-search" title="Examples" overflow="scroll" %}
 {% endblock %}

@@ -5,10 +5,16 @@ from .apps.vtk_view import views as vtk_views
 urlpatterns = patterns(
     '',
     url(r'^$', vtk_views.vtk_viewer),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(
+        r'^api-auth/', include(
+            'rest_framework.urls',
+            namespace='rest_framework'
+        )
+    ),
     url(r'^vtk/search', vtk_views.search),
     url(r'^vtk/get_children', vtk_views.get_children),
-    url(r'^vtk/launch', vtk_views.vtkweb_launcher)
+    url(r'^vtk/launch', vtk_views.vtkweb_launcher),
+    url(r'^fragments/search', vtk_views.search_panel)
 )
 
 # Development

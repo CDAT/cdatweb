@@ -7,8 +7,12 @@
   </div>
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav navbar-left">
+      {% block navbar-left %}
+      {% endblock %}
     </ul>
     <ul class="nav navbar-nav navbar-right">
+      {% block navbar-right %}
+      {% endblock %}
     </ul>
   </div>
 </nav>

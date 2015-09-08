@@ -4,8 +4,13 @@ import vtk_launcher
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from django.template.loader import render_to_string
 from search import files
-from cdatweb.settings.local_settings import *
+try:
+    from cdatweb.settings.local_settings import base_path
+except ImportError:
+    base_path = '/data'
+
 _browser_help = (
     "Choose a variable from the list of files available on the server "
     "and drag it to the canvas."
@@ -63,6 +68,17 @@ def vtkweb_launcher(request):
             return HttpResponse(status=500)
 
     return HttpResponse(status=404)
+
+
+def search_panel(request):
+    if request.is_ajax():
+        html = render_to_string(
+            'vtk_view/fragments/esgf-search.html',
+            {}
+        )
+        return HttpResponse(html)
+    else:
+        HttpResponse(status=404)
 
 
 @csrf_exempt
