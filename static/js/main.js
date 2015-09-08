@@ -222,7 +222,9 @@ $("body").ready(function(){
         for(plot_type in plots[plot_family]){
           plot_item = child.clone();
           plot_item.attr('id', plot_type);
-          plot_item.find('a').attr('data-nvars', plots[plot_family][plot_type].nvars).text(plot_type)
+          plot_item.find('a')
+            .attr('data-nvars', plots[plot_family][plot_type].nvars)
+            .text(plot_type);
           plot_item.hide();
           plot_fam_item.find("ul").append(plot_item);
         }
