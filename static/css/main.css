@@ -1,3 +1,7 @@
 .qtree a {
-    cursor: pointer;
+  cursor: pointer;
+}
+
+.cdatweb-tree {
+  padding-right: 2em;
 }

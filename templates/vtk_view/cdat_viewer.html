@@ -45,7 +45,7 @@
         </div>
       </div>
 
-      <div class="cdatweb-file-browser">
+      <div class="cdatweb-file-browser cdatweb-tree">
           <ul class="qtree">
             {% for folder in files%}
             <li id="{{folder}}"><a data-path="{{base}}/{{folder}}"> {{folder}} </a>
@@ -56,7 +56,7 @@
           </ul>
       </div>
 
-      <div class="cdatweb-plot-selectors">
+      <div class="cdatweb-plot-selectors cdatweb-tree">
         <ul class="qtree">
           <li><a>Graphic Methods</a>
             <ul class="cdatweb-plot-types"></ul>
@@ -67,7 +67,7 @@
         </ul>
       </div>
 
-      <div class="cdatweb-plot-examples">
+      <div class="cdatweb-plot-examples cdatweb-tree">
         <ul>
           <li><a onclick="cdat.create_plot('http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc', 'TS', 'isofill', 'robinson', 'no_legend')" href="javascript:void(0)">Isofill example</a></li>
           <li><a onclick="cdat.create_plot('http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc', 'T', '3d_scalar', 'default', 'default')" href="javascript:void(0)">Volume example</a></li>
