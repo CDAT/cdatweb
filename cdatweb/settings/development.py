@@ -15,8 +15,8 @@ DATABASES = {
 
 INTERNAL_IPS = ('127.0.0.1',)
 
-if 'debug_toolbar' not in INSTALLED_APPS:
-    INSTALLED_APPS += ('debug_toolbar',)
+# if 'debug_toolbar' not in INSTALLED_APPS:
+#     INSTALLED_APPS += ('debug_toolbar',)
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
