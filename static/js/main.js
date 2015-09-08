@@ -220,9 +220,14 @@ function make_droppable(node, ondrop, ondrag) {
  * @param {function?} ondrag A drag event handler
  */
 function make_draggable(node, ondrag) {
-  node.attr('draggable', 'true')
-    .on('dragstart', function (evt) {
-      evt.preventDefault();
+  node.draggable({
+    appendTo: 'body',
+    containment: '.vtk-view-container',
+    helper: "clone",
+    cursor: "dragging",
+    opacity: 0.50
+  }).addClass('cdat-draggable')
+    .on('start', function (evt) {
       if (ondrag) {
         ondrag.call(node, evt);
       }

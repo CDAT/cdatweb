@@ -334,7 +334,7 @@
                     ).then(
                         function (m) { defer.resolve(m); },
                         function () { defer.reject(arguments); }
-                    )
+                    );
                 }
             );
             return defer.promise();
@@ -361,6 +361,29 @@
                 }
             );
             return defer.promise();
+        },
+
+        /**
+         * Generate a new plot config window.
+         */
+        make_plot_panel: function () {
+            var panel = cdat.make_panel(
+                $('<div/>').addClass('cdat-plot-panel')
+                    .css('width', '500px')
+                    .css('height', '500px')
+                    .get(0),
+                null,
+                {
+                    selector: '.vtk-view-container',
+                    title: '<span><i class="fa fa-picture-o"></i>Plot window</span>',
+                    overflow: 'hidden'
+                }
+            );
+            panel.on('dragover', function (evt) {
+                console.log(evt);
+                evt.preventDefault();
+            });
+            console.log(panel);
         }
     };
 

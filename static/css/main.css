@@ -5,3 +5,7 @@
 .cdatweb-tree {
   padding-right: 2em;
 }
+
+.cdat-draggable {
+  cursor: 'grab' !important;
+}
