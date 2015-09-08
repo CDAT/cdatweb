@@ -9,6 +9,16 @@
     <span class="glyphicon glyphicon-plus"></span>
     <span>Plot</span>
 </a></li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+    Examples<span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu">
+    <li><a onclick="cdat.create_plot('http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc', 'TS', 'isofill', 'robinson', 'no_legend')" href="javascript:void(0)">Isofill example</a></li>
+    <li><a onclick="cdat.create_plot('http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc', 'T', '3d_scalar', 'default', 'default')" href="javascript:void(0)">Volume example</a></li>
+    <li><a onclick="cdat.create_plot('http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc', ['U', 'V'], '3d_vector', 'default', 'default')" href="javascript:void(0)">Vector3D example</a></li>
+  </ul>
+</li>
 {% endblock navbar-right %}
 
 {% block app-body %}
@@ -44,9 +54,6 @@
 
       <!--div class="cdatweb-plot-examples cdatweb-tree">
         <ul>
-          <li><a onclick="cdat.create_plot('http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc', 'TS', 'isofill', 'robinson', 'no_legend')" href="javascript:void(0)">Isofill example</a></li>
-          <li><a onclick="cdat.create_plot('http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc', 'T', '3d_scalar', 'default', 'default')" href="javascript:void(0)">Volume example</a></li>
-          <li><a onclick="cdat.create_plot('http://test.opendap.org/dap/netcdf/examples/cami_0000-09-01_64x128_L26_c030918.nc', ['U', 'V'], '3d_vector', 'default', 'default')" href="javascript:void(0)">Vector3D example</a></li>
         </ul>
       </div-->
     </div>
