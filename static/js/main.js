@@ -190,15 +190,10 @@ function get_variables(path, parent, level){
       for(v in variables){
         element = $("<li><a></a></li>");
         make_draggable(element);
-        element.text(v).attr("data-path", v);
-        /*
-        element.find("a").click(function(e){
-          var path = $(this).attr("data-path");
-          var li = $(this).parent().find("li");
-          get_plot(path, $(this).next("ul").attr('id'), level + 1);
-          e.preventDefault();
-        });
-        */
+        element.text(v)
+          .attr("data-name", v)
+          .attr("data-file", path)
+          .addClass('cdat-variable');
         parent.append(element);
       }
     }, function(){console.log(arguments)}
@@ -208,28 +203,6 @@ function get_variables(path, parent, level){
 function get_plot(path, parent, level){
   console.log("get_plot")
 }
-
-/**
- * Create a droppable DOM element that handles drags from make_draggable.
- * @param {jQuery} node A jquery DOM element
- * @param {function?} ondrop A drop event handler
- * @param {function?} ondrag A drag event handler
- */
-function make_droppable(node, ondrop, ondrag) {
-  node.on('drop', function (evt) {
-    evt.preventDefault();
-    if (ondrop) {
-      ondrop.call(node, evt);
-    }
-  }).on('dragover', function (evt) {
-    evt.preventDefault();
-    if (ondrag) {
-      ondrag.call(node, evt);
-    }
-  });
-  return node;
-}
-
 
 /**
  * Make the given element draggable.
@@ -294,6 +267,9 @@ $("body").ready(function(){
           plot_item = child.clone();
           plot_item.attr('id', plot_type);
           plot_item
+            .addClass('cdat-plot-method')
+            .attr('data-type', plot_type)
+            .attr('data-family', plot_family)
             .attr('data-nvars', plots[plot_family][plot_type].nvars)
             .text(plot_type);
           plot_item.hide();
@@ -316,8 +292,9 @@ $("body").ready(function(){
       var temp_fam_item, temp_name;
       for(temp_name = 0; temp_name < templates.length; temp_name++) {
         temp_fam_item = item.clone();
-        temp_fam_item.attr('id', templates[temp_name]);
-        temp_fam_item.text(templates[temp_name]);
+        temp_fam_item.attr('id', templates[temp_name])
+          .text(templates[temp_name])
+          .addClass('cdat-template-option');
         make_draggable(temp_fam_item);
         parent.append(temp_fam_item);
         temp_fam_item.hide();

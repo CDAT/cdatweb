@@ -2,6 +2,27 @@
     'use strict';
 
     /**
+     * Create a droppable DOM element that handles drags from make_draggable.
+     * @param {jQuery} node A jquery DOM element
+     * @param {function?} ondrop A drop event handler
+     * @param {function?} ondrag A drag event handler
+     */
+    function make_droppable(node, ondrop, ondrag) {
+        node.on('drop', function (evt) {
+            evt.preventDefault();
+            if (ondrop) {
+                ondrop.call(node, evt);
+            }
+        }).on('dragover', function (evt) {
+            evt.preventDefault();
+            if (ondrag) {
+                ondrag.call(node, evt);
+            }
+        });
+        return node;
+    }
+
+    /**
      * The vtkweb connection
      * @private
      */
@@ -20,9 +41,9 @@
     var open = null;
 
     /**
-    * global module for CDAT specific methods
-    * @namespace
-    */
+     * global module for CDAT specific methods
+     * @namespace
+     */
     var cdat = {
         /**
          * This is an initialization function that should be called once to initiate
@@ -80,7 +101,7 @@
                 function (code, reason) {
                     open.reject(code, reason);
                 });
-            return open.promise();
+                return open.promise();
         },
 
         /**
@@ -95,11 +116,11 @@
             var defer = new $.Deferred();
             if (connection) {
                 vtkWeb.stop(connection)
-                    .then(function () {
-                        defer.resolve.apply(this, arguments);
-                    }, function () {
-                        defer.reject.apply(this, arguments);
-                    });
+                .then(function () {
+                    defer.resolve.apply(this, arguments);
+                }, function () {
+                    defer.reject.apply(this, arguments);
+                });
 
             }
             return defer.promise();
@@ -195,27 +216,27 @@
                         viewport.bind(config.node);
                         defer.resolve(viewport);
                     }, function () { defer.reject(arguments); });
-            }, function () { defer.reject(arguments); });
+                }, function () { defer.reject(arguments); });
 
-            // append a render function to the promise
-            promise.render = function () {
-                if (viewport) {
-                    viewport.render();
-                }
-            };
+                // append a render function to the promise
+                promise.render = function () {
+                    if (viewport) {
+                        viewport.render();
+                    }
+                };
 
-            // append a close method to the promise
-            promise.close = function () {
-                if (viewport) {
-                    viewport.unbind(config.node);
-                    // this is technically a race condition, but I can't be bothered
-                    // to fix it because it is unlikely to occur
-                    connection.session.call('cdat.view.destroy', [view]);
-                    viewport = null;
-                    view = null;
-                }
-            };
-            return promise;
+                // append a close method to the promise
+                promise.close = function () {
+                    if (viewport) {
+                        viewport.unbind(config.node);
+                        // this is technically a race condition, but I can't be bothered
+                        // to fix it because it is unlikely to occur
+                        connection.session.call('cdat.view.destroy', [view]);
+                        viewport = null;
+                        view = null;
+                    }
+                };
+                return promise;
         },
 
         /**
@@ -269,8 +290,8 @@
         create_plot: function (file, variable, type, method, template) {
             console.log(
                 "Opening file: " + file +
-                " variable: " + variable +
-                " as type: " + type
+                    " variable: " + variable +
+                    " as type: " + type
             );
 
             cdat.make_panel(
@@ -309,8 +330,8 @@
                         'cdat.file.list_variables',
                         [filename]
                     ).then(
-                        function (m) { defer.resolve(m); },
-                        function (m) { defer.reject(arguments); }
+                    function (m) { defer.resolve(m); },
+                    function (m) { defer.reject(arguments); }
                     );
                 }
             );
@@ -332,8 +353,8 @@
                         'cdat.vcs.methods',
                         []
                     ).then(
-                        function (m) { defer.resolve(m); },
-                        function () { defer.reject(arguments); }
+                    function (m) { defer.resolve(m); },
+                    function () { defer.reject(arguments); }
                     );
                 }
             );
@@ -355,8 +376,8 @@
                         'cdat.vcs.templates',
                         []
                     ).then(
-                        function (m) { defer.resolve(m); },
-                        function () { defer.reject(arguments); }
+                    function (m) { defer.resolve(m); },
+                    function () { defer.reject(arguments); }
                     );
                 }
             );
@@ -366,24 +387,55 @@
         /**
          * Generate a new plot config window.
          */
-        make_plot_panel: function () {
-            var panel = cdat.make_panel(
-                $('<div/>').addClass('cdat-plot-panel')
-                    .css('width', '500px')
-                    .css('height', '500px')
-                    .get(0),
+        make_plot_panel: function (evt) {
+            var content, panel, vlist, template, method, opts = {};
+
+
+            // render a new plot when ready
+            function render_when_ready() {
+                if (opts.method &&
+                    opts.template &&
+                    opts.nvars !== null &&
+                    opts.vlist[0] &&
+                    opts.vlist[1]) {
+
+                    cdat.create_plot(
+                    );
+                }
+            }
+
+            opts.method = null;
+            opts.template = 'default';
+            opts.nvars = null;
+            opts.vlist = [null, null];
+
+            // need something better
+            $('.cdat-temporary-window').remove();
+
+            content = $('<div/>').addClass('cdat-plot-panel')
+                .css('width', '500px')
+                .css('height', '500px');
+
+            method = $('<div/>')
+                .addClass('cdat-graphic-method')
+                .text('Drop a graphic method');
+
+            // make_droppable(method, );
+
+            template = $('<div/>')
+                .addClass('cdat-graphic-template')
+                .text('template');
+            vlist = $('<div/>').addClass('cdat-variable-list');
+
+            content.append([method, template, vlist]);
+            panel = cdat.make_panel(
+                content.get(0),
                 null,
                 {
                     selector: '.vtk-view-container',
                     title: '<span><i class="fa fa-picture-o"></i>Plot window</span>',
                     overflow: 'hidden'
-                }
-            );
-            panel.on('dragover', function (evt) {
-                console.log(evt);
-                evt.preventDefault();
-            });
-            console.log(panel);
+                });
         }
     };
 
