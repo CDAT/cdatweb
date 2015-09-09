@@ -34,7 +34,7 @@ def vtk_viewer(request):
     """Open the main visualizer view."""
     data = {}
     data['base'] = base_path
-    data['files'] = os.listdir(base_path)
+
     return render(
         request,
         'vtk_view/cdat_viewer.html',
@@ -122,10 +122,10 @@ def get_children(request):
     context = json.loads(inputstring)
 
     path = context["path"]
-    print path
 
     for newpath in os.listdir(path):
         folder_content.append(os.path.join(path, newpath))
 
-    query['files'] = folder_content
+    query['files'] = [f for f in folder_content if not os.path.isdir(f)]
+    query['dirs'] = [f for f in folder_content if os.path.isdir(f)]
     return HttpResponse(json.dumps(query))

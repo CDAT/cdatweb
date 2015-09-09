@@ -133,8 +133,7 @@ function get_children(path, parent, level){
     data: {query:jsonStr},
     dataType: 'json',
     success: function(data) {
-      results = []
-      results = data.files
+      results = data.dirs;
       for(var x = 0; x < results.length; x ++){
         var short_name = results[x].split("/")
         var display_name = short_name[short_name.length - 1]
@@ -149,14 +148,28 @@ function get_children(path, parent, level){
           }
           var path = $(this).attr("data-path");
           var ul = $(this).parent().find("ul");
-          if(path.indexOf(".") > -1){
-            //file
-            get_variables(path, ul, next_level);
+          get_children(path, ul, next_level);
+          $(this).attr('data-loaded', "true");
+        }).text(display_name).attr("data-path", results[x]);
+        element.find("ul").attr("id", parent_id + "_" + display_name);
+        parent.append(element);
+      }
+      results = data.files;
+      for(var x = 0; x < results.length; x ++){
+        var short_name = results[x].split("/")
+        var display_name = short_name[short_name.length - 1]
+        display_name =display_name.replace("+","_");
+        display_name =display_name.replace(".","_");
+        var element;
+
+        element = $("<li><a></a><ul></ul></li>");
+        element.find("a").click(function(e){
+          if ($(this).attr("data-loaded") === "true") {
+            return;
           }
-          else{
-            //folder
-            get_children(path, ul, next_level);
-          }
+          var path = $(this).attr("data-path");
+          var ul = $(this).parent().find("ul");
+          get_variables(path, ul, next_level);
           $(this).attr('data-loaded', "true");
         }).text(display_name).attr("data-path", results[x]);
         element.find("ul").attr("id", parent_id + "_" + display_name);
