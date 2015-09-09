@@ -234,11 +234,12 @@ function make_droppable(node, ondrop, ondrag) {
  */
 function make_draggable(node, ondrag) {
   node.draggable({
-    appendTo: 'body',
+    appendTo: '.vtk-view-container',
+    zIndex: ~(1 << 31), // because jsPanel, sigh...
     containment: '.vtk-view-container',
     helper: "clone",
-    cursor: "dragging",
-    opacity: 0.50
+    cursor: "grabbing",
+    opacity: 0.75
   }).addClass('cdat-draggable')
     .on('start', function (evt) {
       if (ondrag) {
