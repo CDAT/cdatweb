@@ -4,19 +4,18 @@
     /**
      * Create a droppable DOM element that handles drags from make_draggable.
      * @param {jQuery} node A jquery DOM element
-     * @param {function?} ondrop A drop event handler
-     * @param {function?} ondrag A drag event handler
+     * @param {string} cls A selector expected on the element
+     * @param {function?} drop A drop event handler
      */
-    function make_droppable(node, ondrop, ondrag) {
-        node.on('drop', function (evt) {
+    function make_droppable(node, cls, drop) {
+        node.droppable({
+            accept: cls,
+            hoverClass: 'label-success'
+        });
+        node.on('drop', function (evt, ui) {
             evt.preventDefault();
-            if (ondrop) {
-                ondrop.call(node, evt);
-            }
-        }).on('dragover', function (evt) {
-            evt.preventDefault();
-            if (ondrag) {
-                ondrag.call(node, evt);
+            if (drop) {
+                drop.call(node, evt, ui);
             }
         });
         return node;
@@ -101,7 +100,7 @@
                 function (code, reason) {
                     open.reject(code, reason);
                 });
-                return open.promise();
+            return open.promise();
         },
 
         /**
@@ -216,27 +215,28 @@
                         viewport.bind(config.node);
                         defer.resolve(viewport);
                     }, function () { defer.reject(arguments); });
-                }, function () { defer.reject(arguments); });
+                },
+                function () { defer.reject(arguments); });
 
-                // append a render function to the promise
-                promise.render = function () {
-                    if (viewport) {
-                        viewport.render();
-                    }
-                };
+            // append a render function to the promise
+            promise.render = function () {
+                if (viewport) {
+                    viewport.render();
+                }
+            };
 
-                // append a close method to the promise
-                promise.close = function () {
-                    if (viewport) {
-                        viewport.unbind(config.node);
-                        // this is technically a race condition, but I can't be bothered
-                        // to fix it because it is unlikely to occur
-                        connection.session.call('cdat.view.destroy', [view]);
-                        viewport = null;
-                        view = null;
-                    }
-                };
-                return promise;
+            // append a close method to the promise
+            promise.close = function () {
+                if (viewport) {
+                    viewport.unbind(config.node);
+                    // this is technically a race condition, but I can't be bothered
+                    // to fix it because it is unlikely to occur
+                    connection.session.call('cdat.view.destroy', [view]);
+                    viewport = null;
+                    view = null;
+                }
+            };
+            return promise;
         },
 
         /**
@@ -394,19 +394,31 @@
             // render a new plot when ready
             function render_when_ready() {
                 if (opts.method &&
+                    opts.file &&
                     opts.template &&
                     opts.nvars !== null &&
                     opts.vlist[0] &&
                     opts.vlist[1]) {
 
+                    vlist = opts.vlist;
+                    if (opts.nvars < 2) {
+                        vlist = opts.vlist[0];
+                    }
                     cdat.create_plot(
+                        opts.file,
+                        vlist,
+                        opts.family,
+                        opts.method,
+                        opts.template
                     );
                 }
             }
 
+            opts.family = null;
             opts.method = null;
             opts.template = 'default';
             opts.nvars = null;
+            opts.file = null;
             opts.vlist = [null, null];
 
             // need something better
@@ -416,18 +428,91 @@
                 .css('width', '500px')
                 .css('height', '500px');
 
-            method = $('<div/>')
-                .addClass('cdat-graphic-method')
+            method = $('<span/>')
+                .addClass('cdat-graphic-method label label-default')
                 .text('Drop a graphic method');
 
-            // make_droppable(method, );
+            make_droppable(
+                method,
+                '.cdat-plot-method',
+                function (evt, ui) {
+                    var el = ui.draggable, box, v1, v2;
+                    opts.nvars = parseInt(el.attr('data-nvars'));
+                    opts.family = el.attr('data-family');
+                    opts.method = el.attr('data-type');
+                    this.text(opts.family + '/' + opts.method);
 
-            template = $('<div/>')
-                .addClass('cdat-graphic-template')
-                .text('template');
+                    $('.cdat-variable-list').empty();
+                    box = $('<h3/>').appendTo('.cdat-variable-list');
+                    v1 = $('<span/>')
+                        .addClass('cdat-variable-1 label label-default')
+                        .text('variable 1')
+                        .appendTo(box);
+
+                    make_droppable(
+                        v1,
+                        '.cdat-variable',
+                        function (evt, ui) {
+                            var el = ui.draggable;
+                            opts.vlist[0] = el.attr('data-name');
+                            opts.file = el.attr('data-file');
+                            this.text(opts.vlist[0]);
+                            render_when_ready();
+                        }
+                    );
+
+                    if (opts.nvars > 1) {
+                        if (opts.vlist[1] === true) {
+                            opts.vlist[1] = null;
+                        }
+                        v2 = $('<span/>')
+                        .addClass('cdat-variable-2 label label-default')
+                        .text('variable 2')
+                        .appendTo(box);
+
+                        make_droppable(
+                            v2,
+                            '.cdat-variable',
+                            function (evt, ui) {
+                                var el = ui.draggable;
+                                opts.vlist[1] = el.attr('data-name');
+                                opts.file = el.attr('data-file');
+                                this.text(opts.vlist[1]);
+                                render_when_ready();
+                            }
+                        );
+                    } else {
+                        opts.vlist[1] = opts.vlist[1] || true;
+                    }
+
+
+                    $('.cdat-variable-list').append(box);
+                    render_when_ready();
+                }
+            );
+
+            template = $('<span/>')
+                .addClass('cdat-graphic-template label label-default')
+                .text('default');
+
+            make_droppable(
+                template,
+                '.cdat-template-option',
+                function (evt, ui) {
+                    var el = ui.draggable;
+                    opts.template = el.attr('id');
+                    this.text(opts.template);
+                    render_when_ready();
+                }
+            );
+
             vlist = $('<div/>').addClass('cdat-variable-list');
 
-            content.append([method, template, vlist]);
+            content.append([
+                $('<h3/>').append(method),
+                $('<h3/>').append(template),
+                vlist
+            ]);
             panel = cdat.make_panel(
                 content.get(0),
                 null,

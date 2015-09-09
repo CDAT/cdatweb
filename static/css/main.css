@@ -15,3 +15,11 @@
   cursor: grabbing;
   cursor: -webkit-grabbing;
 }
+
+.cdat-dragging-success {
+  cursor: not-allowed;
+}
+
+.cdat-plot-panel h3 {
+  text-align: center;
+}
