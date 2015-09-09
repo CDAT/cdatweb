@@ -189,12 +189,16 @@ function get_variables(path, parent, level){
     function (variables){
       for(v in variables){
         element = $("<li><a></a></li>");
+        make_draggable(element);
+        element.text(v).attr("data-path", v);
+        /*
         element.find("a").click(function(e){
           var path = $(this).attr("data-path");
           var li = $(this).parent().find("li");
           get_plot(path, $(this).next("ul").attr('id'), level + 1);
           e.preventDefault();
-        }).text(v).attr("data-path", v);
+        });
+        */
         parent.append(element);
       }
     }, function(){console.log(arguments)}
@@ -289,7 +293,7 @@ $("body").ready(function(){
         for(plot_type in plots[plot_family]){
           plot_item = child.clone();
           plot_item.attr('id', plot_type);
-          plot_item.find('a')
+          plot_item
             .attr('data-nvars', plots[plot_family][plot_type].nvars)
             .text(plot_type);
           plot_item.hide();
@@ -313,7 +317,7 @@ $("body").ready(function(){
       for(temp_name = 0; temp_name < templates.length; temp_name++) {
         temp_fam_item = item.clone();
         temp_fam_item.attr('id', templates[temp_name]);
-        temp_fam_item.find('a').text(templates[temp_name]);
+        temp_fam_item.text(templates[temp_name]);
         make_draggable(temp_fam_item);
         parent.append(temp_fam_item);
         temp_fam_item.hide();

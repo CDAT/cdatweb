@@ -7,6 +7,6 @@
 }
 
 .cdat-draggable {
-  cursor: grab !important;
-  cursor: -webkit-grab !important;
+  cursor: grab;
+  cursor: -webkit-grab;
 }
