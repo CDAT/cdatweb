@@ -32,8 +32,14 @@
       
       <div class="cdatweb-file-browser cdatweb-tree">
           <ul class="qtree">
+            {% for folder in dirs%}
+            <li id="{{folder}}"><a class="cdatweb-dir" data-path="{{base}}/{{folder}}"> {{folder}} </a>
+            <ul id="{{folder}}_child">
+            </ul>
+            </li>
+            {% endfor %}
             {% for folder in files%}
-            <li id="{{folder}}"><a data-path="{{base}}/{{folder}}"> {{folder}} </a>
+            <li id="{{folder}}"><a class="cdatweb-file" data-path="{{base}}/{{folder}}"> {{folder}} </a>
             <ul id="{{folder}}_child">
             </ul>
             </li>

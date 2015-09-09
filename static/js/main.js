@@ -252,8 +252,7 @@ function make_draggable(node, ondrag) {
 
 $("body").ready(function(){
 
-  /*
-  $(".cdatweb-file-browser > ul > li > a").click(function(e){
+  $(".cdatweb-file-browser > ul > li > a.cdatweb-dir").click(function(e){
     if ($(this).attr("data-loaded") === "true") {
       return;
     }
@@ -261,7 +260,15 @@ $("body").ready(function(){
     $(this).attr('data-loaded', 'true');
     e.preventDefault();
   });
-  */
+
+  $(".cdatweb-file-browser > ul > li > a.cdatweb-file").click(function(e){
+    if ($(this).attr("data-loaded") === "true") {
+      return;
+    }
+    get_variables($(this).attr("data-path"), $(this).next("ul"), 1);
+    $(this).attr('data-loaded', 'true');
+    e.preventDefault();
+  });
 
   cdat.get_graphics_methods().then(
     function(plots){
