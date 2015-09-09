@@ -10,3 +10,8 @@
   cursor: grab;
   cursor: -webkit-grab;
 }
+
+.cdat-draggable.ui-draggable-dragging {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}

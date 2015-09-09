@@ -242,7 +242,7 @@ function make_draggable(node, ondrag) {
     zIndex: ~(1 << 31), // because jsPanel, sigh...
     containment: '.vtk-view-container',
     helper: "clone",
-    cursor: "grabbing",
+    addClass: "cdat-grabbing",
     opacity: 0.75
   }).addClass('cdat-draggable')
     .on('start', function (evt) {
