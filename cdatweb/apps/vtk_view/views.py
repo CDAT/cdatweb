@@ -5,7 +5,10 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from django.conf import settings
+
 from search import files
+
 try:
     from cdatweb.settings.local_settings import base_path
 except ImportError:
@@ -58,10 +61,9 @@ def vtk_test(request, test="cone"):
 def vtkweb_launcher(request):
     """Proxy requests to the configured launcher service."""
     import requests
-    try:
-        from local_settings import VISUALIZATION_LAUNCHER
-    except ImportError:
-        VISUALIZATION_LAUNCHER = 'http://aims1.llnl.gov/vtk'
+    VISUALIZATION_LAUNCHER = 'http://aims1.llnl.gov/vtk'
+    if getattr(settings, 'VISUALIZATION_LAUNCHER'):
+        VISUALIZATION_LAUNCHER = settings.VISUALIZATION_LAUNCHER
 
     if not VISUALIZATION_LAUNCHER:
         # unconfigured launcher
