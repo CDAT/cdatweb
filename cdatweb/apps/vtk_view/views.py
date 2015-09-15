@@ -1,10 +1,12 @@
 import json
+import os
 import vtk_launcher
 from django.shortcuts import render
 from django.utils.safestring import mark_safe
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from search import files
+from cdatweb.settings.local_settings import *
 
 _browser_help = (
     "Choose a variable from the list of files available on the server "
@@ -40,6 +42,11 @@ def vtk_viewer(request):
         'resizable': True
     }
     data['options'] = mark_safe(json.dumps(options))
+
+    # getting file structure
+    data['files'] = os.listdir(base_path)
+    print base_path
+
     return render(
         request,
         'vtk_view/cdat_viewer.html',
@@ -81,3 +88,21 @@ def search(request):
         print "failed to parse json"
 
     return HttpResponse(json.dumps(results))
+
+
+@csrf_exempt
+def get_children(request):
+    query = {}
+    folder_content = []
+
+    inputstring = request.POST.get('query')
+    context = json.loads(inputstring)
+
+    path = context["path"]
+    print path
+
+    for newpath in os.listdir(path):
+        folder_content.append(os.path.join(path, newpath))
+
+    query['files'] = folder_content
+    return HttpResponse(json.dumps(query))

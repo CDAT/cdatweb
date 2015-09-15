@@ -3,6 +3,7 @@ import os
 from . import BaseProtocol
 from external import exportRpc
 
+from readers import all_readers as readers
 import cdms2
 
 
