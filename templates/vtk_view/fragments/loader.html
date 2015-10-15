@@ -1,27 +1,8 @@
 {% load staticfiles %}
 <script src="{% static "vtkweb/ext/core/autobahn.min.js" %}"></script>
-<script src="{% static "vtkweb/ext/core/gl-matrix.js" %}"></script>
 <script src="{% static "vtkweb/ext/core/jquery.hammer.js" %}"></script>
-<script src="{% static "vtkweb/ext/core/vgl.min.js" %}"></script>
-<script src="{% static "vtkweb/lib/core/vtkweb-all.js" %}"></script>
-<script src="{% static "vtkweb/lib/core/vtkweb-loader.js" %}" load="{{ modules|join:", " }}"></script>
 <script type="text/javascript">
     $(function () {
-        vtkSession = {
-            "host": "{{ host }}",
-            "secret": "vtkweb-secret",
-            "sessionURL": "{{ sessionURL }}",
-            "id": "{{ id }}",
-            "port": {{ port|default:0 }}
-        };
-
-        vtkWeb.connect(
-            {
-                "sessionURL": vtkSession.sessionURL,
-                "secret": vtkSession.secret
-            },
-            cdat.{{ main|default:"main" }},
-            cdat.{{ error|default:"error" }}
-        );
+        cdat.setup({});
     });
 </script>

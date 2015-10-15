@@ -1,3 +1,3 @@
-from vcs_vis import Isofill, Volume
+from vcs_vis import VcsPlot
 
-__all__ = ('Isofill', 'Volume')
+__all__ = ('VcsPlot',)

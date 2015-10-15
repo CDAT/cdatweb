@@ -2,11 +2,17 @@ import json
 import os
 import vtk_launcher
 from django.shortcuts import render
-from django.utils.safestring import mark_safe
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.conf import settings
+
 from search import files
-from cdatweb.settings.local_settings import *
+
+try:
+    from cdatweb.settings.local_settings import base_path
+except ImportError:
+    base_path = '/data'
 
 _browser_help = (
     "Choose a variable from the list of files available on the server "
@@ -29,24 +35,17 @@ def _refresh(request):
 
 def vtk_viewer(request):
     """Open the main visualizer view."""
-    try:
-        data = _refresh(request)
-    except Exception:
-        data = {}
-    data['main'] = 'main'
-    data['error'] = 'error'
-    data['search'] = {
-        'help': ''
-    }
-    options = {
-        'resizable': True
-    }
-    data['options'] = mark_safe(json.dumps(options))
+    data = {}
+    data['base'] = base_path
 
-    # getting file structure
-    data['files'] = os.listdir(base_path)
-    print base_path
-
+    data['files'] = [
+        f for f in os.listdir(base_path)
+        if not os.path.isdir(os.path.join(base_path, f))
+    ]
+    data['dirs'] = [
+        f for f in os.listdir(base_path)
+        if os.path.isdir(os.path.join(base_path, f))
+    ]
     return render(
         request,
         'vtk_view/cdat_viewer.html',
@@ -56,6 +55,40 @@ def vtk_viewer(request):
 
 def vtk_test(request, test="cone"):
     return render(request, 'vtk_view/view_test.html', {"test": test})
+
+
+@csrf_exempt  # should probably fix this at some point
+def vtkweb_launcher(request):
+    """Proxy requests to the configured launcher service."""
+    import requests
+    VISUALIZATION_LAUNCHER = 'http://aims1.llnl.gov/vtk'
+    if getattr(settings, 'VISUALIZATION_LAUNCHER'):
+        VISUALIZATION_LAUNCHER = settings.VISUALIZATION_LAUNCHER
+
+    if not VISUALIZATION_LAUNCHER:
+        # unconfigured launcher
+        return HttpResponse(status=404)
+
+    # TODO: add status and delete methods
+    if request.method == 'POST':
+        req = requests.post(VISUALIZATION_LAUNCHER, request.body)
+        if req.ok:
+            return HttpResponse(req.content)
+        else:
+            return HttpResponse(status=500)
+
+    return HttpResponse(status=404)
+
+
+def search_panel(request):
+    if request.is_ajax():
+        html = render_to_string(
+            'vtk_view/fragments/esgf-search.html',
+            {}
+        )
+        return HttpResponse(html)
+    else:
+        HttpResponse(status=404)
 
 
 @csrf_exempt
@@ -99,10 +132,10 @@ def get_children(request):
     context = json.loads(inputstring)
 
     path = context["path"]
-    print path
 
     for newpath in os.listdir(path):
         folder_content.append(os.path.join(path, newpath))
 
-    query['files'] = folder_content
+    query['files'] = [f for f in folder_content if not os.path.isdir(f)]
+    query['dirs'] = [f for f in folder_content if os.path.isdir(f)]
     return HttpResponse(json.dumps(query))

@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{% static "cdatweb/vtk_view/css/vtk_view.css" %}">
 <link rel="stylesheet" href="{% static "cdatweb/vtk_view/css/jquery.jspanel.css" %}">
-<link rel="stylesheet" href="{% static "css/mtree.css" %}">
+<link rel="stylesheet" href="{% static "css/main.css" %}">
 {% endblock %}
 
 {% block body %}
@@ -26,7 +26,9 @@
 {% include "vtk_view/fragments/loader.html" %}
 <script src="{% static "cdatweb/vtk_view/js/bootstrap-treeview.js" %}"></script>
 <script src="{% static "cdatweb/vtk_view/js/jquery.jspanel.js" %}"></script>
-<script src="{% static "cdatweb/vtk_view/js/main.js" %}"></script>
+<script src="{% static "vtkweb/lib/core/vtkweb-all.js" %}"></script>
+<script src="{% static "cdatweb/vtk_view/js/cdat.js" %}"></script>
 <script src="{% static "cdatweb/vtk_view/js/panel-view.js" %}"></script>
-<script src="{% static "js/mtree.js" %}"></script>
+<script src="{% static "js/quicktree.js" %}"></script>
+<script src="{% static "js/main.js" %}"></script>
 {% endblock %}

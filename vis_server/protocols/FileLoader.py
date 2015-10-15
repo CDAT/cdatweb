@@ -3,7 +3,6 @@ import os
 from . import BaseProtocol
 from external import exportRpc
 
-from readers import all_readers as readers
 import cdms2
 
 
@@ -14,6 +13,22 @@ class FileLoader(BaseProtocol):
     def __init__(self, datadir='.'):
         BaseProtocol.__init__(self)
         self._datadir = datadir
+
+    @exportRpc('cdat.file.list_variables')
+    def list_variables(self, file_name):
+        """Return a list of variables from the given file name."""
+        try:
+            reader = self.get_reader(file_name)
+        except Exception:
+            return {}
+        out = {}
+        for vname in reader.variables:
+            var = reader.variables[vname]
+            out[vname] = {
+                'shape': var.shape[1:],
+                'ndims': len(var.shape[1:])
+            }
+        return out
 
     @exportRpc('cdat.file.can_open')
     def can_open(self, file_name):

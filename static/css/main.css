@@ -1,0 +1,25 @@
+.qtree a {
+  cursor: pointer;
+}
+
+.cdatweb-tree {
+  padding-right: 2em;
+}
+
+.cdat-draggable {
+  cursor: grab;
+  cursor: -webkit-grab;
+}
+
+.cdat-draggable.ui-draggable-dragging {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+
+.cdat-dragging-success {
+  cursor: not-allowed;
+}
+
+.cdat-plot-panel h3 {
+  text-align: center;
+}

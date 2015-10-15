@@ -15,12 +15,13 @@ DATABASES = {
 
 INTERNAL_IPS = ('127.0.0.1',)
 
-if 'debug_toolbar' not in INSTALLED_APPS:
-    INSTALLED_APPS += ('debug_toolbar',)
+# if 'debug_toolbar' not in INSTALLED_APPS:
+#     INSTALLED_APPS += ('debug_toolbar',)
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 VISUALIZATION_LAUNCHER = 'http://aims1.llnl.gov/vtk'
+#VISUALIZATION_LAUNCHER = 'http://localhost:7000/vtk'
 DATA_DIRECTORY = os.path.join(TMP_PATH, 'data')
 
 SECRET_KEY = '62u8^z_p#^z0!!0xx-2e)vd_6b^m@49ecx8qs##e-w7um)&n_$'

@@ -93,7 +93,7 @@
                     title: '<span><i class="fa fa-picture-o"></i>' + varinfo + '</span>',
                     size: {width: 500, height: 500},
                     overflow: 'hidden',
-                    callback: app.vtkViewCreator({
+                    callback: cdat.vtkViewCreator({
                         session: connection.session,
                         file: node.file,
                         variable: node.text
@@ -107,12 +107,12 @@
     app.session = $.Deferred();
 
     app.main = function (connection) {
-        app.session.resolve(connection.session);
+        cdat.session.resolve(connection.session);
     };
 
     app.error = function (err) {
         // TODO: create general error page
-        app.session.reject(err);
+        cdat.session.reject(err);
     };
 
     app.browser = function (connection) {
@@ -121,62 +121,6 @@
             .call('file.server.list')
             .then(function (files) {
                 renderBrowser(connection, files);
-            }, app.error);
-    };
-
-    app.vtkViewCreator = function (options) {
-        // return a function that generates a view inside
-        // a given element
-
-        if (!options.session) {
-            throw new Error('A session must be provided.');
-        }
-
-        options = $.extend({}, {
-            enableInteractions: true,
-            renderer: 'image',
-            interactiveQuality: 100,
-            stillQuality: 100,
-            keepServerInSync: false
-        }, options);
-        return function (panel) {
-
-            var myId = panel.attr('id');
-            var opts = {
-                width: 500,
-                height: 500
-            };
-            options.session.call('cdat.view.create', [options.file, options.variable, options.type, opts])
-                .then(function (view) {
-                    options.view = view;
-                    var viewport;
-                    function render() {
-                        viewport.render();
-                    }
-
-                    // Handle closing the vtkweb instance when the panel closes.
-                    function close(e, id) {
-                        if (id === myId) {
-                            viewport.unbind(panel.content.get(0));
-                            options.session.call('cdat.view.destroy', [view]);
-                            $('body').off('jspanelclosed', close);
-                        }
-                    }
-                    viewport = new vtkWeb.createViewport(options);
-                    viewport.bind(panel.content.get(0));
-                    panel.on('resize jspanelloaded jspanelmaximized jspanelnormalized', render);
-
-                    $('body').on('jspanelclosed', close);
-                },
-                function (err) {
-                    console.log('Applicaton failed with: ' + JSON.stringify(err, null, 2));
-                }
-            );
-        };
-    };
-
-    app.make_panel = function (container, help, opts) {
-        opts = $.extend(true, {content: container}, opts);
-        return cdat.Panel(opts).$el;
+            }, cdat.error);
     };
 })();
