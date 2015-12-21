@@ -116,7 +116,8 @@ VISUALIZATION_LAUNCHER = 'http://localhost:7000/vtk'
   UV-CDAT setup script.  If everything is setup correctly, you should be
   able to run the following:
   ```bash
-  ./vis_server/start.sh
+  cd vis_server
+  ./start.sh
   ```
 
 3. Running vtkWeb on a remote machine
