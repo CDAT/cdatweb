@@ -1704,7 +1704,7 @@
                     stat_value: 0 // start
                 });
 
-                session.call("viewport.image.render", [renderCfg]).then(function (res) {
+                session.call("cdat.render", [renderCfg]).then(function (res) {
                     options.view = Number(res.global_id);
                     lastMTime = res.mtime;
                     if(res.hasOwnProperty("image") && res.image !== null) {

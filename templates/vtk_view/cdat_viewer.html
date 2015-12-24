@@ -14,9 +14,7 @@
     Examples<span class="caret"></span>
   </a>
   <ul class="dropdown-menu">
-    <li><a onclick="cdat.create_plot('http://test.opendap.org/opendap/data/nc/coads_climatology.nc', 'SST', 'isofill', 'robinson', 'no_legend')" href="javascript:void(0)">Isofill example</a></li>
-    <!-- Need a 3D variable for this: <li><a onclick="cdat.create_plot('http://test.opendap.org/opendap/data/nc/coads_climatology.nc', 'AIRT', '3d_scalar', 'default', 'default')" href="javascript:void(0)">Volume example</a></li> -->
-    <li><a onclick="cdat.create_plot('http://test.opendap.org/opendap/data/nc/coads_climatology.nc', ['UWND', 'VWND'], 'vector', 'default', 'default')" href="javascript:void(0)">Vector example</a></li>
+    <li><a onclick="cdat.create_plot('/home/chaudhary/tools/cdatweb/src.git/tmp/data/clt.nc', 'clt', 'isofill', 'robinson', 'default')" href="javascript:void(0)">Isofill example</a></li>   
   </ul>
 </li>
 {% endblock navbar-right %}
@@ -29,7 +27,7 @@
       <div class="vtk-browser-container">
         <div class="vtk-file-browser"></div>
       </div>
-      
+
       <div class="cdatweb-file-browser cdatweb-tree">
           <ul class="qtree">
             {% for folder in dirs%}

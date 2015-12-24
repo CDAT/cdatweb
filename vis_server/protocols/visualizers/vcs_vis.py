@@ -20,17 +20,34 @@ class VcsPlot(BaseVisualizer):
         self._plot.graphics_method = vcs.getisofill() # default
         self._plot.template = vcs.elements['template']['default'] # default
 
-    def render(self, opts={}):
-        super(VcsPlot, self).render(opts)
+    def toJSON(self, imageData, state, mtime, size, format, globalId, localTime, workTime):
+        reply = {}
+        reply['image'] = imageData
+        reply['state'] = state
+        reply['mtime'] = mtime
+        reply['size'] = size
+        reply['format'] = format
+        reply['global_id'] = globalId
+        reply['localTime'] = localTime
+        reply['workTime'] = workTime
+        return reply
 
-        self._window = self.getView()
+    def render(self, cfg):
+        self.getView().SetSize(self._width, self._height)
+        # self._canvas.update()
+        import datetime
+        import base64
+        self._canvas.setbgoutputdimensions(500, 500, units="pixels")
+        d = self._plot.plot()
+        print "template is \n"
+        print self._plot.template.name
+        png = d._repr_png_()
+        png = base64.b64encode(png)
 
-        if not self._window:
-            return
-        self._window.SetSize(self._width, self._height)
-        self._canvas.backend.configureEvent(None, None)
-        self._canvas.update()
-        return True
+        return self.toJSON(png, True, datetime.datetime.now().time().microsecond,
+                           [500, 500], "png;base64", cfg['view'], "", "")
+
+
 
     def setPlotMethod(self, plot_type, plot_method):
         method = vcs.getgraphicsmethod(plot_type, plot_method)

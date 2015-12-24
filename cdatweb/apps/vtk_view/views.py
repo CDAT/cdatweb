@@ -61,7 +61,7 @@ def vtk_test(request, test="cone"):
 def vtkweb_launcher(request):
     """Proxy requests to the configured launcher service."""
     import requests
-    VISUALIZATION_LAUNCHER = 'http://aims1.llnl.gov/vtk'
+    #VISUALIZATION_LAUNCHER = 'http://aims1.llnl.gov/vtk'
     if getattr(settings, 'VISUALIZATION_LAUNCHER'):
         VISUALIZATION_LAUNCHER = settings.VISUALIZATION_LAUNCHER
 

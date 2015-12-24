@@ -38,7 +38,8 @@ class BaseVisualizer(object):
 
     def _render(self, **kw):
         """Call render on the underlying view window."""
-        self.getView().Render()
+        #self.getView().Render()
+	pass
 
     def getViewId(self):
         """Get the global object id for the render window being used."""
@@ -46,4 +47,5 @@ class BaseVisualizer(object):
 
     def close(self):
         """Exit the current view and free memory."""
-        self.getView().Finalize()
+        # self.getView().Finalize()
+        pass
