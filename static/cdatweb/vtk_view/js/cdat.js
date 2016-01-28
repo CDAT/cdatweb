@@ -260,6 +260,20 @@
                 var view = cdat.show(options);
                 view.then(function () {
                     panel.content.on('stop-loading', destroy_spinner);
+                }, function (err) {
+                    // on failure to show the visualization
+                    destroy_spinner();
+
+                    // create an error dialog
+                    var dialog = $('<div/>');
+                    dialog.addClass('alert alert-danger');
+                    dialog.css('margin', '20px');
+
+                    var message = (((err || [])[0] || {}).args || [])[0];
+                    dialog.text(message || 'Could not create the requested visualization');
+
+                    panel.content.append(dialog);
+
                 });
                 panel.on('resize jspanelloaded jspanelmaximized jspanelnormalized', view.render);
                 $('body').on('jspanelclosed', function (evt, id) {
