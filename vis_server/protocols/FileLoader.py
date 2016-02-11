@@ -24,7 +24,17 @@ class FileLoader(BaseProtocol):
         out = {}
         for vname in reader.variables:
             var = reader.variables[vname]
+
+            # Get a displayable name for the variable
+            if hasattr(var, 'long_name'):
+                name = var.long_name
+            elif hasattr(var, 'title'):
+                name = var.title
+            elif hasattr(var, 'id'):
+                name = var.id
+
             out[vname] = {
+                'name': name,
                 'shape': var.shape[1:],
                 'ndims': len(var.shape[1:])
             }
