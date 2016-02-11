@@ -32,6 +32,8 @@ class FileLoader(BaseProtocol):
                 name = var.title
             elif hasattr(var, 'id'):
                 name = var.id
+            else:
+                name = vname
 
             out[vname] = {
                 'name': name,
