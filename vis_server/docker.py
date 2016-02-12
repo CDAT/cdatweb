@@ -29,7 +29,7 @@ def main_linux(port):
 def main_osx(port):
     """Start a vis server and port forward into the docker vm."""
     proc = subprocess.Popen(
-        "boot2docker ssh -L {}:localhost:{} -N".format(port, port),
+        "docker-machine ssh docker -L {}:localhost:{} -N".format(port, port),
         shell=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE
@@ -40,7 +40,7 @@ def main_osx(port):
 
     background.append(proc)
     subprocess.check_call(
-        "$(boot2docker shellinit); " + dockercmd.format(name, port, port, port),
+        "eval $(docker-machine env docker); " + dockercmd.format(name, port, port, port),
         shell=True
     )
 
@@ -50,7 +50,7 @@ def cleanup():
     for proc in background:
         proc.terminate()
     subprocess.call(
-        "$(boot2docker shellinit 2> /dev/null); docker kill {}".format(name),
+        "eval $(docker-machine env docker 2> /dev/null); docker kill {}".format(name),
         shell=True
     )
 

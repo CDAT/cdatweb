@@ -76,9 +76,9 @@ VISUALIZATION_LAUNCHER = 'http://localhost:7000/vtk'
 1. Running vtkWeb from a docker image (Mac OS or Linux ony)
 
   You first must have [Docker](https://docs.docker.com/) installed.  See the
-  installation guide for more information.  The setup here assumes you have
-  `boot2docker` on you `PATH` and that you have run `$(boot2docker shellinit)`
-  in your current terminal window on Mac OS.
+  installation guide for more information.  On OSX, the setup here assumes you have
+  `docker-machine` on you `PATH` and that you have a docker machine named
+  `docker` (created with `docker-machine create docker`).
 
   First, get the latest docker image from dockerhub by running
   ```
