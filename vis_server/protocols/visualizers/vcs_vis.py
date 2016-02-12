@@ -1,3 +1,5 @@
+import datetime
+import base64
 
 from base import BaseVisualizer
 from plotter import PlotManager
@@ -33,21 +35,18 @@ class VcsPlot(BaseVisualizer):
         return reply
 
     def render(self, cfg):
+        # call the super method to set the requested image size
+        super(VcsPlot, self).render(cfg)
+
         self.getView().SetSize(self._width, self._height)
         # self._canvas.update()
-        import datetime
-        import base64
-        self._canvas.setbgoutputdimensions(500, 500, units="pixels")
+        self._canvas.setbgoutputdimensions(self._width, self._height, units="pixels")
         d = self._plot.plot()
-        print "template is \n"
-        print self._plot.template.name
         png = d._repr_png()
         png = base64.b64encode(png)
 
         return self.toJSON(png, True, datetime.datetime.now().time().microsecond,
-                           [500, 500], "png;base64", cfg['view'], "", "")
-
-
+                           [self._width, self._height], "png;base64", cfg['view'], "", "")
 
     def setPlotMethod(self, plot_type, plot_method):
         method = vcs.getgraphicsmethod(plot_type, plot_method)

@@ -38,8 +38,8 @@ class BaseVisualizer(object):
 
     def _render(self, **kw):
         """Call render on the underlying view window."""
-        #self.getView().Render()
-	pass
+        # self.getView().Render()
+        pass
 
     def getViewId(self):
         """Get the global object id for the render window being used."""
