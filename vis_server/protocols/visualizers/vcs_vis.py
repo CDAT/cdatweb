@@ -41,7 +41,7 @@ class VcsPlot(BaseVisualizer):
         d = self._plot.plot()
         print "template is \n"
         print self._plot.template.name
-        png = d._repr_png_()
+        png = d._repr_png()
         png = base64.b64encode(png)
 
         return self.toJSON(png, True, datetime.datetime.now().time().microsecond,
