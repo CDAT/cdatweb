@@ -44,7 +44,6 @@ class Visualizer(BaseProtocol):
 
     @exportRpc('cdat.view.create')
     def create(self, plottype, plotmethod, variable, template, opts={}):
-
         vis = visualizers.VcsPlot()
         vis.setPlotMethod(
             plottype, plotmethod
@@ -60,12 +59,21 @@ class Visualizer(BaseProtocol):
         view = vis.getView()
         id = self.getGlobalId(view)
         self._active[id] = vis
+        print "Creating new view"
         return id
 
     @exportRpc('cdat.view.update')
     def render_view(self, id, opts={}):
+        print "Updating view"
         if id in self._active:
             return self._active[id].render(opts)
+        return False
+
+    @exportRpc('cdat.render')
+    def render_view(self, cfg):
+        print "Updating view"
+        if cfg["view"] in self._active:
+            return self._active[cfg["view"]].render(cfg)
         return False
 
     @exportRpc('cdat.view.destroy')
