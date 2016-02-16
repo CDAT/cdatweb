@@ -190,7 +190,7 @@ function get_variables(path, parent, level){
     for(v in variables){
       element = $("<li><a></a></li>");
       make_draggable(element);
-      element.text(v)
+      element.text(variables[v].name || v)
       .attr("data-name", v)
       .attr("data-file", path)
       .addClass('cdat-variable');
