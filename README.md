@@ -76,19 +76,13 @@ VISUALIZATION_LAUNCHER = 'http://localhost:7000/vtk'
 1. Running vtkWeb from a docker image (Mac OS or Linux ony)
 
   You first must have [Docker](https://docs.docker.com/) installed.  See the
-  installation guide for more information.  The setup here assumes you have
-  `boot2docker` on you `PATH` and that you have run `$(boot2docker shellinit)`
-  in your current terminal window on Mac OS.
+  installation guide for more information.  On OSX, the setup here assumes you have
+  `docker-machine` on you `PATH` and that you have a docker machine named
+  `docker` (see the docker setup instructions below).
 
   First, get the latest docker image from dockerhub by running
   ```
   docker pull uvcdat/cdatweb-vtkweb
-  ```
-  Once that is complete, go
-  to the `static` directory at the root of this repository and run
-  the following command to copy the vtkweb javascript sources
-  ```
-  docker run uvcdat/cdatweb-vtkweb tar c -C /opt/uvcdat/Externals/lib www | tar x && ln -sf www vtkweb
   ```
   Now go to the `vis_server` directory and install the requirements
   for the vtkweb launcher
@@ -128,3 +122,34 @@ VISUALIZATION_LAUNCHER = 'http://localhost:7000/vtk'
   the scope of this document.  See [ParaViewWeb documentation](http://pvw.kitware.com/#!/guide/python_launcher)
   for more details.
 
+
+Docker setup on OS X
+--------------------
+
+On Mac OS, docker containers must run inside a light weight virtual machine.
+There is a command line utility for managing instances of these VM's called
+[docker-machine](https://docs.docker.com/machine/).  Docker-machine replaces
+and earlier tool called **boot2docker** and supports provisioning on to VirtualBox,
+VMWare, as well as many cloud providers.  For local development, the following
+command will provision a docker host in VirtualBox with the machine name of
+`docker`.
+```bash
+docker-machine create docker
+```
+To use that host in you're current shell, you need to run
+```bash
+eval "$(docker-machine env docker)"
+```
+after which you can use docker as normal.  For the `docker.py` script in this repository,
+it is assumed that the docker host is called "`docker`".
+
+
+Building a new docker container
+-------------------------------
+
+If you make changes to the visualization server component, you will need to rebuild
+the docker container.  This can be done simply by going into the `vis_server` directory
+and running the following command:
+```bash
+docker build -t uvcdat/cdatweb-vtkweb .
+```
