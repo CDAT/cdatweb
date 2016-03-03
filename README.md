@@ -107,7 +107,11 @@ VISUALIZATION_LAUNCHER = 'http://localhost:7000/vtk'
   into troubles, try to rebuild the latest version with the following
   option: `cmake -D -DCDAT_BUILD_WEB=ON /path/to/uvcdat`.  Make sure
   you are not in your django virtual environment and source your
-  UV-CDAT setup script.  If everything is setup correctly, you should be
+  UV-CDAT setup script. Source uvcdat environment: `. install/bin/setup_runtime.sh`
+  and make sure netcdf is built with DAP support by
+  running `nc-config --all` and checking if `--has-dap` is on. If that
+  is not the case you won't be able to open files from `http://test.opendap.org`
+  If everything is setup correctly, you should be
   able to run the following:
   ```bash
   cd vis_server
