@@ -12,7 +12,7 @@ from search import files
 try:
     from cdatweb.settings.local_settings import base_path
 except ImportError:
-    base_path = '/data'
+    base_path = 'tmp/data'
 
 _browser_help = (
     "Choose a variable from the list of files available on the server "
