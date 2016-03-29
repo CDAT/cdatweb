@@ -48,7 +48,7 @@ def vtk_viewer(request):
     ]
     return render(
         request,
-        'vtk_view/cdat_viewer.html',
+        'cdatweb/cdat.html',
         data
     )
 
