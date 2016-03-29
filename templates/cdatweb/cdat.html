@@ -1,9 +1,6 @@
 {% extends "bootstrap.html" %} {% block title %} CDATWeb {% endblock %} {% block extra_headers %}
 {% load staticfiles %}
-<script src="{% static "vtkweb/lib/core/vtkweb-all.js" %}"></script>
-<script src="{% static "cdatweb/vtk_view/js/cdat.js" %}"></script>
-<script src="{% static "js/quicktree.js" %}"></script>
-<script src="{% static "js/cdatweb.js" %}"></script>
+
 <style type="text/css">
 
     body {
@@ -43,7 +40,7 @@
         background-color: white;
         margin-top: 10px;
     }
-    
+     
     .input {
         width: 100%;
     }
@@ -92,15 +89,17 @@
         font-size: 10px;
     }
     
+    html {
+       overflow-y: scroll;
+    }
 </style>
 
 {% endblock %} {% block content %}
-<div class="col-sm-3 col-md-6 col-lg-2 sidebar-offcanvas" id="sidebarLeft" role="navigation">
+<div class="col-sm-3 col-md-6 col-lg-3 sidebar-offcanvas" id="sidebarLeft" role="navigation">
     <div class="well sidebar-nav">
         <div class="outlines" id="projects">
             <div class="titles">
-                <center>
-                    <h6>Projects</h6></center>
+                <center><h6>Projects</h6></center>
             </div>
             <div class="btn-toolbar" role="toolbar">
                 <div class="btn-group">
@@ -120,8 +119,7 @@
         </div>
         <div class="outlines" id="plot_types">
             <div class="titles">
-                <center>
-                    <h6>VCS</h6></center>
+                <center><h6>VCS</h6></center>
             </div>
             <div class="cdatweb-plot-selectors cdatweb-tree output">
                 <ul class="qtree">
@@ -139,7 +137,7 @@
 </div>
 <!--/span-->
 
-<div class="col-sm-9 col-md-6 col-lg-6">
+<div class="col-sm-9 col-md-6 col-lg-5">
     <div class="row">
         <div class="center_bar tabs">
             <div class="tabbable">

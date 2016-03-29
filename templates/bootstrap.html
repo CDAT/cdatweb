@@ -7,54 +7,47 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}CDAT Web{% endblock title %}</title>
+      
     <script>
       AUTOBAHN_DEBUG = true;
     </script>
-    {% block css_meta %}
-
-    {% block css_bootstrap %}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-    {% endblock css_bootstrap %}
-
-    {% compress css %}
-    {% block css_cdatweb %}
-    <link rel="stylesheet" href="{% static "cdatweb/css/jquery-ui.css" %}">
-    <link rel="stylesheet" href="{% static "cdatweb/css/cdatweb.css" %}">
-    {% endblock css_cdatweb %}
-
-    {% block css_inline %}{% endblock %}
-    {% endcompress %}
-
-    {% endblock css_meta %}
-
-    {% block js_jquery %}
-    <script type="text/javascript">AUTOBAHN_DEBUG = true;</script>
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    {% endblock js_jquery %}
     
-    {% block js %}
-
-    {% compress js %}
-    {% block js_lodash %}
-    <script src="{% static "cdatweb/js/lodash.js" %}"></script>
-    <script src="{% static "cdatweb/js/jquery-ui.js" %}"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/static/cdatweb/css/jquery-ui.css">
+    <link rel="stylesheet" href="/static/cdatweb/css/cdatweb.css">
+    <link rel="stylesheet" href="/static/cdatweb/vtk_view/css/bootstrap-treeview.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/cdatweb/vtk_view/css/vtk_view.css">
+    <link rel="stylesheet" href="/static/cdatweb/vtk_view/css/jquery.jspanel.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    
+    <script type="text/javascript">AUTOBAHN_DEBUG = true;</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        window.app = window.app || {};
+    </script>
+    <script src="/static/cdatweb/js/lodash.js"></script>
+    <script src="/static/cdatweb/js/jquery-ui.js"></script>
     <script type="text/javascript">$.widget.bridge('uitooltip', $.ui.tooltip);</script>
-    {% endblock %}
-
-
-    {% block js_bootstrap %}
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script src='http://cdnjs.cloudflare.com/ajax/libs/velocity/0.2.1/jquery.velocity.min.js'></script> 
-    <script src="{% static "js/spin.min.js" %}"></script> 
-    {% endblock js_bootstrap %}
-
-    {% block js_inline %}{% endblock js_inline %}
-    {% endcompress %}
-
-    {% endblock js %}
-    
+    <script src="/static/js/spin.min.js"></script> 
+    <script src="/static/vtkweb/ext/core/autobahn.min.js"></script>
+    <script src="/static/vtkweb/ext/core/jquery.hammer.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            cdat.setup({});
+        });
+    </script>
+    <script src="/static/cdatweb/vtk_view/js/bootstrap-treeview.js"></script>
+    <script src="/static/cdatweb/vtk_view/js/jquery.jspanel.js"></script>
+    <script src="/static/vtkweb/lib/core/vtkweb-all.js"></script>
+    <script src="/static/cdatweb/vtk_view/js/cdat.js"></script>
+    <script src="/static/cdatweb/vtk_view/js/panel-view.js"></script>
+    <script src="/static/js/quicktree.js"></script>
+    <script src="/static/js/main.js"></script>
+   
     {% block extra_headers %} {% endblock %}
     <style type="text/css">
         body {
@@ -101,22 +94,13 @@
     </footer>
     </div>
     <!--/.fluid-container-->
-    <script async="" src="//www.google-analytics.com/analytics.js"></script>
+    
 <script type="text/javascript">
     $(document).ready(function() {
-            $(".qtree").quicktree();
             
-        });
-
+    });
 </script>
-    <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-          ga('create', 'UA-40413119-1', 'bootply.com');
-          ga('send', 'pageview');
-    </script>
+
 </body>
 
 </html>

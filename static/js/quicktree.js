@@ -4,6 +4,7 @@
     function click(e){
       var a = $(this);
       a.next('ul').children("li").toggle();
+      console.log('click event fired');
       e.preventDefault();
     }
 

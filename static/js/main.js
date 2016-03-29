@@ -190,7 +190,7 @@ function get_variables(path, parent, level){
     for(v in variables){
       element = $("<li><a></a></li>");
       make_draggable(element);
-      element.text(variables[v].name || v)
+      element.text(v)
       .attr("data-name", v)
       .attr("data-file", path)
       .addClass('cdat-variable');
@@ -306,6 +306,7 @@ $("body").ready(function(){
   }
   );
   $(".qtree").quicktree();
+  
   $(".cdat-search-link").click(function () {
     if ($(".cdat-search-container").get(0)) {
       return;

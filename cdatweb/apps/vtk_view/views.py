@@ -71,7 +71,10 @@ def vtkweb_launcher(request):
 
     # TODO: add status and delete methods
     if request.method == 'POST':
+        # vis server is not being set correctly ...
+        VISUALIZATION_LAUNCHER = 'http://aims1.llnl.gov/vtk'
         req = requests.post(VISUALIZATION_LAUNCHER, request.body)
+
         if req.ok:
             return HttpResponse(req.content)
         else:

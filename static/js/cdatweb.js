@@ -354,6 +354,8 @@ $(function() {
 
     $("body").ready(function() {
         //MATT
+        $(".qtree").quicktree();
+         
         $('#new_plot').click(function() {
             var new_tile = '<li id="' + counter + '" class="tile" >' + header1 + 'plot ' + counter + header2 + contents + header3 + '</li>';
             add_tile(new_tile, counter, { ignore: 'true' } /* , call back function here */);
@@ -390,6 +392,7 @@ $(function() {
 
         cdat.get_graphics_methods().then(
             function(plots) {
+                console.log("plots function");
                 parent = $(".cdatweb-plot-types");
                 var item = $("<li><a></a><ul class='qtree'></ul></li>");
                 var child = $("<li><a></a></li>");
@@ -441,9 +444,7 @@ $(function() {
             function() {
                 console.log(arguments)
             }
-        );
-
-        $(".qtree").quicktree();
+        );  
     });
 
     //setup the hander to fix the windows after a resize
@@ -462,10 +463,8 @@ $(function() {
     });
 
     function getFile(url, id) {
-
+        //TODO
     }
-
-
 
     function isFolder(file) {
         return file.split('.').pop() == file;
