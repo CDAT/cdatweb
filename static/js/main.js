@@ -87,8 +87,10 @@ function cdat_esgf_submit(){
         element.append(wrapper);
       }
 
-      title = "Search Results";
-      newPanel(title, element);
+      //title = "Search Results";
+      //newPanel(title, element);
+      $('#esgf_results').empty();
+      $('#esgf_results').append(element);
     },
     error: function(request, status, error) {
       $("div .error").html(request + " | " + status + " | " + error);
@@ -183,9 +185,9 @@ function get_children(path, parent, level){
 }
 
 function get_variables(path, parent, level){
-  //cdat.get_variables("/var/www/Data/ne120_monthly_ens3/gridded/1979/gridded_ne120_v0.3_00003.cam.h0.1979-01.nc").then(
+  cdat.get_variables("/var/www/Data/ne120_monthly_ens3/gridded/1979/gridded_ne120_v0.3_00003.cam.h0.1979-01.nc").then(
   //testing above
-  cdat.get_variables(path).then(
+  //cdat.get_variables(path).then(
     function (variables){
     for(v in variables){
       element = $("<li><a></a></li>");
@@ -332,6 +334,11 @@ $("body").ready(function(){
       console.log('search fragment load failed.');
       $('.cdat-search-container').remove();
     });
+  });
+  
+  $("#clear").click(function() {
+      $('#esgf_results').empty();
+      // why does this close my modal?
   });
 });
 

@@ -1,0 +1,113 @@
+<div class="container">
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Load Variable</h4>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="center_bar tabs">
+            <div class="tabbable">
+              <ul class="nav nav-tabs nav-size">
+                <li class="active"><a href="#acme" data-toggle="tab">ACME</a></li>
+                <li><a href="#local" data-toggle="tab">Local</a></li>
+                <li><a href="#esgf" data-toggle="tab">ESGF</a></li>
+                <li><a href="#opendap" data-toggle="tab">OpenDAP</a></li>
+              </ul>
+              <div class="tab-content">
+
+                <div class="tab-pane active" id="acme">
+                  <div class="cdatweb-file-browser cdatweb-tree">
+                    <ul class="qtree">
+                      {% for folder in dirs%}
+                      <li id="{{folder}}"><a class="cdatweb-dir" data-path="{{base}}/{{folder}}"> {{folder}} </a>
+                        <ul id="{{folder}}_child">
+                        </ul>
+                      </li>
+                      {% endfor %}
+                      {% for folder in files%}
+                      <li id="{{folder}}"><a class="cdatweb-file" data-path="{{base}}/{{folder}}"> {{folder}} </a>
+                        <ul id="{{folder}}_child">
+                        </ul>
+                      </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+
+                <div class="tab-pane" id="local">
+                  Tab Local
+                </div>
+
+                <div class="tab-pane" id="esgf">
+                  <div class="vtk-search-container">
+                    <!-- esgf search component -->
+                    <div id="search">
+
+                      <h2>ESGF Search</h2>
+                      {% csrf_token %}
+                      <select type="text" name="host" value="" id="host" class="form-control">
+                        <!-- Load from node-manager once installed again -->
+                        <option value="http://esg.ccs.ornl.gov/esg-search">esg.css.ornl</option>
+                        <option value="http://pcmdi.llnl.gov/esg-search">pcmdi.llnl</option>
+                        <option value="http://esgf-node.jpl.nasa.gov/esg-search">jpl.nasa.gov</option>
+                      </select>
+                      <div class="alert-sm alert-warning" role="alert">The ESGF host URL to search. For example, "esg.ccs.ornl.gov/esg-search"</div>
+
+                      <input type="text" name="text" value="" id="text" class="form-control" placeholder="Text">
+                      <div class="alert-sm alert-warning" role="alert">A free text search query in any metadata field</div>
+
+                      <input type="text" name="project" value="" id="project" class="form-control" placeholder="Project Name">
+                      <div class="alert-sm alert-warning" role="alert">Search by project</div>
+
+                      <select type="text" name="limit" value="" id="limit" class="form-control" placeholder="Limit">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                      </select>  
+                      <div class="alert-sm alert-warning" role="alert">The maximum number of files to return</div>
+
+                      <input type="number" name="offset" value="" id="offset" class="form-control" placeholder="Off Set">
+
+                      <div class="alert-sm alert-warning" role="alert">Start at this result</div>
+                      <a onclick="cdat_esgf_submit()" href="#"><button class="btn btn-default">Search</button></a>
+                      <button type="button" class="btn btn-default" id="clear" data-dismiss="modal">Clear</button>
+                      
+                    </div>
+                  </div>
+                  <div id="esgf_results" class="output"></div>
+                </div>
+
+                <div class="tab-pane" id="opendap">
+                  Tab OpenDap
+                </div>
+
+              </div>
+              <!-- /tab-content -->
+            </div>
+            <!-- /tabbable -->
+          </div>
+          <!--/ center_bar tabs --> 
+
+        </div>
+
+        <div class="modal-footer">        
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>    
+    </div>
+  </div>
+</div>
+
+

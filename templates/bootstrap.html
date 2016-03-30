@@ -12,25 +12,25 @@
       AUTOBAHN_DEBUG = true;
     </script>
     
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/cdatweb/css/jquery-ui.css">
     <link rel="stylesheet" href="/static/cdatweb/css/cdatweb.css">
     <link rel="stylesheet" href="/static/cdatweb/vtk_view/css/bootstrap-treeview.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/cdatweb/vtk_view/css/vtk_view.css">
     <link rel="stylesheet" href="/static/cdatweb/vtk_view/css/jquery.jspanel.css">
     <link rel="stylesheet" href="/static/css/main.css">
     
     <script type="text/javascript">AUTOBAHN_DEBUG = true;</script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script type="text/javascript">
         window.app = window.app || {};
     </script>
     <script src="/static/cdatweb/js/lodash.js"></script>
     <script src="/static/cdatweb/js/jquery-ui.js"></script>
     <script type="text/javascript">$.widget.bridge('uitooltip', $.ui.tooltip);</script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src='http://cdnjs.cloudflare.com/ajax/libs/velocity/0.2.1/jquery.velocity.min.js'></script> 
     <script src="/static/js/spin.min.js"></script> 
     <script src="/static/vtkweb/ext/core/autobahn.min.js"></script>
@@ -48,7 +48,14 @@
     <script src="/static/js/quicktree.js"></script>
     <script src="/static/js/main.js"></script>
    
-    {% block extra_headers %} {% endblock %}
+     <!-- Bootstrap Modal -->
+    
+    <link rel="stylesheet" href="/static/bootstrap_modal/bootstrap-modal.css">
+    <script src="/static/bootstrap_modal/bootstrap-modalmanager.js"></script>
+    <script src="/static/bootstrap_modal/bootstrap-modal.js"></script>
+    
+    {% block extra_headers %}{% endblock %}
+    
     <style type="text/css">
         body {
             padding-bottom: 40px;
@@ -89,16 +96,16 @@
     <div class="container-fluid">
         {% block content %} {% endblock %}
         <hr>
-<footer>
-    <a href="http://glyphicons.com/">Special Thanks glypicons</a>
-    </footer>
+        
+<footer><a href="http://glyphicons.com/">Special Thanks glypicons</a></footer>
     </div>
     <!--/.fluid-container-->
     
-<script type="text/javascript">
-    $(document).ready(function() {
             
-    });
+
+    
+<script type="text/javascript">
+   
 </script>
 
 </body>
