@@ -45,49 +45,29 @@
         width: 100%;
     }
     
-    .col1 {
-        width: 60px;
+    .btn-table {
+        width: 100%;
     }
     
-    .col2 {
-        width: 85px;
+    td > .btn {
+        width: 100%;
+        font-size:10px;
     }
-    
-    .col3 {
-        width: 60px;
-    }
-    
-    .col4 {
-        width: 55px;
-    }
-    
-    .col5 {
-        width: 60px;
-    }
-    
-    .col6 {
-        width: 100px;
-    }
-    
-    .col7 {
-        width: 35px;
-    }
-    
-    #sidebarRight {
-        min-width: 590px;
-    }
-    
-    #sidebarLeft {
-        min-width: 300px;
-    }
-    
-    .btn-group {
-        position: center;
-    }
-    
-    .nav-size > li{
+         
+    .nav-size > li {
         font-size: 10px;
     }
+    
+    .cal > .btn {
+        font-size:10px;
+    }
+    
+    .btn-toolbar {
+        margin-left: -5px;
+        margin-right: -5px
+    }
+    
+    
     
     html {
        overflow-y: scroll;
@@ -197,44 +177,44 @@
             Enter CDAT command and press Return</br>
             <input type="text" class="input">
             <!-- Keys -->
-            <div class="btn-toolbar" role="toolbar">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default col1">SIN</button>
-                    <button type="button" class="btn btn-default col2">ARCSIN</button>
-                    <button type="button" class="btn btn-default col3">x^2</button>
-                    <button type="button" class="btn btn-default col4">LN</button>
-                    <button type="button" class="btn btn-default col5">x&lt;y</button>
-                    <button type="button" class="btn btn-default col6">REGRID</button>
-                    <button type="button" class="btn btn-default col7"><b>+</b></button>
-                </div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default col1">COS</button>
-                    <button type="button" class="btn btn-default col2">ARCCOS</button>
-                    <button type="button" class="btn btn-default col3">sqRT</button>
-                    <button type="button" class="btn btn-default col4">LOG</button>
-                    <button type="button" class="btn btn-default col5">x&gt;y</button>
-                    <button type="button" class="btn btn-default col6">MASK</button>
-                    <button type="button" class="btn btn-default col7"><b>-</b></button>
-                </div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default col1">TAN</button>
-                    <button type="button" class="btn btn-default col2">ARCTAN</button>
-                    <button type="button" class="btn btn-default col3">1/x</button>
-                    <button type="button" class="btn btn-default col4">e^x</button>
-                    <button type="button" class="btn btn-default col5">x&lt;&gt;y</button>
-                    <button type="button" class="btn btn-default col6" >GET_MASK</button>
-                    <button type="button" class="btn btn-default col7"><b>*</b></button>
-                </div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default col1">SIN</button>
-                    <button type="button" class="btn btn-default col2">ARCSIN</button>
-                    <button type="button" class="btn btn-default col3">x^2</button>
-                    <button type="button" class="btn btn-default col4">LN</button>
-                    <button type="button" class="btn btn-default col5">x==y</button>
-                    <button type="button" class="btn btn-default col6">GROWER</button>
-                    <button type="button" class="btn btn-default col7"><b>/</b></button>
-                </div>
-            </div>
+            <table class="btn-table">
+  <tr>
+    <td><button type="button" class="btn btn-default col1">SIN</button></td>
+    <td><button type="button" class="btn btn-default col2">ARCSIN</button></td>
+    <td><button type="button" class="btn btn-default col3">x^2</button></td>
+    <td><button type="button" class="btn btn-default col4">LN</button></td>
+    <td><button type="button" class="btn btn-default col5">x&lt;y</button></td>
+    <td><button type="button" class="btn btn-default col6">REGRID</button></td>
+    <td><button type="button" class="btn btn-default col7"><b>+</b></button></td>
+  </tr>
+  <tr>
+    <td><button type="button" class="btn btn-default col1">COS</button></td>
+    <td><button type="button" class="btn btn-default col2">ARCCOS</button></td>
+    <td><button type="button" class="btn btn-default col3">sqRT</button></td>
+    <td><button type="button" class="btn btn-default col4">LOG</button></td>
+    <td><button type="button" class="btn btn-default col5">x&gt;y</button></td>
+    <td><button type="button" class="btn btn-default col6">MASK</button></td>
+    <td><button type="button" class="btn btn-default col7"><b>-</b></button></td>
+  </tr>
+  <tr>
+    <td><button type="button" class="btn btn-default col1">TAN</button></td>
+    <td><button type="button" class="btn btn-default col2">ARCTAN</button></td>
+    <td><button type="button" class="btn btn-default col3">1/x</button></td>
+    <td><button type="button" class="btn btn-default col4">e^x</button></td>
+    <td><button type="button" class="btn btn-default col5">x&lt;&gt;y</button></td>
+    <td><button type="button" class="btn btn-default col6" >GET_MASK</button></td>
+    <td><button type="button" class="btn btn-default col7"><b>*</b></button></td>
+  </tr>
+  <tr>
+    <td><button type="button" class="btn btn-default col1">SIN</button></td>
+    <td><button type="button" class="btn btn-default col2">ARCSIN</button></td>
+    <td><button type="button" class="btn btn-default col3">x^2</button></td>
+    <td><button type="button" class="btn btn-default col4">LN</button></td>
+    <td><button type="button" class="btn btn-default col5">x==y</button></td>
+    <td><button type="button" class="btn btn-default col6">GROWER</button></td>
+    <td><button type="button" class="btn btn-default col7"><b>/</b></button></td>
+  </tr>
+</table>         
         </div>
     </div>
     <!--/.well -->
