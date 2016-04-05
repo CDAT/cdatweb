@@ -6,6 +6,7 @@ from external import exportRpc
 import visualizers
 
 from FileLoader import FileLoader
+import vcs
 
 
 class Visualizer(BaseProtocol):
@@ -25,7 +26,7 @@ class Visualizer(BaseProtocol):
     @exportRpc('cdat.view.variable')
     def variable(self, plot, variable):
         """Add or modify the variables used in the plot."""
-        if not plot in self._active:
+        if plot not in self._active:
             return False
         all_vars = []
         for obj in variable:
@@ -85,8 +86,9 @@ class Visualizer(BaseProtocol):
         insanity:
         https://github.com/UV-CDAT/uvcdat/blob/master/Packages/vcs/Lib/Canvas.py#L251
 
-        The reality is that this api will need to be more complicated in the future to account
-        some methods (like meshfill) that can take one or two variables depending on the grid.
+        The reality is that this api will need to be more complicated in the
+        future to account some methods (like meshfill) that can take one or two
+        variables depending on the grid.
         """
         g_type = g_type.lower()
 
@@ -113,9 +115,6 @@ class Visualizer(BaseProtocol):
 
         # otherwise assume 1
         return 1
-
-
-import vcs
 
 
 # initialize the list of templates and graphics methods

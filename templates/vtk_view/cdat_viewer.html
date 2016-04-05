@@ -17,6 +17,9 @@
     <li><a onclick="cdat.create_plot('http://test.opendap.org/opendap/data/nc/coads_climatology.nc', 'SST', 'isofill', 'robinson', 'no_legend')" href="javascript:void(0)">Isofill example</a></li>
     <!-- Need a 3D variable for this: <li><a onclick="cdat.create_plot('http://test.opendap.org/opendap/data/nc/coads_climatology.nc', 'AIRT', '3d_scalar', 'default', 'default')" href="javascript:void(0)">Volume example</a></li> -->
     <li><a onclick="cdat.create_plot('http://test.opendap.org/opendap/data/nc/coads_climatology.nc', ['UWND', 'VWND'], 'vector', 'default', 'default')" href="javascript:void(0)">Vector example</a></li>
+    <li><a id="variables-example" onclick="cdat.print_variables('http://test.opendap.org/opendap/data/nc/coads_climatology.nc')">Rectilinear grid variables example</a></li>
+    <li><a id="variables-example" onclick="cdat.print_variables('/home/danlipsa/build/uvcdat/install/share/uvcdat/sample_data/sampleCurveGrid4.nc')">Curvilinear grid variable example</a></li>
+    <li><a id="variables-example" onclick="cdat.print_variables('/home/danlipsa/build/uvcdat/install/share/uvcdat/sample_data/sampleGenGrid3.nc')">Generic grid variable example</a></li>
   </ul>
 </li>
 {% endblock navbar-right %}
