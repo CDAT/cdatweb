@@ -1,8 +1,6 @@
-{% extends "bootstrap.html" %} {% block title %} CDATWeb {% endblock %} {% block extra_headers %}
-{% load staticfiles %}
+{% extends "bootstrap.html" %} {% block title %} CDATWeb {% endblock %} {% block extra_headers %} {% load staticfiles %}
 
 <style type="text/css">
-
     body {
         padding-top: 70px;
     }
@@ -32,6 +30,7 @@
         background-color: #f5f5f5;
         border: 1px solid #e3e3e3;
         border-radius: 4px;
+        min-height: 1000px;
     }
     
     .output {
@@ -40,7 +39,7 @@
         background-color: white;
         padding: 10px 10px 10px 10px;
     }
-     
+    
     .input {
         width: 100%;
     }
@@ -51,11 +50,11 @@
     
     td > .btn {
         width: 100%;
-        font-size:10px;
+        font-size: 10px;
     }
     
     html {
-       overflow-y: scroll;
+        overflow-y: scroll;
     }
 </style>
 
@@ -64,7 +63,8 @@
     <div class="well sidebar-nav">
         <div class="outlines" id="projects">
             <div class="titles">
-                <center><h6>Projects</h6></center>
+                <center>
+                    <h6>Projects</h6></center>
             </div>
             <div class="btn-toolbar" role="toolbar">
                 <div class="btn-group">
@@ -84,7 +84,8 @@
         </div>
         <div class="outlines" id="plot_types">
             <div class="titles">
-                <center><h6>VCS</h6></center>
+                <center>
+                    <h6>VCS</h6></center>
             </div>
             <div class="cdatweb-plot-selectors cdatweb-tree output">
                 <ul class="qtree">
@@ -103,7 +104,7 @@
 <!--/span-->
 
 <div class="col-sm-9 col-md-6 col-lg-5">
-    <div class="row">      
+    <div class="row">
         <div class="center_bar tabs">
             <div class="tabbable">
                 <ul class="nav nav-tabs nav-size">
@@ -117,32 +118,21 @@
                         <div class="center_bar">
                             <div class="btn-toolbar" role="toolbar">
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                                    <button id="new_window_button" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
                                     <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></button>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-9 col-md-6 col-lg-6">
-                                   <div class="panel panel-default"> <div class="panel-heading"> <h3 class="panel-title">Panel title</h3> </div> <div class="panel-body"> Panel content </div> </div>
-                                </div>
-                                <div class="col-sm-9 col-md-6 col-lg-6">
-                                    <div class="panel panel-default"> <div class="panel-heading"> <h3 class="panel-title">Panel title</h3> </div> <div class="panel-body"> Panel content </div> </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-9 col-md-6 col-lg-6">
-                                    <div class="panel panel-default"> <div class="panel-heading"> <h3 class="panel-title">Panel title</h3> </div> <div class="panel-body"> Panel content </div> </div>
-                                </div>
-                                <div class="col-sm-9 col-md-6 col-lg-6">
-                                    <div class="panel panel-default"> <div class="panel-heading"> <h3 class="panel-title">Panel title</h3> </div> <div class="panel-body"> Panel content </div> </div>
-                                </div>
+                            <div class="test-box">
+                                <ul id="container">
+                                </ul>
                             </div>
                         </div>
                         <div id="titles_homes" class="tiles"></div>
                     </div>
 
                     <div class="tab-pane" id="two">
-                        Tab 2 </br> Secondo sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan. Aliquam in felis sit amet augue.
+                        Tab 2 </br> Secondo sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan.
+                        Aliquam in felis sit amet augue.
                     </div>
 
                 </div>
@@ -150,7 +140,7 @@
             </div>
             <!-- /tabbable -->
         </div>
-        <!--/ center_bar tabs -->    
+        <!--/ center_bar tabs -->
     </div>
     <!--/row-->
 </div>
@@ -159,7 +149,10 @@
 <div class="col-sm-3 col-md-6 col-lg-4 sidebar-offcanvas" id="sidebarRight" role="navigation">
     <div class="well sidebar-nav">
         <div class="outlines" id="variables">
-            <div class="titles"><center><h6>Variables</h6></center></div>
+            <div class="titles">
+                <center>
+                    <h6>Variables</h6></center>
+            </div>
             <div class="btn-toolbar" role="toolbar">
                 <div class="btn-group">
                     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
@@ -173,55 +166,112 @@
             <p id="variables-output" class="output"></p>
         </div>
         <div class="outlines" id="calulator">
-            <div class="titles"><center><h6>Calculator</h6></center></div>
+            <div class="titles">
+                <center>
+                    <h6>Calculator</h6></center>
+            </div>
             <p id="calulator-output" class="output"></p>
             Enter CDAT command and press Return</br>
             <input type="text" class="input">
             <!-- Keys -->
             <table class="btn-table">
-  <tr>
-    <td><button type="button" class="btn btn-default col1">SIN</button></td>
-    <td><button type="button" class="btn btn-default col2">ARCSIN</button></td>
-    <td><button type="button" class="btn btn-default col3">x^2</button></td>
-    <td><button type="button" class="btn btn-default col4">LN</button></td>
-    <td><button type="button" class="btn btn-default col5">x&lt;y</button></td>
-    <td><button type="button" class="btn btn-default col6">REGRID</button></td>
-    <td><button type="button" class="btn btn-default col7"><b>+</b></button></td>
-  </tr>
-  <tr>
-    <td><button type="button" class="btn btn-default col1">COS</button></td>
-    <td><button type="button" class="btn btn-default col2">ARCCOS</button></td>
-    <td><button type="button" class="btn btn-default col3">sqRT</button></td>
-    <td><button type="button" class="btn btn-default col4">LOG</button></td>
-    <td><button type="button" class="btn btn-default col5">x&gt;y</button></td>
-    <td><button type="button" class="btn btn-default col6">MASK</button></td>
-    <td><button type="button" class="btn btn-default col7"><b>-</b></button></td>
-  </tr>
-  <tr>
-    <td><button type="button" class="btn btn-default col1">TAN</button></td>
-    <td><button type="button" class="btn btn-default col2">ARCTAN</button></td>
-    <td><button type="button" class="btn btn-default col3">1/x</button></td>
-    <td><button type="button" class="btn btn-default col4">e^x</button></td>
-    <td><button type="button" class="btn btn-default col5">x&lt;&gt;y</button></td>
-    <td><button type="button" class="btn btn-default col6" >GET_MASK</button></td>
-    <td><button type="button" class="btn btn-default col7"><b>*</b></button></td>
-  </tr>
-  <tr>
-    <td><button type="button" class="btn btn-default col1">SIN</button></td>
-    <td><button type="button" class="btn btn-default col2">ARCSIN</button></td>
-    <td><button type="button" class="btn btn-default col3">x^2</button></td>
-    <td><button type="button" class="btn btn-default col4">LN</button></td>
-    <td><button type="button" class="btn btn-default col5">x==y</button></td>
-    <td><button type="button" class="btn btn-default col6">GROWER</button></td>
-    <td><button type="button" class="btn btn-default col7"><b>/</b></button></td>
-  </tr>
-</table>         
+                <tr>
+                    <td>
+                        <button type="button" class="btn btn-default col1">SIN</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col2">ARCSIN</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col3">x^2</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col4">LN</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col5">x&lt;y</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col6">REGRID</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col7"><b>+</b></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button type="button" class="btn btn-default col1">COS</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col2">ARCCOS</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col3">sqRT</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col4">LOG</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col5">x&gt;y</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col6">MASK</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col7"><b>-</b></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button type="button" class="btn btn-default col1">TAN</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col2">ARCTAN</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col3">1/x</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col4">e^x</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col5">x&lt;&gt;y</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col6">GET_MASK</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col7"><b>*</b></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button type="button" class="btn btn-default col1">SIN</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col2">ARCSIN</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col3">x^2</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col4">LN</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col5">x==y</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col6">GROWER</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default col7"><b>/</b></button>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
     <!--/.well -->
 </div>
 <!--/span-->
 
-{% include 'cdatweb/file_browser.html' %}     
-
-{% endblock %}
+{% include 'cdatweb/file_browser.html' %} {% endblock %}

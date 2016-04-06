@@ -1,0 +1,34 @@
+.test-box {
+  width: 100%;
+  height: 100%;
+  border-color: blue;
+}
+
+#container {
+  width: 100%;
+  height: 100%;
+  padding: 0px;
+}
+
+.window {
+  border: solid;
+  border-width: 1px;
+  margin: 2px;
+  list-style-type: none;
+  width: calc(50% - 4px);
+}
+
+.window-half {
+  height: calc(50% - 4px);
+}
+
+.window-full {
+  height: calc(100% - 4px);
+}
+
+.full-width {
+  width: calc(100% - 4px);
+}
+
+.window-close-button {}
+

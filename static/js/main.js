@@ -99,23 +99,6 @@ function cdat_esgf_submit(){
   });
 }
 
-function newPanel(title, content){
-  if (typeof content === 'string') {
-    content = $(content);
-  }
-  cdat.Panel({
-    title: title,
-    content: content,
-    overflow: 'scroll',
-    position: "center",
-    size: {width: 400, height: 600}
-  });
-}
-
-function emptyPanel(){
-  return $.jsPanel({});
-}
-
 function get_children(path, parent, level){
   if (parent.attr("data-loaded") === "true") {
     return;
@@ -206,12 +189,13 @@ function get_plot(path, parent, level){
   console.log("get_plot")
 }
 
-/**
- * Make the given element draggable.
- * @param {jQuery} node A jquery DOM element
- * @param {function?} ondrag A drag event handler
- */
+
 function make_draggable(node, ondrag) {
+  /**
+  * Make the given element draggable.
+  * @param {jQuery} node A jquery DOM element
+  * @param {function?} ondrag A drag event handler
+  */  
   node.draggable({
     appendTo: '.vtk-view-container',
     zIndex: ~(1 << 31), // because jsPanel, sigh...
@@ -336,9 +320,64 @@ $("body").ready(function(){
     });
   });
   
-  $("#clear").click(function() {
+  $("#reset").click(function() {
       $('#esgf_results').empty();
-      // why does this close my modal?
   });
+  
+  /* grid */
+  count = 1;
+
+function resizeWindows() {
+  var curWindows = $('.window');
+  if (curWindows.length < 3) {
+    curWindows.removeClass('window-half');
+    curWindows.addClass('window-full');
+  } else {
+    curWindows.removeClass('window-full');
+    curWindows.addClass('window-half');
+  }
+  if (curWindows.length % 2 === 1) {
+    curWindows.last().addClass('full-width');
+  } else {
+    curWindows.removeClass('full-width');
+  }
+}
+
+$("#container").sortable();
+$("#container").disableSelection();
+
+
+$("#container").on("sortstart", function(event, ui) {
+  if ($('.window').not('.ui-sortable-placeholder').length % 2 === 1) {
+    $('.window').removeClass('full-width');
+  }
+});
+
+$("#container").on("sortstop", function(event, ui) {
+  if ($('.window').not('.ui-sortable-placeholder').length % 2 === 1) {
+    $('.window').last().addClass('full-width');
+  }
+});
+
+$('#new_window_button').on('click', function() {
+  var elem = $('<li/>').addClass('window window-half col-xs-4 ui-state-default panel panel-info');
+  /* add droppable fields info */
+  var button = '<button class="window-close-button btn btn-default pull-right">Close</button>';
+  $(elem).text('Added window ' + count);
+  $(elem).append(button);
+  /* append droppable info */
+
+  count++;
+  console.log(elem)
+  $('#container').append(elem);
+  resizeWindows();
+});
+
+$(document.body).on("click", ".window-close-button", function() {
+  $(this).closest('.window').remove();
+  resizeWindows();
+});
+  
+  
 });
 
