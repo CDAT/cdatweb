@@ -135,7 +135,20 @@
          *
          * @param {object} config A plot configuration object
          *
+         * BEGIN simplified interface
+         * @param {string} config.file  data file where to read the variables from
+         * @param {string} config.variable variable or list of variables to plot (from config.file)
+         * @param {object} config.subset same as subset in config.variables.
+         *                 Subset is applied to all variables, so we assume
+         *                 all variables have the same grid.
+         * END simplified interface
          * @param {object[]} config.variables       The variable from the file to display
+         *        A variable contains:
+         *          - name: the name of the attribute to plot
+         *          - file: the data file where to read the variable from
+         *          - subset: a list of dictionary elements, each element has
+         *              - name: index variable name
+         *              - range: list with lower and upper range for the index variable
          * @param {string}   config.template        The plot template to use
          * @param {string}   config.type            The plot type to create
          * @param {string}   config.method          The plot method to use
@@ -146,7 +159,7 @@
          * @returns {$.Deferred} A promise-like object for attaching handlers
          *
          * @example
-         *     var view = cdat.open({
+         *     var view = cdat.show({
          *     }).then(
          *        function () { console.log('success'); },
          *        function () { console.log('fail'); }
@@ -166,9 +179,9 @@
 
             var defer = new $.Deferred();
             var promise = defer.promise();
-            var view, v;
+            var view, v, i;
 
-            // backward compatibility
+            // simplified interface
             if (config.file && config.variable) {
                 if (typeof config.variable === 'string') {
                     config.variables = [{
@@ -182,6 +195,12 @@
                             name: config.variable[v],
                             file: config.file
                         });
+                    }
+                }
+                if (config.subset) {
+                    for (i = 0; i < config.variables.length; ++i) {
+                        v = config.variables[i];
+                        v.subset = config.subset;
                     }
                 }
             }
@@ -306,7 +325,7 @@
          * @param {string} method A graphics method
          * @param {string} template A graphics template
          */
-        create_plot: function (file, variable, type, method, template) {
+        create_plot: function (file, variable, type, method, template, subset) {
             console.log(
                 "Opening file: " + file +
                     " variable: " + variable +
@@ -326,7 +345,8 @@
                         variable: variable,
                         type: type,
                         method: method,
-                        template: template
+                        template: template,
+                        subset: subset
                     })
                 }
             );
@@ -364,6 +384,7 @@
 
         /**
          * Prints the result from get_variables to the console.
+         * @param {string? filename An absolute path to a netcdf file
          */
         print_variables: function (filename) {
             var fileVars = cdat.get_variables(filename);

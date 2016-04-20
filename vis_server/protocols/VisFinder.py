@@ -54,9 +54,13 @@ class Visualizer(BaseProtocol):
         all_vars = []
         for obj in variable:
             f = FileLoader().get_reader(obj['file'])
-            all_vars.append(
-                f[obj['name']]
-            )
+            var = f[obj['name']]
+            if ('subset' in obj):
+                kargs = obj['subset']
+                print obj['name']
+                print kargs
+                var = var(**kargs)
+            all_vars.append(var)
         vis.loadVariable(all_vars)
         view = vis.getView()
         id = self.getGlobalId(view)
