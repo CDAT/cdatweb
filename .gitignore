@@ -7,3 +7,7 @@ public/
 Data/
 cdatweb/settings/local_settings.py
 **/.DS_Store
+.idea/
+build/
+dist/
+env/

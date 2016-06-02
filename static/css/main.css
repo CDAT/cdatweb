@@ -23,3 +23,7 @@
 .cdat-plot-panel h3 {
   text-align: center;
 }
+
+.variable-selected {
+    background: darkgrey;
+}

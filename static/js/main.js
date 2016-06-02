@@ -378,6 +378,25 @@ $(document.body).on("click", ".window-close-button", function() {
   resizeWindows();
 });
   
-  
+$(document.body).on("click", "#file-browser-add-variables", function( event ) {
+    $('.variable-selected').each(function() {
+      var elem = $('<p/>').text($(this).text())
+          .attr('data-file', $(this).attr('data-file'))
+          .attr('data-name', $(this).attr('data-name'));
+      $('#variables-output').append(elem);
+    });
 });
+
+$(document.body).on("click", ".cdat-variable", function( event ) {
+    if($(this).hasClass('variable-selected')){
+      $(this).removeClass('variable-selected');
+    }
+    else {
+      $(this).addClass('variable-selected');
+    }
+});
+
+});
+
+
 
