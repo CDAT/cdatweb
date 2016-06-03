@@ -197,12 +197,13 @@ function make_draggable(node, ondrag) {
   * @param {function?} ondrag A drag event handler
   */  
   node.draggable({
-    appendTo: '.vtk-view-container',
+    appendTo: 'body',
     zIndex: ~(1 << 31), // because jsPanel, sigh...
-    containment: '.vtk-view-container',
+    containment: 'body',
     helper: "clone",
     addClass: "cdat-grabbing",
-    opacity: 0.75
+    opacity: 0.75,
+    cursor: "grabbing",
   }).addClass('cdat-draggable')
   .on('start', function (evt) {
     if (ondrag) {
@@ -343,8 +344,7 @@ function resizeWindows() {
   }
 }
 
-$("#container").sortable();
-$("#container").disableSelection();
+$("#container").sortable().disableSelection();
 
 
 $("#container").on("sortstart", function(event, ui) {
@@ -363,7 +363,29 @@ $('#new_window_button').on('click', function() {
   var elem = $('<li/>').addClass('window window-half col-xs-4 ui-state-default panel panel-info');
   /* add droppable fields info */
   var button = '<button class="window-close-button btn btn-default pull-right">Close</button>';
-  $(elem).text('Added window ' + count);
+  //$(elem).text('Added window ' + count);
+  var variableZone = $('<div/>').text('Variable drop zone').addClass('drop-zone').droppable({
+    accept: '.cdat-variable',
+    hoverClass: 'drop-zone-success',
+    activeClass: 'drop-zone-success',
+    tolerance: 'pointer'
+  });
+  var methodZone = $('<div/>').text('Method drop zone').addClass('drop-zone').droppable({
+    accept: '.cdat-plot-method',
+    hoverClass: 'drop-zone-success',
+    activeClass: 'drop-zone-success',
+    tolerance: 'pointer'
+  });
+  var templateZone = $('<div/>').text('Template drop zone').addClass('drop-zone').droppable({
+    accept: '.cdat-template-option',
+    hoverClass: 'drop-zone-success',
+    activeClass: 'drop-zone-success',
+    tolerance: 'pointer'
+  });
+
+  $(elem).append(variableZone);
+  $(elem).append(methodZone);
+  $(elem).append(templateZone);
   $(elem).append(button);
   /* append droppable info */
 
@@ -383,7 +405,9 @@ $("#file-browser-add-variables").click(function() {
     elems.each(function() {
       var elem = $('<p/>').text($(this).text())
           .attr('data-file', $(this).attr('data-file'))
-          .attr('data-name', $(this).attr('data-name'));
+          .attr('data-name', $(this).attr('data-name'))
+          .addClass('cdat-variable');
+      make_draggable(elem);
       $('#variables-output').append(elem);
       $(this).removeClass('variable-selected');
     });
@@ -406,17 +430,6 @@ $(document.body).on("click", ".cdat-variable", function() {
     }
 });
 
-$(document.body).on("click", "#variables-output p", function() {
-  if($(this).hasClass('variable-selected')){
-    $(this).removeClass('variable-selected');
-  }
-  else {
-    $(this).addClass('variable-selected');
-  }
-});
-
-
-  
 
 });
 
