@@ -378,16 +378,26 @@ $(document.body).on("click", ".window-close-button", function() {
   resizeWindows();
 });
   
-$(document.body).on("click", "#file-browser-add-variables", function( event ) {
-    $('.variable-selected').each(function() {
+$("#file-browser-add-variables").click(function() {
+    var elems = $('.variable-selected');
+    elems.each(function() {
       var elem = $('<p/>').text($(this).text())
           .attr('data-file', $(this).attr('data-file'))
           .attr('data-name', $(this).attr('data-name'));
       $('#variables-output').append(elem);
+      $(this).removeClass('variable-selected');
     });
 });
 
-$(document.body).on("click", ".cdat-variable", function( event ) {
+$("#variable-plus").click(function() {
+  $('.variable-selected').removeClass('variable-selected');
+});
+
+$("#variable-remove").click(function() {
+  $('.variable-selected').remove();
+});
+
+$(document.body).on("click", ".cdat-variable", function() {
     if($(this).hasClass('variable-selected')){
       $(this).removeClass('variable-selected');
     }
@@ -395,6 +405,18 @@ $(document.body).on("click", ".cdat-variable", function( event ) {
       $(this).addClass('variable-selected');
     }
 });
+
+$(document.body).on("click", "#variables-output p", function() {
+  if($(this).hasClass('variable-selected')){
+    $(this).removeClass('variable-selected');
+  }
+  else {
+    $(this).addClass('variable-selected');
+  }
+});
+
+
+  
 
 });
 
