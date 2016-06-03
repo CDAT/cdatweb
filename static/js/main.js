@@ -364,23 +364,38 @@ $('#new_window_button').on('click', function() {
   /* add droppable fields info */
   var button = '<button class="window-close-button btn btn-default pull-right">Close</button>';
   //$(elem).text('Added window ' + count);
-  var variableZone = $('<div/>').text('Variable drop zone').addClass('drop-zone').droppable({
+  var variableZone = $('<div/>').text('Variable').addClass('drop-zone').attr('title', 'Drag and drop a variable here').droppable({
     accept: '.cdat-variable',
-    hoverClass: 'drop-zone-success',
-    activeClass: 'drop-zone-success',
-    tolerance: 'pointer'
+    activeClass: 'alert drop-zone-highlight',
+    hoverClass: 'alert drop-zone-success',
+    tolerance: 'pointer',
+    drop: function (event, ui) {
+      $(this).text(ui.draggable.text());
+      $(this).attr('data-name', ui.draggable.attr('data-name'));
+      $(this).attr('data-file', ui.draggable.attr('data-file'));
+    }
+
   });
-  var methodZone = $('<div/>').text('Method drop zone').addClass('drop-zone').droppable({
+  var methodZone = $('<div/>').text('Method').addClass('drop-zone').attr('title', 'Drag and drop a method here').droppable({
     accept: '.cdat-plot-method',
-    hoverClass: 'drop-zone-success',
-    activeClass: 'drop-zone-success',
-    tolerance: 'pointer'
+    activeClass: 'alert drop-zone-highlight',
+    hoverClass: 'alert drop-zone-success',
+    tolerance: 'pointer',
+    drop: function (event, ui) {
+      $(this).text(ui.draggable.text());
+      $(this).attr('data-type', ui.draggable.attr('data-type'));
+      $(this).attr('data-family', ui.draggable.attr('data-family'));
+      $(this).attr('data-nvars', ui.draggable.attr('data-nvars'));
+    }
   });
-  var templateZone = $('<div/>').text('Template drop zone').addClass('drop-zone').droppable({
+  var templateZone = $('<div/>').text('Template').addClass('drop-zone').attr('title', 'Drag and drop a template here').droppable({
     accept: '.cdat-template-option',
-    hoverClass: 'drop-zone-success',
-    activeClass: 'drop-zone-success',
-    tolerance: 'pointer'
+    activeClass: 'alert drop-zone-highlight',
+    hoverClass: 'alert drop-zone-success',
+    tolerance: 'pointer',
+    drop: function (event, ui) {
+      $(this).text(ui.draggable.text());
+    }
   });
 
   $(elem).append(variableZone);
