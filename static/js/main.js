@@ -73,7 +73,7 @@ function cdat_esgf_submit(){
               _dap = _dap.substring(0, _dap.length - 5)
             }
             var link = $("<a></a>");
-            make_draggable(link);
+            //make_draggable(link); Variables are now click to select
             link.text(obj.variables[v].name)
               .attr("data-name", obj.variables[v].name)
               .attr("data-file", _dap)
@@ -379,6 +379,7 @@ $("body").ready(function(){
         var template = $(this).siblings(".drop-zone.template");
         
         if($(template).text() !== 'Template' && $(method).text() !== 'Method'){
+          console.log('rendering');
           cdat.show({
             file: $(variable).attr('data-file'),
             variable: $(variable).attr('data-name'),
