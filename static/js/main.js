@@ -328,123 +328,174 @@ $("body").ready(function(){
   /* grid */
   count = 1;
 
-function resizeWindows() {
-  var curWindows = $('.window');
-  if (curWindows.length < 3) {
-    curWindows.removeClass('window-half');
-    curWindows.addClass('window-full');
-  } else {
-    curWindows.removeClass('window-full');
-    curWindows.addClass('window-half');
-  }
-  if (curWindows.length % 2 === 1) {
-    curWindows.last().addClass('full-width');
-  } else {
-    curWindows.removeClass('full-width');
-  }
-}
-
-$("#container").sortable().disableSelection();
-
-
-$("#container").on("sortstart", function(event, ui) {
-  if ($('.window').not('.ui-sortable-placeholder').length % 2 === 1) {
-    $('.window').removeClass('full-width');
-  }
-});
-
-$("#container").on("sortstop", function(event, ui) {
-  if ($('.window').not('.ui-sortable-placeholder').length % 2 === 1) {
-    $('.window').last().addClass('full-width');
-  }
-});
-
-$('#new_window_button').on('click', function() {
-  var elem = $('<li/>').addClass('window window-half col-xs-4 ui-state-default panel panel-info');
-  /* add droppable fields info */
-  var button = '<button class="window-close-button btn btn-default pull-right">Close</button>';
-  //$(elem).text('Added window ' + count);
-  var variableZone = $('<div/>').text('Variable').addClass('drop-zone').attr('title', 'Drag and drop a variable here').droppable({
-    accept: '.cdat-variable',
-    activeClass: 'alert drop-zone-highlight',
-    hoverClass: 'alert drop-zone-success',
-    tolerance: 'pointer',
-    drop: function (event, ui) {
-      $(this).text(ui.draggable.text());
-      $(this).attr('data-name', ui.draggable.attr('data-name'));
-      $(this).attr('data-file', ui.draggable.attr('data-file'));
+  function resizeWindows() {
+    var curWindows = $('.window');
+    if (curWindows.length < 3) {
+      curWindows.removeClass('window-half');
+      curWindows.addClass('window-full');
+    } else {
+      curWindows.removeClass('window-full');
+      curWindows.addClass('window-half');
     }
-
-  });
-  var methodZone = $('<div/>').text('Method').addClass('drop-zone').attr('title', 'Drag and drop a method here').droppable({
-    accept: '.cdat-plot-method',
-    activeClass: 'alert drop-zone-highlight',
-    hoverClass: 'alert drop-zone-success',
-    tolerance: 'pointer',
-    drop: function (event, ui) {
-      $(this).text(ui.draggable.text());
-      $(this).attr('data-type', ui.draggable.attr('data-type'));
-      $(this).attr('data-family', ui.draggable.attr('data-family'));
-      $(this).attr('data-nvars', ui.draggable.attr('data-nvars'));
+    if (curWindows.length % 2 === 1) {
+      curWindows.last().addClass('full-width');
+    } else {
+      curWindows.removeClass('full-width');
     }
-  });
-  var templateZone = $('<div/>').text('Template').addClass('drop-zone').attr('title', 'Drag and drop a template here').droppable({
-    accept: '.cdat-template-option',
-    activeClass: 'alert drop-zone-highlight',
-    hoverClass: 'alert drop-zone-success',
-    tolerance: 'pointer',
-    drop: function (event, ui) {
-      $(this).text(ui.draggable.text());
+  }
+
+  $("#container").sortable().disableSelection();
+
+
+  $("#container").on("sortstart", function(event, ui) {
+    if ($('.window').not('.ui-sortable-placeholder').length % 2 === 1) {
+      $('.window').removeClass('full-width');
     }
   });
 
-  $(elem).append(variableZone);
-  $(elem).append(methodZone);
-  $(elem).append(templateZone);
-  $(elem).append(button);
-  /* append droppable info */
+  $("#container").on("sortstop", function(event, ui) {
+    if ($('.window').not('.ui-sortable-placeholder').length % 2 === 1) {
+      $('.window').last().addClass('full-width');
+    }
+  });
 
-  count++;
-  console.log(elem)
-  $('#container').append(elem);
-  resizeWindows();
-});
+  $('#new_window_button').on('click', function() {
+    var elem = $('<li/>').addClass('window window-half col-xs-4 ui-state-default panel panel-info');
+    /* add droppable fields info */
+    var button = '<button class="window-close-button btn btn-default pull-right">Close</button>';
+    //$(elem).text('Added window ' + count);
+    var variableZone = $('<div/>').text('Variable').addClass('drop-zone variable').attr('title', 'Drag and drop a variable here').droppable({
+      accept: '.cdat-variable',
+      activeClass: 'alert drop-zone-highlight',
+      hoverClass: 'alert drop-zone-success',
+      tolerance: 'pointer',
+      drop: function (event, ui) {
+        $(this).text(ui.draggable.text())
+          .attr('data-file', ui.draggable.attr('data-file'))
+          .attr('data-name', ui.draggable.attr('data-name'));
 
-$(document.body).on("click", ".window-close-button", function() {
-  $(this).closest('.window').remove();
-  resizeWindows();
-});
-  
-$("#file-browser-add-variables").click(function() {
-    var elems = $('.variable-selected');
-    elems.each(function() {
-      var elem = $('<p/>').text($(this).text())
-          .attr('data-file', $(this).attr('data-file'))
-          .attr('data-name', $(this).attr('data-name'))
-          .addClass('cdat-variable');
-      make_draggable(elem);
-      $('#variables-output').append(elem);
-      $(this).removeClass('variable-selected');
+        var variable = this;
+        var method = $(this).siblings(".drop-zone.method");
+        var template = $(this).siblings(".drop-zone.template");
+        
+        if($(template).text() !== 'Template' && $(method).text() !== 'Method'){
+          cdat.show({
+            file: $(variable).attr('data-file'),
+            variable: $(variable).attr('data-name'),
+            type: $(method).attr('data-family'),
+            method: $(method).attr('data-type'),
+            template: $(template).text(),
+            node: $(this).parent()
+          });
+        }
+      }
     });
-});
+    var methodZone = $('<div/>').text('Method').addClass('drop-zone method').attr('title', 'Drag and drop a method here').droppable({
+      accept: '.cdat-plot-method',
+      activeClass: 'alert drop-zone-highlight',
+      hoverClass: 'alert drop-zone-success',
+      tolerance: 'pointer',
+      drop: function (event, ui) {
+        //store method data on droppable
+        $(this).text(ui.draggable.text())
+        .attr('data-type', ui.draggable.attr('data-type'))
+        .attr('data-family', ui.draggable.attr('data-family'))
+        .attr('data-nvars', ui.draggable.attr('data-nvars'));
 
-$("#variable-plus").click(function() {
-  $('.variable-selected').removeClass('variable-selected');
-});
+        //set up variables
+        var variable = $(this).siblings(".drop-zone.variable");
+        var method = this;
+        var template = $(this).siblings(".drop-zone.template");
 
-$("#variable-remove").click(function() {
-  $('.variable-selected').remove();
-});
+        //check if we can render and call cdat show if we can
+        if($(template).text() !== 'Template' && $(variable).text() !== 'Variable'){
+          console.log('rendering');
+          cdat.show({
+            file: $(variable).attr('data-name'),
+            variable: $(variable).attr('data-file'),
+            type: $(method).attr('data-family'),
+            method: $(method).attr('data-type'),
+            template: $(template).text(),
+            node: $(this).parent()
+          });
+        }
+      }
 
-$(document.body).on("click", ".cdat-variable", function() {
-    if($(this).hasClass('variable-selected')){
-      $(this).removeClass('variable-selected');
-    }
-    else {
-      $(this).addClass('variable-selected');
-    }
-});
+    });
+    var templateZone = $('<div/>').text('Template').addClass('drop-zone template').attr('title', 'Drag and drop a template here').droppable({
+      accept: '.cdat-template-option',
+      activeClass: 'alert drop-zone-highlight',
+      hoverClass: 'alert drop-zone-success',
+      tolerance: 'pointer',
+      drop: function (event, ui) {
+        $(this).text(ui.draggable.text());
 
+        //set up variables
+        var variable = $(this).siblings(".drop-zone.method");
+        var method = $(this).siblings(".drop-zone.method");
+        var template = this;
+
+        //check if we can render and call cdat show if we can
+        if( method.text() !== 'Method' && variable.text() !== 'Variable'){
+          console.log('rendering');
+          cdat.show({
+            file: variable.attr('data-name'),
+            variable: variable.attr('data-file'),
+            type: method.attr('data-family'),
+            method: method.attr('data-type'),
+            template: $(template).text(),
+            node: $(this).parent()
+          });
+        }
+      }
+    });
+    var plotcontainer = $('<div/>').addClass('plot-container')
+        .append(variableZone)
+        .append(methodZone)
+        .append(templateZone);
+    $(elem).append(plotcontainer).append(button);
+    /* append droppable info */
+
+    count++;
+    $('#container').append(elem);
+    resizeWindows();
+  });
+
+  $(document.body).on("click", ".window-close-button", function() {
+    $(this).closest('.window').remove();
+    resizeWindows();
+  });
+
+  $("#file-browser-add-variables").click(function() {
+      var elems = $('.variable-selected');
+      elems.each(function() {
+        var elem = $('<p/>').text($(this).text())
+            .attr('data-file', $(this).attr('data-file'))
+            .attr('data-name', $(this).attr('data-name'))
+            .addClass('cdat-variable');
+        make_draggable(elem);
+        $('#variables-output').append(elem);
+        $(this).removeClass('variable-selected');
+      });
+  });
+
+  $("#variable-plus").click(function() {
+    $('.variable-selected').removeClass('variable-selected');
+  });
+
+  $("#variable-remove").click(function() {
+    $('.variable-selected').remove();
+  });
+
+  $(document.body).on("click", ".cdat-variable", function() {
+      if($(this).hasClass('variable-selected')){
+        $(this).removeClass('variable-selected');
+      }
+      else {
+        $(this).addClass('variable-selected');
+      }
+  });
+  
 
 });
 
