@@ -338,7 +338,7 @@ $("body").ready(function(){
       curWindows.addClass('window-half');
     }
     if (curWindows.length % 2 === 1) {
-      curWindows.last().addClass('full-width');
+      curWindows.first().addClass('full-width');
     } else {
       curWindows.removeClass('full-width');
     }
