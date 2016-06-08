@@ -13,7 +13,7 @@ footer {
 }
 
 .outlines {
-  padding: 19px;
+  padding: 10px;
   margin: 10px;
   background-color: #dcdcdc;
   border: 1px solid #b0b0b0;
@@ -115,6 +115,19 @@ html {
   overflow-y: scroll;
 }
 
+
+.modal-body .center_bar {
+  min-height: 1000px;
+}
+
 .cdat-variable {
   cursor: pointer;
+}
+
+.cdatweb-plot-selectors.cdatweb-tree{
+  max-height: 50vh;
+}
+
+.well.sidebar-nav {
+  padding: 0;
 }
