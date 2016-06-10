@@ -362,14 +362,14 @@ $("body").ready(function(){
   $(".grid-container").sortable({
     helper: "clone",
     tolerance: "pointer",
-    placeholder: ' window window-placeholder',
+    placeholder: ' window window-half window-placeholder',
     forceHelperSize: true,
     forcePlaceholderSize: true
   }).disableSelection();
 
 
   $("body").on("sortstart", ".grid-container", function(event, ui) {
-      // $('.window').removeClass('full-width');
+
   });
 
   $("body").on("sortstop", ".grid-container", function(event, ui) {
@@ -377,77 +377,84 @@ $("body").ready(function(){
   });
 
   $('body').on('click', '.new_window_button', function() {
-    var elem = $('<li/>').addClass('window window-half col-xs-4 ui-state-default panel panel-info');
-    /* add droppable fields info */
-    var button = '<button class="window-close-button btn btn-default pull-right">Close</button>';
-    //$(elem).text('Added window ' + count);
-    var variableZone = $('<div/>').text('Variable').addClass('drop-zone variable').attr('title', 'Drag and drop a variable here').droppable({
-      accept: '.cdat-variable',
-      activeClass: 'alert drop-zone-highlight',
-      hoverClass: 'alert drop-zone-success',
-      tolerance: 'pointer',
-      drop: function (event, ui) {
-        $(this).text(ui.draggable.text())
-          .attr('data-file', ui.draggable.attr('data-file'))
-          .attr('data-name', ui.draggable.attr('data-name'));
-
-        var variable = this;
-        var method;
-        if ($(this).siblings(".drop-zone.method").text() === 'Method (default)'){
-          method = {family: 'boxfill', type: 'default'}
-        }
-        else {
-          method = {family: $(this).siblings(".drop-zone.method").attr('data-family'), type: $(this).siblings(".drop-zone.method").attr('data-type')};
-        }
-        var template = $(this).siblings(".drop-zone.template").text();
-        if(template ==='Template (default)'){
-          template = 'default';
-        }
-        console.log('rendering');
-        cdat.show({
-          file: $(variable).attr('data-file'),
-          variable: $(variable).attr('data-name'),
-          type: method.family,
-          method: method.type, // Yeah, the names are backwards
-          template: template,
-          node: $(this)
-        });
-      }
-    });
-    var methodZone = $('<div/>').text('Method').addClass('drop-zone method').attr('title', 'Drag and drop a method here').droppable({
-      accept: '.cdat-plot-method',
-      activeClass: 'alert drop-zone-highlight',
-      hoverClass: 'alert drop-zone-success',
-      tolerance: 'pointer',
-      drop: function (event, ui) {
-        //store method data on droppable
-        $(this).text(ui.draggable.text())
-        .attr('data-type', ui.draggable.attr('data-type'))
-        .attr('data-family', ui.draggable.attr('data-family'))
-        .attr('data-nvars', ui.draggable.attr('data-nvars'));
-      }
-
-    });
-    var templateZone = $('<div/>').text('Template').addClass('drop-zone template').attr('title', 'Drag and drop a template here').droppable({
-      accept: '.cdat-template-option',
-      activeClass: 'alert drop-zone-highlight',
-      hoverClass: 'alert drop-zone-success',
-      tolerance: 'pointer',
-      drop: function (event, ui) {
-        $(this).text(ui.draggable.text());
-      }
-    });
-    var plotcontainer = $('<div/>').addClass('plot-container')
-        .append(variableZone)
-        .append(methodZone)
-        .append(templateZone);
-    $(elem).append(plotcontainer).append(button);
-    /* append droppable info */
-
     var container = $(this).closest('.center_bar').find('.grid-container');
-    container.append(elem);
-    container.data().count++; //increment container's count of windows currently open
-    resizeWindows(container);
+    if (container.data().count < 4) {
+      var elem = $('<li/>').addClass('window window-half col-xs-4 ui-state-default panel panel-default')
+          .append($('<div/>').addClass('pull-right').html('<i class="fa fa-close window-close-button" aria-hidden="true"></i>'));
+      /* add droppable fields info */
+      //$(elem).text('Added window ' + count);
+      var variableZone = $('<div/>').text('Variable').addClass('drop-zone variable').attr('title', 'Drag and drop a variable here').droppable({
+        accept: '.cdat-variable',
+        activeClass: 'alert drop-zone-highlight',
+        hoverClass: 'alert drop-zone-success',
+        tolerance: 'pointer',
+        drop: function (event, ui) {
+          $(this).text(ui.draggable.text())
+              .attr('data-file', ui.draggable.attr('data-file'))
+              .attr('data-name', ui.draggable.attr('data-name'));
+
+          var variable = this;
+          var method;
+          if ($(this).siblings(".drop-zone.method").text() === 'Method (default)') {
+            method = {family: 'boxfill', type: 'default'}
+          }
+          else {
+            method = {
+              family: $(this).siblings(".drop-zone.method").attr('data-family'),
+              type: $(this).siblings(".drop-zone.method").attr('data-type')
+            };
+          }
+          var template = $(this).siblings(".drop-zone.template").text();
+          if (template === 'Template (default)') {
+            template = 'default';
+          }
+          console.log('rendering');
+          cdat.show({
+            file: $(variable).attr('data-file'),
+            variable: $(variable).attr('data-name'),
+            type: method.family,
+            method: method.type, // Yeah, the names are backwards
+            template: template,
+            node: $(this)
+          }).then(
+                  function () { console.log('success'); },
+                  function () { console.log('fail'); });
+        }
+      });
+      var methodZone = $('<div/>').text('Method').addClass('drop-zone method').attr('title', 'Drag and drop a method here').droppable({
+        accept: '.cdat-plot-method',
+        activeClass: 'alert drop-zone-highlight',
+        hoverClass: 'alert drop-zone-success',
+        tolerance: 'pointer',
+        drop: function (event, ui) {
+          //store method data on droppable
+          $(this).text(ui.draggable.text())
+              .attr('data-type', ui.draggable.attr('data-type'))
+              .attr('data-family', ui.draggable.attr('data-family'))
+              .attr('data-nvars', ui.draggable.attr('data-nvars'));
+        }
+
+      });
+      var templateZone = $('<div/>').text('Template').addClass('drop-zone template').attr('title', 'Drag and drop a template here').droppable({
+        accept: '.cdat-template-option',
+        activeClass: 'alert drop-zone-highlight',
+        hoverClass: 'alert drop-zone-success',
+        tolerance: 'pointer',
+        drop: function (event, ui) {
+          $(this).text(ui.draggable.text());
+        }
+      });
+      var plotcontainer = $('<div/>').addClass('plot-container panel-body')
+          .append(variableZone)
+          .append(methodZone)
+          .append(templateZone);
+      $(elem).append(plotcontainer);
+      /* append droppable info */
+
+      container.append(elem);
+      container.data().count++; //increment container's count of windows currently open
+      resizeWindows(container);
+    }
   });
 
   $(document.body).on("click", ".window-close-button", function() {
@@ -514,7 +521,7 @@ $("body").ready(function(){
     $("#sheet-" + numTabs).find(".grid-container").sortable({
       helper: "clone",
       tolerance: "pointer",
-      placeholder: ' window window-placeholder',
+      placeholder: ' window window-half window-placeholder',
       forceHelperSize: true,
       forcePlaceholderSize: true
     }).disableSelection();
