@@ -50,20 +50,19 @@
         <div class="center_bar tabs">
             <div class="tabbable plot-tabs">
                 <ul class="nav nav-tabs nav-size">
+                    <li><a id="new-sheet"><span class="glyphicon glyphicon-plus" aria-hidden="true"></a></li>
                     <li class="active"><a href="#one" data-toggle="tab">Sheet 1</a></li>
-                    <li><a href="#two" data-toggle="tab">Sheet 2</a></li>
-                    <li><a href="#new" data-toggle="tab"><span class="glyphicon glyphicon-plus" aria-hidden="true"></a></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="one">
                         <div class="center_bar">
                             <div class="btn-toolbar" role="toolbar">
                                 <div class="btn-group">
-                                    <button id="new_window_button" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                                    <button class="new_window_button btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
                                     <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></button>
                                 </div>
                             </div>
-                                <ul id="container">
+                                <ul class="grid-container" data-count="0">
                                 </ul>
                         </div>
                         <div id="titles_homes" class="tiles"></div>

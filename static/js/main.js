@@ -216,6 +216,13 @@ function make_draggable(node, ondrag) {
 
 $("body").ready(function(){
 
+  $("div.row div.tabs").tabs({
+      activate: function (event, ui) {
+        ui.oldTab.removeClass('active');
+        ui.newTab.addClass('active');
+      }
+  });
+
   $(".cdatweb-file-browser > ul > li > a.cdatweb-dir").click(function(e){
     if ($(this).attr("data-loaded") === "true") {
       return;
@@ -328,50 +335,48 @@ $("body").ready(function(){
   /* grid */
   count = 1;
 
-  function resizeWindows() {
-    var curWindows = $('.window');
-    if (curWindows.length > 1) {
-      curWindows.removeClass('window-full');
-      curWindows.addClass('window-half');
+  function resizeWindows(container) {
+    //this function expects to be passed the grid-container to be resized
+    //containers have an attribute 'data-count' that tracks the number of open windows inside of them
+    var numWindows = container.data().count;
+    var windowElements = $(container).find('.window');
+    if (numWindows > 1) {
+      windowElements.removeClass('window-full');
+      windowElements.addClass('window-half');
     } else {
-      curWindows.removeClass('window-half');
-      curWindows.addClass('window-full');
+      windowElements.removeClass('window-half');
+      windowElements.addClass('window-full');
     }
-    if (curWindows.length < 3) {
-      curWindows.addClass('full-width');
+    if (numWindows < 3) {
+      windowElements.addClass('full-width');
     }
-    else if(curWindows.length === 3){
-      curWindows.removeClass('full-width');
-      curWindows.first().addClass('full-width');
+    else if(numWindows === 3){
+      windowElements.removeClass('full-width');
+      windowElements.first().addClass('full-width');
     }
     else {
-      curWindows.removeClass('full-width');
+      windowElements.removeClass('full-width');
     }
   }
 
-  $("#container").sortable({
-    helper: function(event, ui){
-      if ($('.window').not('.ui-sortable-placeholder').length > 1){
-        ui.removeClass('full-width');
-      }
-      return ui;
-    },
-    tolerance: "pointer"
+  $(".grid-container").sortable({
+    helper: "clone",
+    tolerance: "pointer",
+    placeholder: ' window window-placeholder',
+    forceHelperSize: true,
+    forcePlaceholderSize: true
   }).disableSelection();
 
 
-  $("#container").on("sortstart", function(event, ui) {
-      $('.window').removeClass('full-width');
+  $("body").on("sortstart", ".grid-container", function(event, ui) {
+      // $('.window').removeClass('full-width');
   });
 
-  $("#container").on("sortstop", function(event, ui) {
-    resizeWindows();
-    // if ($('.window').not('.ui-sortable-placeholder').length % 2 === 1) {
-    //   $('.window').first().addClass('full-width');
-    // }
+  $("body").on("sortstop", ".grid-container", function(event, ui) {
+    resizeWindows(ui.item.closest('ul.grid-container'));
   });
 
-  $('#new_window_button').on('click', function() {
+  $('body').on('click', '.new_window_button', function() {
     var elem = $('<li/>').addClass('window window-half col-xs-4 ui-state-default panel panel-info');
     /* add droppable fields info */
     var button = '<button class="window-close-button btn btn-default pull-right">Close</button>';
@@ -387,20 +392,26 @@ $("body").ready(function(){
           .attr('data-name', ui.draggable.attr('data-name'));
 
         var variable = this;
-        var method = $(this).siblings(".drop-zone.method");
-        var template = $(this).siblings(".drop-zone.template");
-        
-        if($(template).text() !== 'Template' && $(method).text() !== 'Method'){
-          console.log('rendering');
-          cdat.show({
-            file: $(variable).attr('data-file'),
-            variable: $(variable).attr('data-name'),
-            type: $(method).attr('data-family'),
-            method: $(method).attr('data-type'),
-            template: $(template).text(),
-            node: $(this).parent()
-          });
+        var method;
+        if ($(this).siblings(".drop-zone.method").text() === 'Method (default)'){
+          method = {family: 'boxfill', type: 'default'}
         }
+        else {
+          method = {family: $(this).siblings(".drop-zone.method").attr('data-family'), type: $(this).siblings(".drop-zone.method").attr('data-type')};
+        }
+        var template = $(this).siblings(".drop-zone.template").text();
+        if(template ==='Template (default)'){
+          template = 'default';
+        }
+        console.log('rendering');
+        cdat.show({
+          file: $(variable).attr('data-file'),
+          variable: $(variable).attr('data-name'),
+          type: method.family,
+          method: method.type, // Yeah, the names are backwards
+          template: template,
+          node: $(this)
+        });
       }
     });
     var methodZone = $('<div/>').text('Method').addClass('drop-zone method').attr('title', 'Drag and drop a method here').droppable({
@@ -414,24 +425,6 @@ $("body").ready(function(){
         .attr('data-type', ui.draggable.attr('data-type'))
         .attr('data-family', ui.draggable.attr('data-family'))
         .attr('data-nvars', ui.draggable.attr('data-nvars'));
-
-        //set up variables
-        var variable = $(this).siblings(".drop-zone.variable");
-        var method = this;
-        var template = $(this).siblings(".drop-zone.template");
-
-        //check if we can render and call cdat show if we can
-        if($(template).text() !== 'Template' && $(variable).text() !== 'Variable'){
-          console.log('rendering');
-          cdat.show({
-            file: $(variable).attr('data-name'),
-            variable: $(variable).attr('data-file'),
-            type: $(method).attr('data-family'),
-            method: $(method).attr('data-type'),
-            template: $(template).text(),
-            node: $(this).parent()
-          });
-        }
       }
 
     });
@@ -442,24 +435,6 @@ $("body").ready(function(){
       tolerance: 'pointer',
       drop: function (event, ui) {
         $(this).text(ui.draggable.text());
-
-        //set up variables
-        var variable = $(this).siblings(".drop-zone.method");
-        var method = $(this).siblings(".drop-zone.method");
-        var template = this;
-
-        //check if we can render and call cdat show if we can
-        if( method.text() !== 'Method' && variable.text() !== 'Variable'){
-          console.log('rendering');
-          cdat.show({
-            file: variable.attr('data-name'),
-            variable: variable.attr('data-file'),
-            type: method.attr('data-family'),
-            method: method.attr('data-type'),
-            template: $(template).text(),
-            node: $(this).parent()
-          });
-        }
       }
     });
     var plotcontainer = $('<div/>').addClass('plot-container')
@@ -469,14 +444,18 @@ $("body").ready(function(){
     $(elem).append(plotcontainer).append(button);
     /* append droppable info */
 
-    count++;
-    $('#container').append(elem);
-    resizeWindows();
+    var container = $(this).closest('.center_bar').find('.grid-container');
+    container.append(elem);
+    container.data().count++; //increment container's count of windows currently open
+    resizeWindows(container);
   });
 
   $(document.body).on("click", ".window-close-button", function() {
+    var container = $(this).closest('ul.grid-container');
+    container.data().count--; //decrement container's count of windows currently open
     $(this).closest('.window').remove();
-    resizeWindows();
+    resizeWindows(container);
+
   });
 
   $("#file-browser-add-variables").click(function() {
@@ -508,7 +487,38 @@ $("body").ready(function(){
         $(this).addClass('variable-selected');
       }
   });
-  
+
+  $("#new-sheet").click(function() {
+    var numTabs = $("div.row div.tabs div.plot-tabs ul.nav-tabs li").length;
+
+    $("div.row div.tabs div.plot-tabs ul.nav-tabs").append(
+        "<li><a href='#sheet-" + numTabs + "'>Sheet " + numTabs + "</a></li>"
+    );
+    $("div.row div.tabs div.plot-tabs div.tab-content").append(
+        '<div class="tab-pane" id="sheet-' + numTabs +'">' +
+        '<div class="center_bar">' +
+        '<div class="btn-toolbar" role="toolbar">' +
+        '<div class="btn-group">' +
+        '<button class="new_window_button btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>' +
+        '<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></button>' +
+        '</div>' +
+        '</div>' +
+        '<ul class="grid-container" data-count="0">' +
+        '</ul>' +
+        '</div>' +
+        '<div id="titles_homes" class="tiles"></div>' +
+        '</div>' +
+        '</div>'
+    );
+    $("div.row div.tabs").tabs("refresh");
+    $("#sheet-" + numTabs).find(".grid-container").sortable({
+      helper: "clone",
+      tolerance: "pointer",
+      placeholder: ' window window-placeholder',
+      forceHelperSize: true,
+      forcePlaceholderSize: true
+    }).disableSelection();
+  });
 
 });
 

@@ -126,8 +126,10 @@ html {
 
 .cdatweb-plot-selectors.cdatweb-tree{
   max-height: 50vh;
+  overflow-y: scroll;
 }
 
 .well.sidebar-nav {
   padding: 0;
 }
+
