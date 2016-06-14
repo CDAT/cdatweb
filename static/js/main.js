@@ -73,7 +73,7 @@ function cdat_esgf_submit(){
               _dap = _dap.substring(0, _dap.length - 5)
             }
             var link = $("<a></a>");
-            make_draggable(link);
+            //make_draggable(link); Variables are now click to select
             link.text(obj.variables[v].name)
               .attr("data-name", obj.variables[v].name)
               .attr("data-file", _dap)
@@ -197,12 +197,13 @@ function make_draggable(node, ondrag) {
   * @param {function?} ondrag A drag event handler
   */  
   node.draggable({
-    appendTo: '.vtk-view-container',
+    appendTo: 'body',
     zIndex: ~(1 << 31), // because jsPanel, sigh...
-    containment: '.vtk-view-container',
+    containment: 'body',
     helper: "clone",
     addClass: "cdat-grabbing",
-    opacity: 0.75
+    opacity: 0.75,
+    cursor: "grabbing",
   }).addClass('cdat-draggable')
   .on('start', function (evt) {
     if (ondrag) {
@@ -214,6 +215,13 @@ function make_draggable(node, ondrag) {
 }
 
 $("body").ready(function(){
+
+  $("div.row div.tabs").tabs({
+      activate: function (event, ui) {
+        ui.oldTab.removeClass('active');
+        ui.newTab.addClass('active');
+      }
+  });
 
   $(".cdatweb-file-browser > ul > li > a.cdatweb-dir").click(function(e){
     if ($(this).attr("data-loaded") === "true") {
@@ -327,57 +335,199 @@ $("body").ready(function(){
   /* grid */
   count = 1;
 
-function resizeWindows() {
-  var curWindows = $('.window');
-  if (curWindows.length < 3) {
-    curWindows.removeClass('window-half');
-    curWindows.addClass('window-full');
-  } else {
-    curWindows.removeClass('window-full');
-    curWindows.addClass('window-half');
+  function resizeWindows(container) {
+    //this function expects to be passed the grid-container to be resized
+    //containers have an attribute 'data-count' that tracks the number of open windows inside of them
+    var numWindows = container.data().count;
+    var windowElements = $(container).find('.window');
+    if (numWindows > 1) {
+      windowElements.removeClass('window-full');
+      windowElements.addClass('window-half');
+    } else {
+      windowElements.removeClass('window-half');
+      windowElements.addClass('window-full');
+    }
+    if (numWindows < 3) {
+      windowElements.addClass('full-width');
+    }
+    else if(numWindows === 3){
+      windowElements.removeClass('full-width');
+      windowElements.first().addClass('full-width');
+    }
+    else {
+      windowElements.removeClass('full-width');
+    }
   }
-  if (curWindows.length % 2 === 1) {
-    curWindows.last().addClass('full-width');
-  } else {
-    curWindows.removeClass('full-width');
-  }
-}
 
-$("#container").sortable();
-$("#container").disableSelection();
+  $(".grid-container").sortable({
+    helper: "clone",
+    tolerance: "pointer",
+    placeholder: ' window window-half window-placeholder',
+    forceHelperSize: true,
+    forcePlaceholderSize: true
+  }).disableSelection();
 
 
-$("#container").on("sortstart", function(event, ui) {
-  if ($('.window').not('.ui-sortable-placeholder').length % 2 === 1) {
-    $('.window').removeClass('full-width');
-  }
+  $("body").on("sortstart", ".grid-container", function(event, ui) {
+
+  });
+
+  $("body").on("sortstop", ".grid-container", function(event, ui) {
+    resizeWindows(ui.item.closest('ul.grid-container'));
+  });
+
+  $('body').on('click', '.new_window_button', function() {
+    var container = $(this).closest('.center_bar').find('.grid-container');
+    if (container.data().count < 4) {
+      var elem = $('<li/>').addClass('window window-half col-xs-4 ui-state-default panel panel-default')
+          .append($('<div/>').addClass('pull-right').html('<i class="fa fa-close window-close-button" aria-hidden="true"></i>'));
+      /* add droppable fields info */
+      //$(elem).text('Added window ' + count);
+      var variableZone = $('<div/>').text('Variable').addClass('drop-zone variable').attr('title', 'Drag and drop a variable here').droppable({
+        accept: '.cdat-variable',
+        activeClass: 'alert drop-zone-highlight',
+        hoverClass: 'alert drop-zone-success',
+        tolerance: 'pointer',
+        drop: function (event, ui) {
+          $(this).text(ui.draggable.text())
+              .attr('data-file', ui.draggable.attr('data-file'))
+              .attr('data-name', ui.draggable.attr('data-name'));
+
+          var variable = this;
+          var method;
+          if ($(this).siblings(".drop-zone.method").text() === 'Method (default)') {
+            method = {family: 'boxfill', type: 'default'}
+          }
+          else {
+            method = {
+              family: $(this).siblings(".drop-zone.method").attr('data-family'),
+              type: $(this).siblings(".drop-zone.method").attr('data-type')
+            };
+          }
+          var template = $(this).siblings(".drop-zone.template").text();
+          if (template === 'Template (default)') {
+            template = 'default';
+          }
+          console.log('rendering');
+          cdat.show({
+            file: $(variable).attr('data-file'),
+            variable: $(variable).attr('data-name'),
+            type: method.family,
+            method: method.type, // Yeah, the names are backwards
+            template: template,
+            node: $(this)
+          }).then(
+                  function () { console.log('success'); },
+                  function () { console.log('fail'); });
+        }
+      });
+      var methodZone = $('<div/>').text('Method').addClass('drop-zone method').attr('title', 'Drag and drop a method here').droppable({
+        accept: '.cdat-plot-method',
+        activeClass: 'alert drop-zone-highlight',
+        hoverClass: 'alert drop-zone-success',
+        tolerance: 'pointer',
+        drop: function (event, ui) {
+          //store method data on droppable
+          $(this).text(ui.draggable.text())
+              .attr('data-type', ui.draggable.attr('data-type'))
+              .attr('data-family', ui.draggable.attr('data-family'))
+              .attr('data-nvars', ui.draggable.attr('data-nvars'));
+        }
+
+      });
+      var templateZone = $('<div/>').text('Template').addClass('drop-zone template').attr('title', 'Drag and drop a template here').droppable({
+        accept: '.cdat-template-option',
+        activeClass: 'alert drop-zone-highlight',
+        hoverClass: 'alert drop-zone-success',
+        tolerance: 'pointer',
+        drop: function (event, ui) {
+          $(this).text(ui.draggable.text());
+        }
+      });
+      var plotcontainer = $('<div/>').addClass('plot-container panel-body')
+          .append(variableZone)
+          .append(methodZone)
+          .append(templateZone);
+      $(elem).append(plotcontainer);
+      /* append droppable info */
+
+      container.append(elem);
+      container.data().count++; //increment container's count of windows currently open
+      resizeWindows(container);
+    }
+  });
+
+  $(document.body).on("click", ".window-close-button", function() {
+    var container = $(this).closest('ul.grid-container');
+    container.data().count--; //decrement container's count of windows currently open
+    $(this).closest('.window').remove();
+    resizeWindows(container);
+
+  });
+
+  $("#file-browser-add-variables").click(function() {
+      var elems = $('.variable-selected');
+      elems.each(function() {
+        var elem = $('<p/>').text($(this).text())
+            .attr('data-file', $(this).attr('data-file'))
+            .attr('data-name', $(this).attr('data-name'))
+            .addClass('cdat-variable');
+        make_draggable(elem);
+        $('#variables-output').append(elem);
+        $(this).removeClass('variable-selected');
+      });
+  });
+
+  $("#variable-plus").click(function() {
+    $('.variable-selected').removeClass('variable-selected');
+  });
+
+  $("#variable-remove").click(function() {
+    $('.variable-selected').remove();
+  });
+
+  $(document.body).on("click", ".cdat-variable", function() {
+      if($(this).hasClass('variable-selected')){
+        $(this).removeClass('variable-selected');
+      }
+      else {
+        $(this).addClass('variable-selected');
+      }
+  });
+
+  $("#new-sheet").click(function() {
+    var numTabs = $("div.row div.tabs div.plot-tabs ul.nav-tabs li").length;
+
+    $("div.row div.tabs div.plot-tabs ul.nav-tabs").append(
+        "<li><a href='#sheet-" + numTabs + "'>Sheet " + numTabs + "</a></li>"
+    );
+    $("div.row div.tabs div.plot-tabs div.tab-content").append(
+        '<div class="tab-pane" id="sheet-' + numTabs +'">' +
+        '<div class="center_bar">' +
+        '<div class="btn-toolbar" role="toolbar">' +
+        '<div class="btn-group">' +
+        '<button class="new_window_button btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>' +
+        '<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></button>' +
+        '</div>' +
+        '</div>' +
+        '<ul class="grid-container" data-count="0">' +
+        '</ul>' +
+        '</div>' +
+        '<div id="titles_homes" class="tiles"></div>' +
+        '</div>' +
+        '</div>'
+    );
+    $("div.row div.tabs").tabs("refresh");
+    $("#sheet-" + numTabs).find(".grid-container").sortable({
+      helper: "clone",
+      tolerance: "pointer",
+      placeholder: ' window window-half window-placeholder',
+      forceHelperSize: true,
+      forcePlaceholderSize: true
+    }).disableSelection();
+  });
+
 });
 
-$("#container").on("sortstop", function(event, ui) {
-  if ($('.window').not('.ui-sortable-placeholder').length % 2 === 1) {
-    $('.window').last().addClass('full-width');
-  }
-});
 
-$('#new_window_button').on('click', function() {
-  var elem = $('<li/>').addClass('window window-half col-xs-4 ui-state-default panel panel-info');
-  /* add droppable fields info */
-  var button = '<button class="window-close-button btn btn-default pull-right">Close</button>';
-  $(elem).text('Added window ' + count);
-  $(elem).append(button);
-  /* append droppable info */
-
-  count++;
-  console.log(elem)
-  $('#container').append(elem);
-  resizeWindows();
-});
-
-$(document.body).on("click", ".window-close-button", function() {
-  $(this).closest('.window').remove();
-  resizeWindows();
-});
-  
-  
-});
 
