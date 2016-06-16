@@ -250,9 +250,23 @@ $("body").ready(function(){
   });
 
   $('body').on('click', '.sheet-close', function(event){
-    var sheetid = $(this).parent().attr('href');
+    var sheetid = $(this).siblings('a').attr('href');
+    var tabid = $("div.row div.tabs").tabs( "option", "active" );
+    if($(this).closest('li').hasClass('active')) {
+      if($(this).closest('li').next().length > 0) {
+        console.log(tabid+1);
+        $( "div.row div.tabs" ).tabs( "option", "active", tabid+1 );
+      }
+      else if($(this).closest('li').prev().length > 0) {
+        console.log(tabid-1);
+        console.log('lower');
+        $( "div.row div.tabs" ).tabs( "option", "active", tabid-1 );
+      }
+    }
     $(this).closest('li.ui-state-default').remove();
     $(sheetid).remove();
+    $("div.row div.tabs").tabs('refresh');
+
   });
 
   cdat.get_graphics_methods().then(
