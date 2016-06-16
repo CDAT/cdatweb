@@ -137,3 +137,37 @@ html {
 .sheet-close:hover {
   cursor: pointer;
 }
+
+.plot-tabs ul {
+  border-bottom: 1px solid #ddd;
+}
+
+.plot-tabs li {
+  float: left;
+  margin-bottom: -1px;
+}
+.plot-tabs li.ui-state-default a {
+  display:inline-block;
+  padding-right: 10px;
+}
+
+.plot-tabs li.ui-state-default .sheet-close {
+  padding-right: 5px;
+}
+
+.plot-tabs li.active {
+  margin-right: 2px;
+  color: #555;
+  cursor: default;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-bottom-color: transparent;
+  border-radius: 4px 4px 0 0;
+}
+.plot-tabs li.active:hover, .plot-tabs li.active>a:hover {
+  background-color: white;
+}
+.plot-tabs li>a:focus {
+  outline: none;
+  background-color: white;
+}

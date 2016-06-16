@@ -103,9 +103,7 @@ function cdat_esgf_submit(){
 function cdat_opendap_submit(){
   var url = $('#opendap-url').val();
   var elem = $('#opendap-results');
-  console.log('got to 1');
   get_variables(url, elem);
-
 }
 
 function get_children(path, parent, level){
@@ -513,8 +511,8 @@ $("body").ready(function(){
 
   $("#new-sheet").click(function() {
     tabCount++;
-    $("div.row div.tabs div.plot-tabs ul.nav-tabs").append(
-        "<li><a href='#sheet-" + tabCount + "'>Sheet " + tabCount + "<i class='fa fa-times-circle-o sheet-close' aria-hidden='true'></i></a></li>"
+    $("div.row div.tabs div.plot-tabs>ul").append(
+        "<li><a href='#sheet-" + tabCount + "'>Sheet " + tabCount + "</a><i class='fa fa-times-circle-o sheet-close' aria-hidden='true'></i></li>"
     );
     $("div.row div.tabs div.plot-tabs div.tab-content").append(
         '<div class="tab-pane" id="sheet-' + tabCount +'">' +
