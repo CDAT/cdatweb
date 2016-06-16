@@ -133,3 +133,7 @@ html {
   padding: 0;
 }
 
+
+.sheet-close:hover {
+  cursor: pointer;
+}
