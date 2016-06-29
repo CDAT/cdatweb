@@ -17,8 +17,8 @@ class VcsPlot(BaseVisualizer):
         self._window = None
         self._canvas = vcs.init()
         self._plot = PlotManager(self._canvas)
-        self._plot.graphics_method = vcs.getisofill() # default
-        self._plot.template = vcs.elements['template']['default'] # default
+        self._plot.graphics_method = vcs.getisofill()              # default
+        self._plot.template = vcs.elements['template']['default']  # default
 
     def render(self, opts={}):
         super(VcsPlot, self).render(opts)

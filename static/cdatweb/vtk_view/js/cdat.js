@@ -135,7 +135,20 @@
          *
          * @param {object} config A plot configuration object
          *
+         * BEGIN simplified interface
+         * @param {string} config.file  data file where to read the variables from
+         * @param {string} config.variable variable or list of variables to plot (from config.file)
+         * @param {object} config.subset same as subset in config.variables.
+         *                 Subset is applied to all variables, so we assume
+         *                 all variables have the same grid.
+         * END simplified interface
          * @param {object[]} config.variables       The variable from the file to display
+         *        A variable contains:
+         *          - name: the name of the attribute to plot
+         *          - file: the data file where to read the variable from
+         *          - subset: a list of dictionary elements, each element has
+         *              - name: index variable name
+         *              - range: list with lower and upper range for the index variable
          * @param {string}   config.template        The plot template to use
          * @param {string}   config.type            The plot type to create
          * @param {string}   config.method          The plot method to use
@@ -146,7 +159,7 @@
          * @returns {$.Deferred} A promise-like object for attaching handlers
          *
          * @example
-         *     var view = cdat.open({
+         *     var view = cdat.show({
          *     }).then(
          *        function () { console.log('success'); },
          *        function () { console.log('fail'); }
@@ -166,9 +179,9 @@
 
             var defer = new $.Deferred();
             var promise = defer.promise();
-            var view, v;
+            var view, v, i;
 
-            // backward compatibility
+            // simplified interface
             if (config.file && config.variable) {
                 if (typeof config.variable === 'string') {
                     config.variables = [{
@@ -182,6 +195,12 @@
                             name: config.variable[v],
                             file: config.file
                         });
+                    }
+                }
+                if (config.subset) {
+                    for (i = 0; i < config.variables.length; ++i) {
+                        v = config.variables[i];
+                        v.subset = config.subset;
                     }
                 }
             }
@@ -214,9 +233,14 @@
                         );
                         viewport.bind(config.node);
                         defer.resolve(viewport);
-                    }, function () { defer.reject(arguments); });
+                    },
+                    function () {
+                        defer.reject(arguments);
+                    });
                 },
-                function () { defer.reject(arguments); });
+                function () {
+                    defer.reject(arguments);
+                });
 
             // append a render function to the promise
             promise.render = function () {
@@ -301,7 +325,7 @@
          * @param {string} method A graphics method
          * @param {string} template A graphics template
          */
-        create_plot: function (file, variable, type, method, template) {
+        create_plot: function (file, variable, type, method, template, subset) {
             console.log(
                 "Opening file: " + file +
                     " variable: " + variable +
@@ -321,7 +345,8 @@
                         variable: variable,
                         type: type,
                         method: method,
-                        template: template
+                        template: template,
+                        subset: subset
                     })
                 }
             );
@@ -329,9 +354,10 @@
 
         /**
          * Given a file or opendap url, return an object containing the list of variables
-         * in the file.
+         * in the file, followed by the list of axes.
          * @param {string} filename An absolute path to a file on the vis server.
          * @return {$.Deferred} A promise resolving with the variable info object
+         * @see print_variables which describes the object returned by get_variables
          */
         get_variables: function (filename) {
             if (!open) {
@@ -344,13 +370,88 @@
                         'cdat.file.list_variables',
                         [filename]
                     ).then(
-                    function (m) { defer.resolve(m); },
-                    function (m) { defer.reject(arguments); }
+                    function (m) {
+                        defer.resolve(m);
+                    },
+                    function (m) {
+                        defer.reject(arguments);
+                    }
                     );
                 }
             );
             return defer.promise();
         },
+
+        /**
+         * Prints the result from get_variables to the console.
+         * @param {string? filename An absolute path to a netcdf file
+         */
+        print_variables: function (filename) {
+            var fileVars = cdat.get_variables(filename);
+            var vars, axes, shape, axisList, lonLat, logString, boundsString,
+                gridType;
+            var v, i, al;
+            fileVars.then(
+                function (varsAxes) {
+                    // variables
+                    vars = varsAxes[0];
+                    for (v in vars) {
+                        // shape of the variable
+                        shape = '(' + vars[v].shape[0];
+                        for (i = 1; i < vars[v].shape.length; ++i) {
+                            shape += (',' + vars[v].shape[i]);
+                        }
+                        shape += ')';
+                        // axes for the variable
+                        al = vars[v].axisList;
+                        axisList = '(' + al[0];
+                        for (i = 1; i < al.length; ++i) {
+                            axisList += (', ' + al[i]);
+                        }
+                        axisList += ')';
+                        // bounds are received for longitude and latitude
+                        boundsString = '';
+                        if (vars[v].bounds) {
+                            boundsString += ': (' + vars[v].bounds[0] + ', ' +
+                                vars[v].bounds[1] + ')';
+                        }
+                        // longitude, latitude for the variable
+                        // these are different than the axes for the curvilinear or
+                        // generic grids
+                        lonLat = null;
+                        if (vars[v].lonLat) {
+                            lonLat = '(' + vars[v].lonLat[0] + ', ' + vars[v].lonLat[1] + ')';
+                        }
+                        logString = v + shape + '[' + vars[v].name + ', ' +
+                                    vars[v].units + boundsString + ']' + ': ' + axisList;
+                        if (lonLat) {
+                            logString += (', ' + lonLat);
+                        }
+                        if (vars[v].gridType) {
+                            logString += (', ' + vars[v].gridType);
+                        }
+                        console.log(logString);
+                    }
+                    // all axes in the file
+                    axes = varsAxes[1];
+                    for (v in axes) {
+                        shape = '(' + axes[v].shape[0];
+                        for (i = 1; i < axes[v].shape.length; ++i) {
+                            shape += (',' + axes[v].shape[i]);
+                        }
+                        shape += ')';
+                        console.log(v + shape + '[' + axes[v].name + ', ' +
+                                    axes[v].units + ': (' +
+                                    axes[v].data[0] + ', ' +
+                                    axes[v].data[axes[v].data.length - 1] + ')]');
+                    }
+                },
+                function (reason) {
+                    console.log(reason[0].args[0]);
+                }
+            );
+        },
+
 
         /**
          * Return a list of graphics methods.
@@ -367,8 +468,12 @@
                         'cdat.vcs.methods',
                         []
                     ).then(
-                    function (m) { defer.resolve(m); },
-                    function () { defer.reject(arguments); }
+                    function (m) {
+                        defer.resolve(m);
+                    },
+                    function () {
+                        defer.reject(arguments);
+                    }
                     );
                 }
             );
@@ -390,8 +495,12 @@
                         'cdat.vcs.templates',
                         []
                     ).then(
-                    function (m) { defer.resolve(m); },
-                    function () { defer.reject(arguments); }
+                    function (m) {
+                        defer.resolve(m);
+                    },
+                    function () {
+                        defer.reject(arguments);
+                    }
                     );
                 }
             );

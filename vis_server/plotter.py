@@ -12,7 +12,10 @@ class PlotManager(object):
         self._template = None
 
     def can_plot(self):
-        return self.dp is not None or (self._template is not None and self._vars is not None and self._gm is not None)
+        return (self.dp is not None or
+                (self._template is not None and
+                 self._vars is not None and
+                 self._gm is not None))
 
     def gm(self):
         return self._gm
