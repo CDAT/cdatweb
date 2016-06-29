@@ -1,3 +1,4 @@
+var tabCount = 1;
 function cdat_esgf_submit(){
   var host =    document.getElementById("host").value;
   console.log(host);
@@ -99,6 +100,12 @@ function cdat_esgf_submit(){
   });
 }
 
+function cdat_opendap_submit(){
+  var url = $('#opendap-url').val();
+  var elem = $('#opendap-results');
+  get_variables(url, elem);
+}
+
 function get_children(path, parent, level){
   if (parent.attr("data-loaded") === "true") {
     return;
@@ -167,11 +174,12 @@ function get_children(path, parent, level){
   });
 }
 
-function get_variables(path, parent, level){
-  cdat.get_variables("/var/www/Data/ne120_monthly_ens3/gridded/1979/gridded_ne120_v0.3_00003.cam.h0.1979-01.nc").then(
+function get_variables(path, parent){//, level){
+  // cdat.get_variables("/var/www/Data/ne120_monthly_ens3/gridded/1979/gridded_ne120_v0.3_00003.cam.h0.1979-01.nc").then(
   //testing above
-  //cdat.get_variables(path).then(
+  cdat.get_variables(path).then(
     function (variables){
+      console.log(variables);
     for(v in variables){
       element = $("<li><a></a></li>");
       make_draggable(element);
@@ -239,6 +247,26 @@ $("body").ready(function(){
     get_variables($(this).attr("data-path"), $(this).next("ul"), 1);
     $(this).attr('data-loaded', 'true');
     e.preventDefault();
+  });
+
+  $('body').on('click', '.sheet-close', function(event){
+    var sheetid = $(this).siblings('a').attr('href');
+    var tabid = $("div.row div.tabs").tabs( "option", "active" );
+    if($(this).closest('li').hasClass('active')) {
+      if($(this).closest('li').next().length > 0) {
+        console.log(tabid+1);
+        $( "div.row div.tabs" ).tabs( "option", "active", tabid+1 );
+      }
+      else if($(this).closest('li').prev().length > 0) {
+        console.log(tabid-1);
+        console.log('lower');
+        $( "div.row div.tabs" ).tabs( "option", "active", tabid-1 );
+      }
+    }
+    $(this).closest('li.ui-state-default').remove();
+    $(sheetid).remove();
+    $("div.row div.tabs").tabs('refresh');
+
   });
 
   cdat.get_graphics_methods().then(
@@ -496,13 +524,12 @@ $("body").ready(function(){
   });
 
   $("#new-sheet").click(function() {
-    var numTabs = $("div.row div.tabs div.plot-tabs ul.nav-tabs li").length;
-
-    $("div.row div.tabs div.plot-tabs ul.nav-tabs").append(
-        "<li><a href='#sheet-" + numTabs + "'>Sheet " + numTabs + "</a></li>"
+    tabCount++;
+    $("div.row div.tabs div.plot-tabs>ul").append(
+        "<li><a href='#sheet-" + tabCount + "'>Sheet " + tabCount + "</a><i class='fa fa-times-circle-o sheet-close' aria-hidden='true'></i></li>"
     );
     $("div.row div.tabs div.plot-tabs div.tab-content").append(
-        '<div class="tab-pane" id="sheet-' + numTabs +'">' +
+        '<div class="tab-pane" id="sheet-' + tabCount +'">' +
         '<div class="center_bar">' +
         '<div class="btn-toolbar" role="toolbar">' +
         '<div class="btn-group">' +
@@ -518,7 +545,7 @@ $("body").ready(function(){
         '</div>'
     );
     $("div.row div.tabs").tabs("refresh");
-    $("#sheet-" + numTabs).find(".grid-container").sortable({
+    $("#sheet-" + tabCount).find(".grid-container").sortable({
       helper: "clone",
       tolerance: "pointer",
       placeholder: ' window window-half window-placeholder',
@@ -528,6 +555,9 @@ $("body").ready(function(){
   });
 
 });
+
+
+
 
 
 
